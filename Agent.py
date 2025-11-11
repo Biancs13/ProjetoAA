@@ -1,5 +1,7 @@
 import random
 
+
+
 class Agent:
     def __init__(self, name, position):
         self.name = name
