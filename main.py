@@ -1,5 +1,5 @@
-from World import World
-from Agent import Agent
+from world import World
+from agente import Agent
 import random
 
 def main():
