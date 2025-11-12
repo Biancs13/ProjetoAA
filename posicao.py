@@ -1,9 +1,8 @@
 
 class Posicao:
-    def __init__(self,x,y,world=None):
+    def __init__(self,x,y):
         self.x = x
         self.y = y
-        self.world = world
 
     def getX(self):
         return self.x
