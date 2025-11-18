@@ -1,3 +1,5 @@
+
+
 class World:
     def __init__(self, gridSize, goal):
         self.map = {(x,y):None for x in range(gridSize) for y in range(gridSize)}

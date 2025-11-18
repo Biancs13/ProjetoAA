@@ -1,8 +1,10 @@
 class Elemento:
-    def __init__(self,nome,coletavel=False,solido=False):
+    def __init__(self,nome, pontos = 0, coletavel=False,solido=False):
+        self.id = (int(coletavel),int(solido),pontos)
         self.nome = nome
         self.coletavel = coletavel
         self.solido = solido
+        self.pontos = pontos
 
     def getName(self):
         return self.nome
@@ -12,3 +14,6 @@ class Elemento:
 
     def isSolido(self):
         return self.solido
+
+    def getPontos(self):
+        return self.pontos
