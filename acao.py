@@ -1,7 +1,6 @@
 from enum import Enum
 from posicao import Posicao
 
-
 def Acao(Enum):
     DIREITA = (1,0)
     ESQUERDA = (-1,0)
