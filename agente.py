@@ -1,22 +1,35 @@
 import random
 
-
-class Agent:
-    def __init__(self, id, posicao):
+class Agente:
+    def __init__(self, id, posicaoAtual, sensor):
         self.id = id
-        self.posicao = posicao
-    
-    def move(self, novaPosicao):
-        self.posicao = novaPosicao
-    
-    def randomMove(self, tamanhoGrelha):
-        pass
-    
+        self.posicaoAtual = posicaoAtual
+        self.sensor = sensor
 
-    def getPosicao(self):
-        return self.posicao
-    
     def getId(self):
         return self.id
-    
+
+    def getPosicao(self):
+        return self.posicaoAtual
+
+    # def cria(self,ficheiro):
+
+    # observacao(self,obs)):
+
+    # age(self):
+
+    # avaliacaoEstadoAtual(self,recompensa):
+
+    # instala(self,sensor):
+
+    def getSensor(self):
+        return self.sensor
+
+    # ageAleatorio(self):
+
+
+
+
+
+
 
