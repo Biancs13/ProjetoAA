@@ -1,3 +1,4 @@
+from observacao import Observacao
 from posicao import Posicao
 
 
