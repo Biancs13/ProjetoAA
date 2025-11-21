@@ -17,3 +17,6 @@ class Elemento:
 
     def getPontos(self):
         return self.id[2]
+
+    def __str__(self):
+        return self.nome[0].upper()

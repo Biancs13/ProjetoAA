@@ -1,23 +1,47 @@
-from world import World
-from agente import Agent
-import random
+from time import sleep
+
+from ambiente import Ambiente
+from elemento import Elemento
+from posicao import Posicao
+from agente import Agente
+
 
 def main():
-    wantSee = True
-    n = 40
-    g = Agent("G", (2,2))
-    world = World(5,g)
-    a1 = Agent("A", (0,0))
-    a2 = Agent("B", (1,1))
-    world.addAgent(a1)  
-    world.addAgent(a2)
+    MAX_GRID = 5
+    cheguei = False
+    ambiente = Ambiente(MAX_GRID)
+    elemento = Elemento("farol",10)
+    ambiente.adicionar(elemento, Posicao(3,3))
+    agente = Agente(1, Posicao(0,0),None,0)
+    print(representa(ambiente,agente))
+    while not cheguei:
+        agente.ageAleatorio(MAX_GRID)
+        print(agente)
+        if agente.getPosicao() == Posicao(3,3):
+            cheguei = True
+            print("Cheguei ao farol")
+        print(representa(ambiente,agente))
+        sleep(1)
 
-    if wantSee:
-        for i in range(n):
-            world.toString()
-            if world.updateWorldRandom(i):
-                return
-            
+
+
+#Depois pôr no motor de Simulação
+def representa(ambiente,agente):
+    pos = agente.getPosicao()
+    linhas = []
+    for y in range(ambiente.tamanhoGrelha):
+        linha = []
+        for x in range(ambiente.tamanhoGrelha):
+            if pos == Posicao(x, y):
+                linha.append("A")
+            else:
+                elemento = ambiente.grelha[Posicao(x,y)]
+                if elemento is None:
+                    linha.append(".")
+                else:
+                    linha.append(str(elemento))
+        linhas.append(" ".join(linha))
+    return "\n".join(linhas)
 
 
 if __name__ == "__main__":

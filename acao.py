@@ -1,24 +1,25 @@
+import copy
+import random
 from enum import Enum
 from posicao import Posicao
 
-def Acao(Enum):
-    DIREITA = (1,0,0)
-    ESQUERDA = (-1,0,0)
-    CIMA =  (0,-1,0)
-    BAIXO =  (0,1,0)
-    RODAR = (0,0,90)
+class Acao(Enum):
+    DIREITA = (1,0)
+    ESQUERDA = (-1,0)
+    CIMA =  (0,-1)
+    BAIXO =  (0,1)
+    RODAR = (0,0)
 
-    def getNovaPosicao(p):
-        x = p.getX()
-        y = p.getY()
-        a = p.getAngulo()
-        if p == DIREITA:
-            return Posicao(x+1,y,a)
-        elif p == ESQUERDA:
-            return Posicao(x-1,y,a)
-        elif p == CIMA:
-            return Posicao(x,y-1,a)
-        elif p == BAIXO:
-            return Posicao(x,y+1,a)
-        return Posicao(x,y,(a + 90) % 360)
+    def getNovaPosicao(self, posicao, angulo):
+        if self == Acao.RODAR:
+            return Posicao(posicao.x, posicao.y), (angulo + 90) % 360
+        dx, dy = self.value
+        return Posicao(posicao.x + dx, posicao.y + dy), angulo
+
+def atuar(agente, acao):
+    novaPos, novoAng = acao.getNovaPosicao(agente.posicaoAtual, agente.angulo)
+    return novaPos, novoAng
+
+def getAcaoAleatoria():
+    return random.choice(list(Acao))
 
