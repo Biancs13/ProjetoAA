@@ -1,5 +1,8 @@
 import numpy as np
 
+from vetor import Vetor, multiplicar_vetor_matriz
+
+
 class Sensor:
     def __init__(self, campoVisao):
         self.campoVisao = campoVisao
@@ -7,19 +10,19 @@ class Sensor:
     def getCampoVisao(self):
         return self.campoVisao
 
-    def rodar(self,numVezes=1):
-        novoSensor = []
+    def rodar(self):
+        novoCampoVisao = []
         for v in self.campoVisao:
-            for i in range(numVezes):
-                novoSensor.append(rodar(v))
-        return novoSensor
+            novoCampoVisao.append(rodar(v))
+        self.campoVisao = novoCampoVisao
+
 
 
 
 def rodar(vetor):
-    matriz = np.array([[0,1],[-1,0]])
-    res = np.array(vetor) @ matriz
-    return tuple(int(x) for x in res)
+    matriz = [[0,-1],[1,0]]
+    res = multiplicar_vetor_matriz(vetor,matriz)
+    return res
 
-vetor = (0,1)
+vetor = Vetor(1,1)
 print(rodar(vetor))
