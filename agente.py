@@ -9,6 +9,8 @@ class Agente:
         self.posicaoAtual = posicaoAtual
         self.sensor = None
         self.angulo = angulo
+        self.coletaveis = []
+        self.observavaoAtual = None
 
     def getId(self):
         return self.id
@@ -16,31 +18,33 @@ class Agente:
     def getPosicao(self):
         return self.posicaoAtual
 
-    # def cria(self,ficheiro):
+    def observacao(self,obs):
+        self.observavaoAtual = obs
 
-    # observacao(self,obs)):
+    #Não Altera o agente
+    def age(self):
+        pass
 
-    # age(self):
-
-    # avaliacaoEstadoAtual(self,recompensa):
+    def avaliacaoEstadoAtual(self,recompensa):
+        pass
 
     def instala(self,sensor):
-        self.sensor = sensor
+        if self.sensor is None:
+            self.sensor = sensor
+        else:
+            self.sensor.getCampoVisao().append(sensor.getCampoVisao())
 
     def getSensor(self):
-        #Nota: tem de ser chamado depois de mudar a posição!
         return self.sensor
 
+    #Não Altera o agente
     def ageAleatorio(self,maxGrid):
         while True:
             acao = getAcaoAleatoria()
             novaPos, novoAng = atuar(self, acao)
             if novoAng != self.angulo:
-                print("rodei")
-                self.rodar(novoAng)
                 break
             if dentroLimites(novaPos, maxGrid):
-                self.posicaoAtual = novaPos
                 break
             return novaPos,novoAng
 
@@ -50,11 +54,18 @@ class Agente:
             self.angulo = novoAng
             self.sensor.rodar()
 
+    def coleta(self,elemento):
+        if elemento.isColetavel():
+            self.coletaveis.append(elemento)
+
+
+    def alterar(self,novoAng,novaPos):
+        self.rodar(novoAng)
+        self.posicaoAtual = novaPos
+
     def __str__(self):
         return f"Agente {self.id}: Posicao={self.posicaoAtual}, Angulo={self.angulo}°"
 
-agente = Agente(1,Posicao(0,0),0)
-print(agente)
-agente.ageAleatorio(20)
-print(agente)
-
+#Lara
+def cria(linha):
+    pass

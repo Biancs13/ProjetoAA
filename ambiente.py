@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 from elemento import Elemento
 from observacao import Observacao
 from posicao import Posicao, dentroLimites
@@ -12,12 +14,10 @@ class Ambiente:
     def observacaoParaAgente(self,agente):
         sensor = agente.getSensor()
         print(" ".join(str(v) for v in sensor.getCampoVisao()))
-        print("tipo sensor:",type(sensor))
         observacao = Observacao()
         posicoes = []
         for v in sensor.getCampoVisao():
             posicao = v.soma(agente.getPosicao())
-            print(posicao)
             if dentroLimites(posicao,self.tamanhoGrelha):
                 posicoes.append(posicao)
                 observacao.adicionar(v,self.grelha[posicao].getId() if self.grelha[posicao] is not None else None)
@@ -28,8 +28,6 @@ class Ambiente:
         reward = 100
         return reward
 
-
-
     def adicionar(self,elemento,pos):
         if self.grelha[pos] is None:
             self.grelha[pos] = elemento
@@ -37,9 +35,16 @@ class Ambiente:
         else:
             return False
 
+    def getElementos(self,tipo_Elemento):
+        elementos = {pos: ele for pos, ele in self.grelha.items() if ele is not None and ele.getNome() == tipo_Elemento}
+        return elementos
 
+    def getElemento(self,pos):
+        return self.grelha[pos]
 
-
+    @abstractmethod
+    def condicaoFim(self,agentes=None):
+        pass
 
 ambiente = Ambiente(20)
 elemento = Elemento("parede", -10, False, True)

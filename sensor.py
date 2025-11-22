@@ -1,4 +1,3 @@
-import numpy as np
 
 from vetor import Vetor, multiplicar_vetor_matriz
 

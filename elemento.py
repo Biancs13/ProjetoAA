@@ -6,7 +6,7 @@ class Elemento:
     def getId(self):
         return self.id
 
-    def getName(self):
+    def getNome(self):
         return self.nome
 
     def isColetavel(self):
