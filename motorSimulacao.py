@@ -30,7 +30,7 @@ class MotorSimulacao:
                     agente.alterar(novaPos, novoAng)
                     if ele.isColetavel():
                         (agente.coleta(ele))
-            sleep(1) #Quando queremos ber
+            sleep(1) #Quando queremos testar
 
 
     def representa(self):
