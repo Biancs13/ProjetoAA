@@ -42,11 +42,12 @@ class Agente:
         while True:
             acao = getAcaoAleatoria()
             novaPos, novoAng = atuar(self, acao)
+
             if novoAng != self.angulo:
-                break
+                return novaPos, novoAng
             if dentroLimites(novaPos, maxGrid):
-                break
-            return novaPos,novoAng
+                return novaPos, novoAng
+            #return novaPos,novoAng
 
 
     def rodar(self,novoAng):
@@ -59,7 +60,7 @@ class Agente:
             self.coletaveis.append(elemento)
 
 
-    def alterar(self,novoAng,novaPos):
+    def alterar(self,novaPos,novoAng):
         self.rodar(novoAng)
         self.posicaoAtual = novaPos
 

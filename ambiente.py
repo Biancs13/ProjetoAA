@@ -42,6 +42,9 @@ class Ambiente:
     def getElemento(self,pos):
         return self.grelha[pos]
 
+    def atualizacao(self):
+        pass
+
     @abstractmethod
     def condicaoFim(self,agentes=None):
         pass

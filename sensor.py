@@ -9,6 +9,7 @@ class Sensor:
     def getCampoVisao(self):
         return self.campoVisao
 
+#fazer função para rodar os digs
     def rodar(self):
         novoCampoVisao = []
         for v in self.campoVisao:
