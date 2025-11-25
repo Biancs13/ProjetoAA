@@ -167,7 +167,7 @@ def verificaFicheiro(resultado):
         elif type(limite) is not int:
             return False
 
-    def valida_coordenada(c_str, nome_campo):
+    def valida_coordenada(c_str):
         c = int(c_str)
         if c < 0 or c >= tamanho_grelha_int:
             return False,None
@@ -175,7 +175,7 @@ def verificaFicheiro(resultado):
             return False,None
         return True, c
 
-    def valida_posicao(pos_str, nome_entidade, entidade_id_ou_nome):
+    def valida_posicao(pos_str):
         if not (pos_str.startswith('(') and pos_str.endswith(')') and ',' in pos_str):
             return False
         x_str, y_str = pos_str.strip("()").split(',')
@@ -205,7 +205,7 @@ def verificaFicheiro(resultado):
             return False
         agente_ids.add(agente_id)
 
-        valido = valida_posicao(pos_str, "Agente", id_str)
+        valido = valida_posicao(pos_str)
         if not valido:
             return False
         ang_int =int(ang_str)
@@ -224,7 +224,7 @@ def verificaFicheiro(resultado):
         elif type(idAg) is not int:
             return False
 
-        def valida_vetor(v_str, vetor_nome):
+        def valida_vetor(v_str):
             if not (v_str.startswith('(') and v_str.endswith(')') and ',' in v_str):
                 return False
             x_str, y_str = v_str.strip("()").split(',')
@@ -235,7 +235,7 @@ def verificaFicheiro(resultado):
             return True
 
         for j, v_str in enumerate([v1_str, v2_str, v3_str]):
-            valido = valida_vetor(v_str, f"Vetor {j+1}")
+            valido = valida_vetor(v_str)
             if not valido:
                 return False
 
@@ -245,7 +245,7 @@ def verificaFicheiro(resultado):
 
         _, nome_str, pos_str, coletavel_str, solido_str = ele
 
-        valido = valida_posicao(pos_str, "Elemento", nome_str)
+        valido = valida_posicao(pos_str)
         if not valido:
             return False
 
