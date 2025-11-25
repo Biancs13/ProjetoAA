@@ -9,6 +9,7 @@ from vetor import Vetor
 
 class MotorSimulacao:
     def __init__(self,modo,agentes,ambiente,tipo):
+        print("entrei construtor")
         self.agentes = agentes
         self.ambiente = ambiente
         self.tipo = tipo #pode ser F ou R
@@ -18,8 +19,10 @@ class MotorSimulacao:
         return self.agentes
 
     def executa(self):
+        print(self.representa())
         while not self.ambiente.condicaoFim(self.agentes):
             for agente in self.agentes:
+                print(agente)
                 obs,pos = self.ambiente.observacaoParaAgente(agente)
                 agente.observacao(obs)
                 novaPos, novoAng = agente.ageAleatorio(self.ambiente.tamanhoGrelha)
@@ -29,12 +32,12 @@ class MotorSimulacao:
                     if ele is not None and ele.isColetavel():
                         (agente.coleta(ele))
             print(self.representa())
-            sleep(1) #Quando queremos testar
+            sleep(0.5) #Quando queremos testar
 
 
     def representa(self):
         pos_agentes = [a.getPosicao() for a in self.agentes]
-        pos_vistas = [self.ambiente.observacaoParaAgente(a)[1] for a in self.agentes]
+        pos_vistas = [pos for a in self.agentes for pos in self.ambiente.observacaoParaAgente(a)[1] ]
         linhas = []
         for y in range(self.ambiente.tamanhoGrelha):
             linha = []
@@ -53,9 +56,10 @@ class MotorSimulacao:
         return "\n".join(linhas)
 
 def cria(ficheiro):
-    modo,tipo,tempoLim, tamanhoGrelha, agentes_str, sensores, elementos = lerFicheiro(ficheiro)
+    modo,tipo,tempoLim, tamanhoGrelha, agentes_str, sensores, elementos_str = lerFicheiro(ficheiro)
     agentes = []
-    if verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes, sensores, elementos]):
+    print(verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes, sensores, elementos_str]))
+    if verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes_str, sensores, elementos_str]):
         modo = modo.strip()
         tipo = tipo.strip()
         tamanhoGrelha = int(tamanhoGrelha.strip())
@@ -85,15 +89,17 @@ def cria(ficheiro):
                 if ag.id == idAg:
                     ag.instala(sensor)
 
-        for ele in elementos:
+        for ele in elementos_str:
             _, nome, pos, coletavel, solido = ele
             x,y = pos.strip("()").split(',')
             posicao = Posicao(int(x),int(y))
 
             elemento = Elemento(nome,posicao,bool(coletavel),bool(solido))
             ambiente.adicionar(elemento,posicao)
-
-        return MotorSimulacao(modo,agentes,ambiente,tipo)
+        ms = MotorSimulacao(modo,agentes,ambiente,tipo)
+        print(type(ms))
+        print("MS:",ms)
+        return ms
 
 def lerFicheiro(nome):
     fich = open(nome, "r")
@@ -164,17 +170,17 @@ def verificaFicheiro(resultado):
     def valida_coordenada(c_str, nome_campo):
         c = int(c_str)
         if c < 0 or c >= tamanho_grelha_int:
-            return False
+            return False,None
         elif type(c) is not int:
-            return False
+            return False,None
         return True, c
 
     def valida_posicao(pos_str, nome_entidade, entidade_id_ou_nome):
         if not (pos_str.startswith('(') and pos_str.endswith(')') and ',' in pos_str):
             return False
         x_str, y_str = pos_str.strip("()").split(',')
-        val_x, res_x = valida_coordenada(x_str.strip(), "Coordenada X")
-        val_y, res_y = valida_coordenada(y_str.strip(), "Coordenada Y")
+        val_x, res_x = valida_coordenada(x_str.strip())
+        val_y, res_y = valida_coordenada(y_str.strip())
 
         if not val_x:
             return False

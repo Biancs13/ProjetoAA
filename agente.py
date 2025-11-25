@@ -42,18 +42,17 @@ class Agente:
         while True:
             acao = getAcaoAleatoria()
             novaPos, novoAng = atuar(self, acao)
-
-            if novoAng != self.angulo:
-                return novaPos, novoAng
             if dentroLimites(novaPos, maxGrid):
+                print(acao)
                 return novaPos, novoAng
             #return novaPos,novoAng
 
 
     def rodar(self,novoAng):
         if self.sensor is not None:
+            rotacao = (novoAng - self.angulo) % 360
             self.angulo = novoAng
-            self.sensor.rodar()
+            self.sensor.rodar(rotacao)
 
     def coleta(self,elemento):
         if elemento.isColetavel():
