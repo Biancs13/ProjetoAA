@@ -2,6 +2,7 @@ class Elemento:
     def __init__(self,nome,pontos = 0, coletavel=False,solido=False):
         self.id = (int(coletavel),int(solido),pontos)
         self.nome = nome
+        print(f"nome: {self.nome} é solido: {solido} e coletavel: {coletavel} ")
 
     def getId(self):
         return self.id

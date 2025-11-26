@@ -2,7 +2,7 @@ from motorSimulacao import MotorSimulacao, cria
 
 
 def main():
-    motor = cria("simulacao_farol.txt")
+    motor = cria("simulacao_recolecao.txt")
     print(motor)
     motor.executa()
 

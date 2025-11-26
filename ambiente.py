@@ -1,11 +1,11 @@
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 from elemento import Elemento
 from observacao import Observacao
 from posicao import Posicao, dentroLimites
 
 
-class Ambiente:
+class Ambiente(ABC):
 
     def __init__(self,tamanhoGrelha):
         self.grelha = {Posicao(x,y): None for x in range(tamanhoGrelha) for y in range(tamanhoGrelha)}
@@ -16,11 +16,13 @@ class Ambiente:
         print(" ".join(str(v) for v in sensor.getCampoVisao()))
         observacao = Observacao()
         posicoes = []
-        for v in sensor.getCampoVisao():
+        i = 0
+        for v in sensor.getCampoVisao(): #Está ordenado esq, frente, dta
             posicao = v.soma(agente.getPosicao())
             if dentroLimites(posicao,self.tamanhoGrelha):
                 posicoes.append(posicao)
-                observacao.adicionar(v,self.grelha[posicao].getId() if self.grelha[posicao] is not None else None)
+                observacao.adicionar(self.grelha[posicao].getId() if self.grelha[posicao] is not None else None,i)
+                i += 1
         return observacao,posicoes
 
 
@@ -42,16 +44,16 @@ class Ambiente:
     def getElemento(self,pos):
         return self.grelha[pos]
 
-    def atualizacao(self):
-        pass
+    #Temos de receber a nova posição do agente para verificar se foi algo coletado, não?
+    def atualizacao(self,novaPosAgente = None):
+        if novaPosAgente is not None:
+            elemento = self.grelha[novaPosAgente]
+            if elemento is not None and elemento.isColetavel():
+                self.grelha[novaPosAgente] = None
+
 
     @abstractmethod
     def condicaoFim(self,agentes=None):
         pass
 
-ambiente = Ambiente(20)
-elemento = Elemento("parede", -10, False, True)
-print(ambiente.grelha)
-ambiente.adicionar(elemento,Posicao(1,1))
-print(ambiente)
 

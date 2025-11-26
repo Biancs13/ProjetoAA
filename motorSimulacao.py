@@ -1,9 +1,12 @@
 from time import sleep
 
+from AgenteFixo import AgenteFixo
 from agente import Agente
 from ambiente import Ambiente
-from posicao import Posicao
+from farol import Farol
+from posicao import Posicao, dentroLimites
 from elemento import Elemento
+from recolecao import Recolecao
 from sensor import Sensor
 from vetor import Vetor
 
@@ -22,17 +25,24 @@ class MotorSimulacao:
         print(self.representa())
         while not self.ambiente.condicaoFim(self.agentes):
             for agente in self.agentes:
-                print(agente)
                 obs,pos = self.ambiente.observacaoParaAgente(agente)
                 agente.getObservacao(obs)
                 novaPos, novoAng = agente.ageAleatorio(self.ambiente.tamanhoGrelha)
-                ele = self.ambiente.getElemento(novaPos)
-                if ele is None or not ele.isSolido():
-                    agente.alterar(novaPos, novoAng)
-                    if ele is not None and ele.isColetavel():
-                        (agente.coleta(ele))
+                if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
+                    ele = self.ambiente.getElemento(novaPos)
+                    if ele is None or (ele is not None and not ele.isSolido()):
+                        agente.alterar(novaPos, novoAng)
+                        if ele is not None and ele.isColetavel():
+                            (agente.coleta(ele))
+                            self.ambiente.atualizacao(novaPos)
+                        if ele is not None and self.tipo == "R" and ele.getNome() == "ninho":
+                            pts = agente.getPontosColetaveis()
+                            self.ambiente.recolher(pts)
             print(self.representa())
             sleep(0.5) #Quando queremos testar
+
+    def obterEstadoAtual(self):
+        obs = self.ambiente.getObservacao(self.agentes)
 
 
     def representa(self):
@@ -60,17 +70,19 @@ def cria(ficheiro):
     agentes = []
     print(verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes, sensores, elementos_str]))
     if verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes_str, sensores, elementos_str]):
-        modo = modo.strip()
-        tipo = tipo.strip()
         tamanhoGrelha = int(tamanhoGrelha.strip())
-        ambiente = Ambiente(tamanhoGrelha)
+        tipo = tipo.strip()
+        if tipo == "R":
+            ambiente = Recolecao(tamanhoGrelha,int(tempoLim))
+        elif tipo == "F":
+            ambiente = Farol(tamanhoGrelha)
+        modo = modo.strip()
         for ag in agentes_str:
             _, id, pos, ang = ag
             x,y = pos.strip("()").split(',')
             posicao = Posicao(int(x),int(y))
             angulo = int(ang)
-
-            agente = Agente(id,posicao,angulo)
+            agente = AgenteFixo(id,posicao,angulo)
             agentes.append(agente)
 
         #alterar de sítio
@@ -90,11 +102,13 @@ def cria(ficheiro):
                     ag.instala(sensor)
 
         for ele in elementos_str:
-            _, nome, pos, coletavel, solido = ele
+            _, nome, pos, coletavel, solido, pts = ele
             x,y = pos.strip("()").split(',')
             posicao = Posicao(int(x),int(y))
-
-            elemento = Elemento(nome,posicao,bool(coletavel),bool(solido))
+            pts = int(pts.strip())
+            solido_bool = True if solido == "True" else False
+            coletavel_bool = True if coletavel == "True" else False
+            elemento = Elemento(nome, pts, coletavel_bool, solido_bool)
             ambiente.adicionar(elemento,posicao)
         ms = MotorSimulacao(modo,agentes,ambiente,tipo)
         print(type(ms))
@@ -114,7 +128,7 @@ def lerFicheiro(nome):
     elementosFich = []
 
     i = 2
-
+    tipoFich = linhas[1].strip()
     if tipoFich == "R":
         tempoLim = linhas[i]
         i += 1
@@ -240,10 +254,10 @@ def verificaFicheiro(resultado):
                 return False
 
     for i, ele in enumerate(elementos):
-        if len(ele) != 5:
+        if len(ele) != 6:
             return False
 
-        _, nome_str, pos_str, coletavel_str, solido_str = ele
+        _, nome_str, pos_str, coletavel_str, solido_str,pts_str = ele
 
         valido = valida_posicao(pos_str)
         if not valido:
@@ -252,6 +266,9 @@ def verificaFicheiro(resultado):
         if coletavel_str not in ['True', 'False']:
             return False
         if solido_str not in ['True', 'False']:
+            return False
+        pts = int(pts_str)
+        if type(pts) is not int:
             return False
 
     return True

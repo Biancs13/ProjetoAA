@@ -1,14 +1,16 @@
 import random
+from abc import abstractmethod, ABC
+
 from acao import *
 from posicao import dentroLimites
 
 
-class Agente:
-    def __init__(self, id, posicaoAtual, politica, angulo=0):
+class Agente(ABC):
+    def __init__(self, id, posicaoAtual, angulo=0):
         self.id = id
         self.posicaoAtual = posicaoAtual
         self.angulo = angulo
-        self.politica = politica
+        #self.politica = politica
         self.sensor = None
         self.coletaveis = []
         self.observavaoAtual = None
@@ -22,10 +24,11 @@ class Agente:
     def getObservacao(self,obs):
         self.observavaoAtual = obs
 
-    #Não Altera o agente
+    @abstractmethod
     def age(self):
         pass
 
+    @abstractmethod
     def avaliacaoEstadoAtual(self,recompensa):
         pass
 
@@ -53,19 +56,24 @@ class Agente:
         if self.sensor is not None:
             rotacao = (novoAng - self.angulo) % 360
             self.angulo = novoAng
-            self.sensor.rodar(rotacao)
+            self.sensor.rodar(rotacao,novoAng)
 
     def coleta(self,elemento):
         if elemento.isColetavel():
             self.coletaveis.append(elemento)
 
+    def getPontosColetaveis(self):
+        pts = 0
+        for c in self.coletaveis:
+            pts += c.getPontos()
+        return pts
 
     def alterar(self,novaPos,novoAng):
         self.rodar(novoAng)
         self.posicaoAtual = novaPos
 
     def __str__(self):
-        return (f"Agente {self.id}: Posicao={self.posicaoAtual}, " f"Angulo={self.angulo}°, Politica={self.politica}")
+        return (f"Agente {self.id}: Posicao={self.posicaoAtual}, " f"Angulo={self.angulo}°")
 
 
 def cria(ficheiro_agentes):
