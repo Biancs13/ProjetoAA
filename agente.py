@@ -6,7 +6,7 @@ from posicao import dentroLimites
 
 
 class Agente(ABC):
-    def __init__(self, id, posicaoAtual, angulo=0):
+    def __init__(self, id, posicaoAtual, tipo, angulo=0):
         self.id = id
         self.posicaoAtual = posicaoAtual
         self.angulo = angulo
@@ -14,6 +14,7 @@ class Agente(ABC):
         self.sensor = None
         self.coletaveis = []
         self.observavaoAtual = None
+        self.tipo = tipo #Pode ser F ou R
 
     def getId(self):
         return self.id

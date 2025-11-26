@@ -82,7 +82,7 @@ def cria(ficheiro):
             x,y = pos.strip("()").split(',')
             posicao = Posicao(int(x),int(y))
             angulo = int(ang)
-            agente = AgenteFixo(id,posicao,angulo)
+            agente = AgenteFixo(id,posicao,tipo,angulo)
             agentes.append(agente)
 
         #alterar de sítio

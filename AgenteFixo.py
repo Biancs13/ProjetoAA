@@ -5,8 +5,8 @@ from agente import Agente
 
 class AgenteFixo(Agente):
 
-    def __init__(self, id, posicaoInicial, angulo):
-        super().__init__(id,posicaoInicial,angulo)
+    def __init__(self, id, posicaoInicial, tipo, angulo):
+        super().__init__(id,posicaoInicial,tipo, angulo)
         self.posiccoesBloqueadas = []
         self.ultimaPosicao = posicaoInicial
 
