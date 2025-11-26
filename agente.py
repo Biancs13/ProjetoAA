@@ -4,11 +4,12 @@ from posicao import dentroLimites
 
 
 class Agente:
-    def __init__(self, id, posicaoAtual,angulo=0):
+    def __init__(self, id, posicaoAtual, politica, angulo=0):
         self.id = id
         self.posicaoAtual = posicaoAtual
-        self.sensor = None
         self.angulo = angulo
+        self.politica = politica
+        self.sensor = None
         self.coletaveis = []
         self.observavaoAtual = None
 
@@ -18,7 +19,7 @@ class Agente:
     def getPosicao(self):
         return self.posicaoAtual
 
-    def observacao(self,obs):
+    def getObservacao(self,obs):
         self.observavaoAtual = obs
 
     #Não Altera o agente
@@ -64,8 +65,47 @@ class Agente:
         self.posicaoAtual = novaPos
 
     def __str__(self):
-        return f"Agente {self.id}: Posicao={self.posicaoAtual}, Angulo={self.angulo}°"
+        return (f"Agente {self.id}: Posicao={self.posicaoAtual}, " f"Angulo={self.angulo}°, Politica={self.politica}")
 
-#Lara
-def cria(linha):
-    pass
+
+def cria(ficheiro_agentes):
+    # ["AG","1","(1,1)","0","F"]
+
+    agentes_str = lerAgentes(ficheiro_agentes)
+    agentes = []
+    for ag in agentes_str:
+        _, id, pos, ang, politica = ag
+
+        x_str, y_str = pos.strip("()").split(',')
+        posicao = Posicao(int(x_str), int(y_str))
+        angulo = int(ang)
+        agente = Agente(id, posicao, politica, angulo)
+        agentes.append(agente)
+
+    return agentes
+
+
+def lerAgentes(ficheiro):
+    fich = open(ficheiro, "r")
+    linhas = fich.readlines()
+    fich.close()
+
+    agentesFich = []
+
+    for linha in linhas:
+        linha = linha.strip()
+        if not linha or linha.startswith(";"):
+            continue
+        partes = linha.split()
+        if partes[0] == "AG":
+            agentesFich.append(partes)
+
+    return agentesFich
+
+def main():
+    agentes = cria("agentes")
+    for ag in agentes:
+        print(ag)
+
+if __name__ == "__main__":
+    main()

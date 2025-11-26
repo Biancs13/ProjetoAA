@@ -24,7 +24,7 @@ class MotorSimulacao:
             for agente in self.agentes:
                 print(agente)
                 obs,pos = self.ambiente.observacaoParaAgente(agente)
-                agente.observacao(obs)
+                agente.getObservacao(obs)
                 novaPos, novoAng = agente.ageAleatorio(self.ambiente.tamanhoGrelha)
                 ele = self.ambiente.getElemento(novaPos)
                 if ele is None or not ele.isSolido():
