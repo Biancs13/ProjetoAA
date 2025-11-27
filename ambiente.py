@@ -2,18 +2,17 @@ from abc import abstractmethod, ABC
 
 from elemento import Elemento
 from observacao import Observacao
-from posicao import Posicao, dentroLimites
+from posicao import Posicao, dentroLimites, getDistancia
 
 
 class Ambiente(ABC):
 
     def __init__(self,tamanhoGrelha):
-        self.grelha = {Posicao(x,y): None for x in range(tamanhoGrelha) for y in range(tamanhoGrelha)}
+        self.grelha = {Posicao(x,y): Elemento("Vazio",-1,-1,-1) for x in range(tamanhoGrelha) for y in range(tamanhoGrelha)}
         self.tamanhoGrelha = tamanhoGrelha
 
     def observacaoParaAgente(self,agente):
         sensor = agente.getSensor()
-        print(" ".join(str(v) for v in sensor.getCampoVisao()))
         observacao = Observacao()
         posicoes = []
         i = 0
@@ -21,8 +20,10 @@ class Ambiente(ABC):
             posicao = v.soma(agente.getPosicao())
             if dentroLimites(posicao,self.tamanhoGrelha):
                 posicoes.append(posicao)
-                observacao.adicionar(self.grelha[posicao].getId() if self.grelha[posicao] is not None else None,i)
-                i += 1
+                observacao.adicionar(self.grelha[posicao].getId(),i)
+            else:
+                observacao.adicionar(None, i)
+            i += 1
         return observacao,posicoes
 
 
@@ -30,26 +31,32 @@ class Ambiente(ABC):
         reward = 100
         return reward
 
-    def adicionar(self,elemento,pos):
-        if self.grelha[pos] is None:
+    def adicionar(self, elemento, pos):
+        if self.grelha[pos].getNome() == "Vazio":
             self.grelha[pos] = elemento
             return True
         else:
             return False
 
     def getElementos(self,tipo_Elemento):
-        elementos = {pos: ele for pos, ele in self.grelha.items() if ele is not None and ele.getNome() == tipo_Elemento}
+        elementos = {pos: ele for pos, ele in self.grelha.items() if ele != (-1,-1,-1) and ele.getNome() == tipo_Elemento}
         return elementos
+
+    def getPosicaoElementoMaisProximo(self,posAgente,tipo_elemento):
+        elementos = self.getElementos(tipo_elemento)
+        if not elementos:      # ← quando não há nenhum elemento desse tipo
+            return None
+        return min(elementos, key=lambda x: getDistancia(x,posAgente))
 
     def getElemento(self,pos):
         return self.grelha[pos]
 
     #Temos de receber a nova posição do agente para verificar se foi algo coletado, não?
     def atualizacao(self,novaPosAgente = None):
-        if novaPosAgente is not None:
+        if novaPosAgente != (-1,-1,-1):
             elemento = self.grelha[novaPosAgente]
-            if elemento is not None and elemento.isColetavel():
-                self.grelha[novaPosAgente] = None
+            if elemento != (-1,-1,-1) and elemento.isColetavel():
+                self.grelha[novaPosAgente] = (-1,-1,-1)
 
 
     @abstractmethod

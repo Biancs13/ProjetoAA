@@ -1,3 +1,7 @@
+import math
+
+
+
 class Posicao:
     def __init__(self,x,y):
         self.x = x
@@ -24,4 +28,5 @@ def dentroLimites(pos,tamanhoGrelha):
     return 0 <= pos.x < tamanhoGrelha and 0 <= pos.y < tamanhoGrelha
 
 def getDistancia(pos1,pos2):
-    return abs(pos1.x - pos2.x) + abs(pos1.y - pos2.y)
+    return math.hypot(pos1.x-pos2.x,pos1.y-pos2.y)
+

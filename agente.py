@@ -6,15 +6,16 @@ from posicao import dentroLimites
 
 
 class Agente(ABC):
-    def __init__(self, id, posicaoAtual, tipo, angulo=0):
+    def __init__(self, id, posicaoAtual, tipoProblema, angulo):
         self.id = id
         self.posicaoAtual = posicaoAtual
         self.angulo = angulo
         #self.politica = politica
         self.sensor = None
         self.coletaveis = []
-        self.observavaoAtual = None
-        self.tipo = tipo #Pode ser F ou R
+        self.observacaoAtual = None
+        self.estadoAtual = None
+        self.tipoProblema = tipoProblema #Pode ser F ou R
 
     def getId(self):
         return self.id
@@ -22,8 +23,30 @@ class Agente(ABC):
     def getPosicao(self):
         return self.posicaoAtual
 
-    def getObservacao(self,obs):
-        self.observavaoAtual = obs
+    def observacao(self,obs):
+        self.observacaoAtual = obs
+
+    def atualizarEstadoAtual(self,direcaoObj1,direcaoObj2 = None):
+        novoEstado = []
+        novoEstado.append(self.angulo/360)# o angulo fica em 0, 0.25, 0.5 ou 0.75 para indicar a orientação
+        print(self.observacaoAtual)
+        for elemento in self.observacaoAtual.getElementos():
+            if elemento is None:
+                novoEstado.extend([-2, -2, -2])
+            else:
+                novoEstado.extend(elemento)
+        if self.tipoProblema == "F":
+            novoEstado.append(direcaoObj1.x)
+            novoEstado.append(direcaoObj1.y)
+            self.estadoAtual = novoEstado
+        elif self.tipoProblema == "R":
+            novoEstado.append(len(self.coletaveis)/100)
+            novoEstado.append(direcaoObj1.x)
+            novoEstado.append(direcaoObj1.y)
+            novoEstado.append(direcaoObj2.x)
+            novoEstado.append(direcaoObj2.y)
+            self.estadoAtual = novoEstado
+        print(self.sensor)
 
     @abstractmethod
     def age(self):
@@ -36,7 +59,11 @@ class Agente(ABC):
     def instala(self,sensor):
         if self.sensor is None:
             self.sensor = sensor
+            if self.angulo != 0:
+                sensor.rodar(self.angulo,self.angulo)
         else:
+            if self.angulo != 0:
+                sensor.rodar(self.angulo,self.angulo)
             self.sensor.getCampoVisao().append(sensor.getCampoVisao())
 
     def getSensor(self):
