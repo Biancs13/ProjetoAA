@@ -99,28 +99,5 @@ def melhor_acao(angA,angD):
             return Acao.FRENTE
 
 
-def angulo_desvio(vetor_objetivo, acao, angulo_agente):
-    acoes_locais = {
-        Acao.FRENTE: (1, 0),
-        Acao.ESQUERDA: (0, 1),
-        Acao.DIREITA: (0, -1),
-        Acao.MEIA_VOLTA: (-1, 0)
-    }
-    x, y = acoes_locais[acao]
-
-    rad = math.radians(angulo_agente)
-    x_rot = x * math.cos(rad) - y * math.sin(rad)
-    y_rot = x * math.sin(rad) + y * math.cos(rad)
-
-    fx, fy = vetor_objetivo.x, vetor_objetivo.y
-    dot = x_rot * fx + y_rot * fy
-    mag_a = math.sqrt(x_rot ** 2 + y_rot ** 2)
-    mag_f = math.sqrt(fx ** 2 + fy ** 2)
-
-    if mag_a == 0 or mag_f == 0:
-        return math.pi
-    cos_theta = max(min(dot / (mag_a * mag_f), 1), -1)
-    return math.acos(cos_theta)
-
 
 

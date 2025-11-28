@@ -4,6 +4,3 @@ F
 AG 1 (0,0) 90
 S 1 (0,-1) (0,1) (1,0)
 E farol (3,3) False False 100
-E parede (2,2) False True 0
-E parede (2,3) False True 0
-E parede (2,4) False True 0

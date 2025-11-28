@@ -43,8 +43,12 @@ class Agente(ABC):
             novoEstado.append(len(self.coletaveis)/100)
             novoEstado.append(direcaoObj1.x)
             novoEstado.append(direcaoObj1.y)
-            novoEstado.append(direcaoObj2.x)
-            novoEstado.append(direcaoObj2.y)
+            if direcaoObj2 is not None:
+                novoEstado.append(direcaoObj2.x)
+                novoEstado.append(direcaoObj2.y)
+            else:
+                novoEstado.append(-1)
+                novoEstado.append(-1)
             self.estadoAtual = novoEstado
         print(self.sensor)
 

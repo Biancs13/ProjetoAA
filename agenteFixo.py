@@ -59,7 +59,9 @@ class AgenteFixo(Agente):
                 numColetaveis = self.estadoAtual[10]
                 direcaoNinho = Vetor(self.estadoAtual[11],self.estadoAtual[12])
                 direcaoColetavel = Vetor(self.estadoAtual[13],self.estadoAtual[14])
-                if(numColetaveis >= 1):
+                if self.estadoAtual[13] == -1 and self.estadoAtual[14] == -1:
+                    melhorAcao = melhor_acao_para_direcao(angulo, direcaoNinho)
+                elif (numColetaveis >= 1):
                     melhorAcao = melhor_acao_para_direcao(angulo, direcaoNinho)
                 else:
                     melhorAcao = melhor_acao_para_direcao(angulo, direcaoColetavel)

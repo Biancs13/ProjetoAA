@@ -39,10 +39,10 @@ class MotorSimulacao:
                     ele = self.ambiente.getElemento(novaPos)
                     if ele.getId() == (-1,-1,-1) or (ele != (-1,-1,-1) and not ele.isSolido()):
                         agente.alterar(novaPos, novoAng)
-                        if ele != (-1,-1,-1) and ele.isColetavel():
+                        if ele.getId() != (-1,-1,-1) and ele.isColetavel():
                             (agente.coleta(ele))
                             self.ambiente.atualizacao(novaPos)
-                        if ele != (-1,-1,-1) and self.tipo == "R" and ele.getNome() == "ninho":
+                        if ele.getId() != (-1,-1,-1) and self.tipo == "R" and ele.getNome() == "ninho":
                             pts = agente.getPontosColetaveis()
                             self.ambiente.recolher(pts)
             print(self.representa())
@@ -61,8 +61,12 @@ class MotorSimulacao:
                 agente.atualizarEstadoAtual(direcao1)
             elif self.tipo == "R":
                 direcao1 = getDirecao(agente.posicaoAtual,self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"ninho"))
-                direcao2 = getDirecao(agente.posicaoAtual,self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"ovo"))
-                agente.atualizarEstadoAtual(direcao1,direcao2)
+                posOvo = self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"ovo")
+                if posOvo is not None:
+                    direcao2 = getDirecao(agente.posicaoAtual,posOvo)
+                    agente.atualizarEstadoAtual(direcao1,direcao2)
+                else:
+                    agente.atualizarEstadoAtual(direcao1)
 
     def inicializarObservacao(self):
         for agente in self.agentes:

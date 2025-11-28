@@ -56,7 +56,7 @@ class Ambiente(ABC):
         if novaPosAgente != (-1,-1,-1):
             elemento = self.grelha[novaPosAgente]
             if elemento != (-1,-1,-1) and elemento.isColetavel():
-                self.grelha[novaPosAgente] = (-1,-1,-1)
+                self.grelha[novaPosAgente] = Elemento("Vazio",-1,-1,-1)
 
 
     @abstractmethod
