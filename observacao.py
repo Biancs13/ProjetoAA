@@ -1,7 +1,12 @@
 class Observacao:
-    def __init__(self,):
+    def __init__(self):
         self.elementos = [None,None,None]
 
     def adicionar(self, elemento, i):
-        if elemento is not None:
-            self.elementos[i] = elemento
+        self.elementos[i] = elemento
+
+    def getElementos(self):
+        return self.elementos
+
+    def __str__(self):
+        return f"Elementos: {self.elementos}"

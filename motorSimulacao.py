@@ -1,6 +1,7 @@
 from time import sleep
 
-from AgenteFixo import AgenteFixo
+from acao import atuar
+from agenteFixo import AgenteFixo
 from agente import Agente
 from ambiente import Ambiente
 from farol import Farol
@@ -8,34 +9,40 @@ from posicao import Posicao, dentroLimites
 from elemento import Elemento
 from recolecao import Recolecao
 from sensor import Sensor
-from vetor import Vetor
+from vetor import Vetor, getDirecao
+
 
 class MotorSimulacao:
     def __init__(self,modo,agentes,ambiente,tipo):
-        print("entrei construtor")
         self.agentes = agentes
         self.ambiente = ambiente
         self.tipo = tipo #pode ser F ou R
         self.modo = modo #pode ser T ou A
 
+
     def listaAgentes(self):
         return self.agentes
 
     def executa(self):
+        i = 1
         print(self.representa())
+        self.inicializarObservacao()
         while not self.ambiente.condicaoFim(self.agentes):
+            print(i)
+            self.atualizarEstadoAgentes()
             for agente in self.agentes:
-                obs,pos = self.ambiente.observacaoParaAgente(agente)
-                agente.getObservacao(obs)
-                novaPos, novoAng = agente.ageAleatorio(self.ambiente.tamanhoGrelha)
+                acao = agente.age()
+                novaPos, novoAng = atuar(agente, acao)
+                #novaPos, novoAng = agente.ageAleatorio(self.ambiente.tamanhoGrelha)
+                print(novaPos, novoAng)
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
-                    if ele is None or (ele is not None and not ele.isSolido()):
+                    if ele.getId() == (-1,-1,-1) or (ele != (-1,-1,-1) and not ele.isSolido()):
                         agente.alterar(novaPos, novoAng)
-                        if ele is not None and ele.isColetavel():
+                        if ele.getId() != (-1,-1,-1) and ele.isColetavel():
                             (agente.coleta(ele))
                             self.ambiente.atualizacao(novaPos)
-                        if ele is not None and self.tipo == "R" and ele.getNome() == "ninho":
+                        if ele.getId() != (-1,-1,-1) and self.tipo == "R" and ele.getNome() == "ninho":
                             pts = agente.getPontosColetaveis()
                             self.ambiente.recolher(pts)
             print(self.representa())
@@ -44,6 +51,27 @@ class MotorSimulacao:
     def obterEstadoAtual(self):
         obs = self.ambiente.getObservacao(self.agentes)
 
+    def atualizarEstadoAgentes(self):
+        for agente in self.agentes:
+            obs, pos = self.ambiente.observacaoParaAgente(agente)
+            agente.observacao(obs)
+            print("atualizando estado atual")
+            if self.tipo == "F":
+                direcao1 = getDirecao(agente.posicaoAtual,self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"farol"))
+                agente.atualizarEstadoAtual(direcao1)
+            elif self.tipo == "R":
+                direcao1 = getDirecao(agente.posicaoAtual,self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"ninho"))
+                posOvo = self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"ovo")
+                if posOvo is not None:
+                    direcao2 = getDirecao(agente.posicaoAtual,posOvo)
+                    agente.atualizarEstadoAtual(direcao1,direcao2)
+                else:
+                    agente.atualizarEstadoAtual(direcao1)
+
+    def inicializarObservacao(self):
+        for agente in self.agentes:
+            obs,_ = self.ambiente.observacaoParaAgente(agente)
+            agente.observacao(obs)
 
     def representa(self):
         pos_agentes = [a.getPosicao() for a in self.agentes]
@@ -59,6 +87,8 @@ class MotorSimulacao:
                 else:
                     elemento = self.ambiente.getElemento(Posicao(x, y))
                     if elemento is None:
+                        linha.append("_")
+                    elif elemento.getNome() == "Vazio":
                         linha.append(".")
                     else:
                         linha.append(str(elemento))
@@ -68,7 +98,6 @@ class MotorSimulacao:
 def cria(ficheiro):
     modo,tipo,tempoLim, tamanhoGrelha, agentes_str, sensores, elementos_str = lerFicheiro(ficheiro)
     agentes = []
-    print(verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes, sensores, elementos_str]))
     if verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes_str, sensores, elementos_str]):
         tamanhoGrelha = int(tamanhoGrelha.strip())
         tipo = tipo.strip()
@@ -82,6 +111,7 @@ def cria(ficheiro):
             x,y = pos.strip("()").split(',')
             posicao = Posicao(int(x),int(y))
             angulo = int(ang)
+            print(angulo)
             agente = AgenteFixo(id,posicao,tipo,angulo)
             agentes.append(agente)
 
@@ -111,8 +141,6 @@ def cria(ficheiro):
             elemento = Elemento(nome, pts, coletavel_bool, solido_bool)
             ambiente.adicionar(elemento,posicao)
         ms = MotorSimulacao(modo,agentes,ambiente,tipo)
-        print(type(ms))
-        print("MS:",ms)
         return ms
 
 def lerFicheiro(nome):

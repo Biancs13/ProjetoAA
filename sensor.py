@@ -28,7 +28,14 @@ class Sensor:
         self.ordenar(NovoAngulo)
 
     def ordenar(self,angulo):
-        self.campoVisao.sort(key=lambda v: anguloEntre(v, getVetorFrente(angulo)))
+        self.campoVisao.sort(key=lambda v: anguloEntre(v, getVetorFrente(angulo)), reverse=True)
+
+
+    def __str__(self):
+        string = ""
+        for v in self.campoVisao:
+            string += v.__str__()
+        return string
 
 
 def rodar(vetor,angulo):
