@@ -1,8 +1,9 @@
+import os
 from time import sleep
 
 from acao import atuar
 from agenteFixo import AgenteFixo
-from agente import Agente
+from agente import Agente, criaAgente
 from ambiente import Ambiente
 from farol import Farol
 from posicao import Posicao, dentroLimites
@@ -96,9 +97,9 @@ class MotorSimulacao:
         return "\n".join(linhas)
 
 def cria(ficheiro):
-    modo,tipo,tempoLim, tamanhoGrelha, agentes_str, sensores, elementos_str = lerFicheiro(ficheiro)
+    modo,tipo,tempoLim, tamanhoGrelha, agentes_str, elementos_str = lerFicheiro(ficheiro)
     agentes = []
-    if verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes_str, sensores, elementos_str]):
+    if verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes_str,elementos_str]):
         tamanhoGrelha = int(tamanhoGrelha.strip())
         tipo = tipo.strip()
         if tipo == "R":
@@ -107,29 +108,7 @@ def cria(ficheiro):
             ambiente = Farol(tamanhoGrelha)
         modo = modo.strip()
         for ag in agentes_str:
-            _, id, pos, ang = ag
-            x,y = pos.strip("()").split(',')
-            posicao = Posicao(int(x),int(y))
-            angulo = int(ang)
-            print(angulo)
-            agente = AgenteFixo(id,posicao,tipo,angulo)
-            agentes.append(agente)
-
-        #alterar de sítio
-        def stringParaVetor(v_str):
-            x_str, y_str = v_str.strip("()").split(',')
-            return Vetor(int(x_str), int(y_str))
-
-        for sen in sensores:
-            _, idAg, vetor1, vetor2, vetor3 = sen #confirmar se é assim
-
-            vetores = [vetor1,vetor2,vetor3]
-            campoVisao = [stringParaVetor(v) for v in vetores]
-            sensor = Sensor(campoVisao)
-
-            for ag in agentes:
-                if ag.id == idAg:
-                    ag.instala(sensor)
+            agentes.append(criaAgente(ag,tamanhoGrelha,tipo))
 
         for ele in elementos_str:
             _, nome, pos, coletavel, solido, pts = ele
@@ -170,7 +149,7 @@ def lerFicheiro(nome):
         partes = linha.split()
 
         if partes[0] == "AG":
-            agentesFich.append(partes)
+            agentesFich.append(partes[1])
 
         elif partes[0] == "S":
             sensoresFich.append(partes)
@@ -181,12 +160,12 @@ def lerFicheiro(nome):
         else:
             pass
 
-    resultado = [modoFich,tipoFich,tempoLim,tamanhoFich,agentesFich,sensoresFich,elementosFich]
+    resultado = [modoFich,tipoFich,tempoLim,tamanhoFich,agentesFich,elementosFich]
 
     return resultado
 
 def verificaFicheiro(resultado):
-    modo,tipo, tempoLim, tamanhoGrelha, agentes, sensores, elementos = resultado
+    modo,tipo, tempoLim, tamanhoGrelha, agentesFich, elementos = resultado
 
     modo = modo.strip()
     if modo not in ["A", "T"]:
@@ -196,17 +175,21 @@ def verificaFicheiro(resultado):
     if tipo not in ["R", "F"]:
         return False
 
+    if tipo == "R":
+        limite = int(tempoLim.strip())
+        if limite <= 10:
+            return False
+        elif type(limite) is not int:
+            return False
+
     tamanho_grelha_int = int(tamanhoGrelha.strip())
     if tamanho_grelha_int < 3:
         return False
     elif type(tamanho_grelha_int) is not int:
         return False
 
-    if tipo == "R":
-        limite = int(tempoLim.strip())
-        if limite <= 10:
-            return False
-        elif type(limite) is not int:
+    for agenteFich in agentesFich:
+        if not os.path.exists(agenteFich) or not os.path.isfile(agenteFich):
             return False
 
     def valida_coordenada(c_str):
@@ -229,57 +212,6 @@ def verificaFicheiro(resultado):
         if not val_y:
             return False
         return True
-
-    if not agentes:
-        return False
-
-    agente_ids = set()
-    for i, ag in enumerate(agentes):
-        if len(ag) != 4:
-            return False
-
-        _, id_str, pos_str, ang_str = ag
-
-        agente_id = int(id_str)
-        if agente_id in agente_ids:
-            return False
-        elif type(agente_id) is not int:
-            return False
-        agente_ids.add(agente_id)
-
-        valido = valida_posicao(pos_str)
-        if not valido:
-            return False
-        ang_int =int(ang_str)
-        if type(ang_int) is not int:
-            return False
-
-    for i, sen in enumerate(sensores):
-        if len(sen) != 5:
-            return False
-
-        _, idAg_str, v1_str, v2_str, v3_str = sen
-
-        idAg = int(idAg_str)
-        if idAg not in agente_ids:
-            return False
-        elif type(idAg) is not int:
-            return False
-
-        def valida_vetor(v_str):
-            if not (v_str.startswith('(') and v_str.endswith(')') and ',' in v_str):
-                return False
-            x_str, y_str = v_str.strip("()").split(',')
-            x_int = int(x_str.strip())
-            y_int = int(y_str.strip())
-            if type(x_int) is not int or type(y_int) is not int:
-                return False
-            return True
-
-        for j, v_str in enumerate([v1_str, v2_str, v3_str]):
-            valido = valida_vetor(v_str)
-            if not valido:
-                return False
 
     for i, ele in enumerate(elementos):
         if len(ele) != 6:
