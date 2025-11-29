@@ -1,8 +1,8 @@
 import copy
 import random
 from enum import Enum
-from posicao import Posicao
-from vetor import Vetor
+from posicao import *
+from vetor import Vetor, vetor_para_angulo, normalizarVetor
 
 
 class Acao(Enum):
@@ -51,3 +51,53 @@ def getVetorFrente(angulo):
         return Vetor(0,-1)
     else:
         raise ValueError(f"Angulo inválido: {angulo}")
+
+
+
+
+def melhor_acao_para_direcao(anguloAgente, direcao):
+    return melhor_acao(anguloAgente,vetor_para_angulo(direcao))
+
+
+def melhor_acao(angA,angD):
+    print(f"anguloA: {angA} | anguloD: {angD}")
+    if angA == 0:
+        if  angD < 45 or angD >= 315:
+            return Acao.FRENTE
+        elif 45 <= angD < 135:
+            return Acao.DIREITA
+        elif 135 <= angD < 225:
+            return Acao.MEIA_VOLTA
+        else:
+            return Acao.ESQUERDA
+    elif angA == 90:
+        if angD < 45 or angD >= 315:
+            return Acao.ESQUERDA
+        elif 45 <= angD < 135:
+            return Acao.FRENTE
+        elif 135 <= angD < 225:
+            return Acao.DIREITA
+        else:
+            return Acao.MEIA_VOLTA
+    elif angA == 180:
+        if angD < 45 or angD >= 315:
+            return Acao.MEIA_VOLTA
+        elif 45 <= angD < 135:
+            return Acao.ESQUERDA
+        elif 135 <= angD < 225:
+            return Acao.FRENTE
+        else:
+            return Acao.DIREITA
+    else:
+        if angD < 45 or angD >= 315:
+            return Acao.DIREITA
+        elif 45 <= angD < 135:
+            return Acao.MEIA_VOLTA
+        elif 135 <= angD < 225:
+            return Acao.ESQUERDA
+        else:
+            return Acao.FRENTE
+
+
+
+

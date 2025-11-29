@@ -10,13 +10,6 @@ class Recolecao(Ambiente):
         self.tempoInicial = time.time()
         self.totalPontosRecolhidos = 0
 
-    def getNinhoMaisProximo(self, agente):
-        ninhos = self.getElementos('ninho')
-        if not ninhos:
-            return None
-        agente_pos = agente.getPosicao()
-        ninho_mais_proximo = min(ninhos.items(), key=lambda item: item[0].getDistancia(agente_pos))
-        return ninho_mais_proximo
 
     def recolher(self,pontosTotais):
         self.totalPontosRecolhidos += pontosTotais
