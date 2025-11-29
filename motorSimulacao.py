@@ -3,7 +3,7 @@ from time import sleep
 
 from acao import atuar
 from agenteFixo import AgenteFixo
-from agente import Agente
+from agente import Agente, criaAgente
 from ambiente import Ambiente
 from farol import Farol
 from posicao import Posicao, dentroLimites
@@ -97,9 +97,9 @@ class MotorSimulacao:
         return "\n".join(linhas)
 
 def cria(ficheiro):
-    modo,tipo,tempoLim, tamanhoGrelha, agentes_str, sensores, elementos_str = lerFicheiro(ficheiro)
+    modo,tipo,tempoLim, tamanhoGrelha, agentes_str, elementos_str = lerFicheiro(ficheiro)
     agentes = []
-    if verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes_str, sensores, elementos_str]):
+    if verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes_str,elementos_str]):
         tamanhoGrelha = int(tamanhoGrelha.strip())
         tipo = tipo.strip()
         if tipo == "R":
@@ -108,29 +108,7 @@ def cria(ficheiro):
             ambiente = Farol(tamanhoGrelha)
         modo = modo.strip()
         for ag in agentes_str:
-            _, id, pos, ang = ag
-            x,y = pos.strip("()").split(',')
-            posicao = Posicao(int(x),int(y))
-            angulo = int(ang)
-            print(angulo)
-            agente = AgenteFixo(id,posicao,tipo,angulo)
-            agentes.append(agente)
-
-        #alterar de sítio
-        def stringParaVetor(v_str):
-            x_str, y_str = v_str.strip("()").split(',')
-            return Vetor(int(x_str), int(y_str))
-
-        for sen in sensores:
-            _, idAg, vetor1, vetor2, vetor3 = sen #confirmar se é assim
-
-            vetores = [vetor1,vetor2,vetor3]
-            campoVisao = [stringParaVetor(v) for v in vetores]
-            sensor = Sensor(campoVisao)
-
-            for ag in agentes:
-                if ag.id == idAg:
-                    ag.instala(sensor)
+            agentes.append(criaAgente(ag,tamanhoGrelha,tipo))
 
         for ele in elementos_str:
             _, nome, pos, coletavel, solido, pts = ele
@@ -171,7 +149,7 @@ def lerFicheiro(nome):
         partes = linha.split()
 
         if partes[0] == "AG":
-            agentesFich.append(partes)
+            agentesFich.append(partes[1])
 
         elif partes[0] == "S":
             sensoresFich.append(partes)
@@ -182,12 +160,12 @@ def lerFicheiro(nome):
         else:
             pass
 
-    resultado = [modoFich,tipoFich,tempoLim,tamanhoFich,agentesFich,sensoresFich,elementosFich]
+    resultado = [modoFich,tipoFich,tempoLim,tamanhoFich,agentesFich,elementosFich]
 
     return resultado
 
 def verificaFicheiro(resultado):
-    modo,tipo, tempoLim, tamanhoGrelha, agentesFich, sensores, elementos = resultado
+    modo,tipo, tempoLim, tamanhoGrelha, agentesFich, elementos = resultado
 
     modo = modo.strip()
     if modo not in ["A", "T"]:
@@ -216,7 +194,7 @@ def verificaFicheiro(resultado):
 
     def valida_coordenada(c_str):
         c = int(c_str)
-        if c < 0 or c >= tamanhoGrelha:
+        if c < 0 or c >= tamanho_grelha_int:
             return False,None
         elif type(c) is not int:
             return False,None

@@ -4,7 +4,6 @@ from acao import *
 from posicao import dentroLimites
 from sensor import Sensor
 
-
 class Agente(ABC):
     def __init__(self, id, posicaoAtual, tipoProblema, angulo):
         self.id = id
@@ -107,11 +106,12 @@ class Agente(ABC):
     def __str__(self):
         return (f"Agente {self.id}: Posicao={self.posicaoAtual}, " f"Angulo={self.angulo}°")
 
-def cria(ficheiro_agentes,tamanhoGrelha):
-    from agenteAleatorio import AgenteAleatorio
+
+def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema):
     from agenteFixo import AgenteFixo
-    from agenteGenetico import AgenteGenetico
     from agenteReforco import AgenteReforco
+    from agenteGenetico import AgenteGenetico
+    from agenteAleatorio import AgenteAleatorio
     fich = open(ficheiro_agentes,"r")
     ag = [linha.strip() for linha in fich.readlines()]
     if(verificaFicheiro(ag,tamanhoGrelha)):
@@ -122,13 +122,13 @@ def cria(ficheiro_agentes,tamanhoGrelha):
         angulo = int(ag[3])
 
         if politica == "fixo" :
-            agente = AgenteFixo(id, posicao, politica, angulo)
+            agente = AgenteFixo(id,posicao,tipoProblema, angulo)
         if politica == "genetico":
-            agente = AgenteGenetico(id, posicao, angulo)
+            agente = AgenteGenetico(id,tipoProblema, angulo)
         if politica == "reforco":
-            agente = AgenteReforco(id, posicao, angulo)
+            agente = AgenteReforco(id,tipoProblema, angulo)
         if politica == "aleatorio":
-            agente = AgenteAleatorio(id, posicao, angulo)
+            agente = AgenteAleatorio(id,tipoProblema, angulo)
 
         sen = ag[4].split()
         campoVisao =[]
