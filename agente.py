@@ -207,7 +207,7 @@ def verificaFicheiro(agente,tamanhoGrelha):
 
 def main():
     tamanho_da_grelha = 10
-    agente = cria("agentes", tamanho_da_grelha)
+    agente = cria("agente.txt", tamanho_da_grelha)
     if agente:
         print(" Criação do Agente SUCESSO:")
         print(agente)
