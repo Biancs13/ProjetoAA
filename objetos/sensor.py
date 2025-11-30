@@ -1,7 +1,7 @@
 import math
 
-from acao import getVetorFrente
-from vetor import Vetor, multiplicar_vetor_matriz
+from objetos.acao import getVetorFrente
+from objetos.vetor import Vetor, multiplicar_vetor_matriz
 
 
 #Para manter o sensor sempre ordenado em esquerda frente direita (independentemente do angulo)

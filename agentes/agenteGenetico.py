@@ -1,6 +1,7 @@
 from abc import ABC
 
-from agente import Agente
+from agentes.agente import Agente
+
 
 
 class AgenteGenetico(Agente):

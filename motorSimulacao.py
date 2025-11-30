@@ -1,16 +1,13 @@
 import os
 from time import sleep
 
-from acao import atuar
-from agenteFixo import AgenteFixo
-from agente import Agente, criaAgente
-from ambiente import Ambiente
-from farol import Farol
-from posicao import Posicao, dentroLimites
-from elemento import Elemento
-from recolecao import Recolecao
-from sensor import Sensor
-from vetor import Vetor, getDirecao
+from objetos.acao import atuar
+from agentes.agente import criaAgente
+from ambientes.farol import Farol
+from objetos.posicao import Posicao, dentroLimites
+from objetos.elemento import Elemento
+from ambientes.recolecao import Recolecao
+from objetos.vetor import getDirecao
 
 
 class MotorSimulacao:
@@ -34,7 +31,7 @@ class MotorSimulacao:
             for agente in self.agentes:
                 acao = agente.age()
                 novaPos, novoAng = atuar(agente, acao)
-                #novaPos, novoAng = agente.ageAleatorio(self.ambiente.tamanhoGrelha)
+                #novaPos, novoAng = agente.ageAleatorio(self.ambientes.tamanhoGrelha)
                 print(novaPos, novoAng)
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
@@ -108,7 +105,8 @@ def cria(ficheiro):
             ambiente = Farol(tamanhoGrelha)
         modo = modo.strip()
         for ag in agentes_str:
-            agentes.append(criaAgente(ag,tamanhoGrelha,tipo))
+            path = "agentes/"+ag
+            agentes.append(criaAgente(path,tamanhoGrelha,tipo))
 
         for ele in elementos_str:
             _, nome, pos, coletavel, solido, pts = ele
@@ -189,7 +187,8 @@ def verificaFicheiro(resultado):
         return False
 
     for agenteFich in agentesFich:
-        if not os.path.exists(agenteFich) or not os.path.isfile(agenteFich):
+        path = "agentes/" + agenteFich
+        if not os.path.exists(path) or not os.path.isfile(path):
             return False
 
     def valida_coordenada(c_str):

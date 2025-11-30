@@ -1,0 +1,4 @@
+1000
+500
+0.01
+simulacao_farol_genetico.txt

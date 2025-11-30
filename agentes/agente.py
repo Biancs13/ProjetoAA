@@ -1,8 +1,7 @@
-import random
 from abc import abstractmethod, ABC
-from acao import *
-from posicao import dentroLimites
-from sensor import Sensor
+from objetos.acao import *
+from objetos.posicao import dentroLimites
+from objetos.sensor import Sensor
 
 class Agente(ABC):
     def __init__(self, id, posicaoAtual, tipoProblema, angulo):
@@ -108,10 +107,10 @@ class Agente(ABC):
 
 
 def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema):
-    from agenteFixo import AgenteFixo
-    from agenteReforco import AgenteReforco
-    from agenteGenetico import AgenteGenetico
-    from agenteAleatorio import AgenteAleatorio
+    from agentes.agenteFixo import AgenteFixo
+    from agentes.agenteReforco import AgenteReforco
+    from agentes.agenteGenetico import AgenteGenetico
+    from agentes.agenteAleatorio import AgenteAleatorio
     fich = open(ficheiro_agentes,"r")
     ag = [linha.strip() for linha in fich.readlines()]
     if(verificaFicheiro(ag,tamanhoGrelha)):

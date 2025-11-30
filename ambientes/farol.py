@@ -1,5 +1,5 @@
-from ambiente import Ambiente
-from posicao import getDistancia
+from ambientes.ambiente import Ambiente
+from objetos.posicao import getDistancia
 
 class Farol(Ambiente):
     def __init__(self,tamanho):

@@ -1,6 +1,6 @@
 import time
 
-from ambiente import Ambiente
+from ambientes.ambiente import Ambiente
 
 
 class Recolecao(Ambiente):

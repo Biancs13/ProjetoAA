@@ -1,11 +1,11 @@
 from time import sleep
 
-from ambiente import Ambiente
-from elemento import Elemento
-from posicao import Posicao
-from agente import Agente
-from sensor import Sensor
-from vetor import Vetor
+from ambientes import Ambiente
+from objetos.elemento import Elemento
+from objetos.posicao import Posicao
+from agentes.agente import Agente
+from objetos.sensor import Sensor
+from objetos.vetor import Vetor
 
 
 def main():

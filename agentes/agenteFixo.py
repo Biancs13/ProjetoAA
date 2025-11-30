@@ -1,9 +1,8 @@
 import random
-from abc import ABC
 
-from acao import Acao, melhor_acao_para_direcao
-from agente import Agente
-from vetor import Vetor
+from objetos.acao import Acao, melhor_acao_para_direcao
+from agentes.agente import Agente
+from objetos.vetor import Vetor
 
 
 class AgenteFixo(Agente):
@@ -16,7 +15,7 @@ class AgenteFixo(Agente):
         print(self.estadoAtual)
         elementos = self.estadoAtual[1:10]
         angulo = self.estadoAtual[0] * 360
-        if self.tipoProblema == "F":
+        if len(self.estadoAtual) == 12:
             if elementos[2] == 1:
                 return Acao.ESQUERDA
             elif elementos[5] == 1:
@@ -45,7 +44,7 @@ class AgenteFixo(Agente):
             self.ultima_acao = Acao.MEIA_VOLTA
             return Acao.MEIA_VOLTA
 
-        elif self.tipoProblema == "R":
+        elif len(self.estadoAtual) == 15:
             opcoes = {
                 Acao.ESQUERDA: elementos[2],
                 Acao.FRENTE:   elementos[5],

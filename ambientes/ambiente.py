@@ -1,8 +1,8 @@
 from abc import abstractmethod, ABC
 
-from elemento import Elemento
-from observacao import Observacao
-from posicao import Posicao, dentroLimites, getDistancia
+from objetos.elemento import Elemento
+from objetos.observacao import Observacao
+from objetos.posicao import Posicao, dentroLimites, getDistancia
 
 
 class Ambiente(ABC):

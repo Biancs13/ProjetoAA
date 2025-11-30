@@ -1,8 +1,8 @@
 import copy
 import random
 from enum import Enum
-from posicao import *
-from vetor import Vetor, vetor_para_angulo, normalizarVetor
+from objetos.posicao import *
+from objetos.vetor import *
 
 
 class Acao(Enum):

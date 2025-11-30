@@ -1,6 +1,6 @@
 import math
 
-from posicao import Posicao
+from objetos.posicao import Posicao
 
 class Vetor:
     def __init__(self, x,y):
