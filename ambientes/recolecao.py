@@ -16,4 +16,15 @@ class Recolecao(Ambiente):
 
 
     def condicaoFim(self, agentes=None):
-        return time.time() - self.tempoInicial >= self.tempoLimite
+        found_grelha = False
+        found_agente = False
+        for p,ele in self.grelha.items():
+            if ele.isColetavel():
+                found_grelha = True
+                break
+        if not found_grelha:
+            for a in agentes:
+                if len(a.getColetaveis()) > 0:
+                    found_agente= True
+                    break
+        return (not found_grelha and not found_agente) or time.time() - self.tempoInicial >= self.tempoLimite
