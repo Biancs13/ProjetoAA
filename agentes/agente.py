@@ -69,17 +69,6 @@ class Agente(ABC):
     def getSensor(self):
         return self.sensor
 
-    #Não Altera o agente
-    def ageAleatorio(self,maxGrid):
-        while True:
-            acao = getAcaoAleatoria()
-            novaPos, novoAng = atuar(self, acao)
-            if dentroLimites(novaPos, maxGrid):
-                print(acao)
-                return novaPos, novoAng
-            #return novaPos,novoAng
-
-
     def rodar(self,novoAng):
         if self.sensor is not None:
             rotacao = (novoAng - self.angulo) % 360
@@ -94,11 +83,15 @@ class Agente(ABC):
         pts = 0
         for c in self.coletaveis:
             pts += c.getPontos()
+        self.coletaveis = []
         return pts
 
     def alterar(self,novaPos,novoAng):
         self.rodar(novoAng)
         self.posicaoAtual = novaPos
+
+    def getColetaveis(self):
+        return self.coletaveis
 
     def __str__(self):
         return (f"Agente {self.id}: Posicao={self.posicaoAtual}, " f"Angulo={self.angulo}°")
@@ -121,11 +114,11 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema):
         if politica == "fixo" :
             agente = AgenteFixo(id,posicao,tipoProblema, angulo)
         if politica == "genetico":
-            agente = AgenteGenetico(id,tipoProblema, angulo)
+            agente = AgenteGenetico(id,posicao,tipoProblema, angulo)
         if politica == "reforco":
-            agente = AgenteReforco(id,tipoProblema, angulo)
+            agente = AgenteReforco(id,posicao,tipoProblema, angulo)
         if politica == "aleatorio":
-            agente = AgenteAleatorio(id,tipoProblema, angulo)
+            agente = AgenteAleatorio(id,posicao,tipoProblema, angulo)
 
         sen = ag[4].split()
         campoVisao =[]
@@ -204,7 +197,7 @@ def verificaFicheiro(agente,tamanhoGrelha):
 
 def main():
     tamanho_da_grelha = 10
-    agente = cria("agente.txt", tamanho_da_grelha)
+    agente = criaAgente("agente.txt", tamanho_da_grelha)
     if agente:
         print(" Criação do Agente SUCESSO:")
         print(agente)
