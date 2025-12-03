@@ -1,6 +1,6 @@
 from time import sleep
 
-from ambientes import Ambiente
+from ambientes.ambiente import Ambiente
 from objetos.elemento import Elemento
 from objetos.posicao import Posicao
 from agentes.agente import Agente

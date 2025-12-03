@@ -6,10 +6,10 @@ from objetos.vetor import *
 
 
 class Acao(Enum):
-    DIREITA = "D"
-    ESQUERDA = "E"
-    FRENTE = "F"
-    MEIA_VOLTA = "M"
+    DIREITA = 0
+    ESQUERDA = 1
+    FRENTE = 2
+    MEIA_VOLTA = 3
 
     def getNovaPosicao(self, posicao, angulo):
         if self == Acao.FRENTE:
@@ -51,9 +51,6 @@ def getVetorFrente(angulo):
         return Vetor(0,-1)
     else:
         raise ValueError(f"Angulo inválido: {angulo}")
-
-
-
 
 def melhor_acao_para_direcao(anguloAgente, direcao):
     return melhor_acao(anguloAgente,vetor_para_angulo(direcao))
@@ -97,7 +94,3 @@ def melhor_acao(angA,angD):
             return Acao.ESQUERDA
         else:
             return Acao.FRENTE
-
-
-
-

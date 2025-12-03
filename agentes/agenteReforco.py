@@ -2,8 +2,6 @@ from abc import ABC
 
 from agentes.agente import Agente
 
-
-
 class AgenteReforco(Agente):
 
     def __init__(self, id, posicaoInicial, tipo, angulo):
