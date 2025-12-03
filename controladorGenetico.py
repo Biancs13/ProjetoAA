@@ -1,5 +1,9 @@
+import os
 import random
+
 from objetos.redeNeuronal import *
+from motorSimulacao import *
+
 
 class ControladorGenetico:
 
@@ -94,6 +98,8 @@ def executar(self):
     melhor = max(fitness_dict, key=fitness_dict.get)
     return list(melhor), fitness_dict[melhor]
 
+
+
 def jaccard_distance(set1, set2):
     intersection = len(set1 & set2)
     union = len(set1 | set2)
@@ -110,5 +116,81 @@ def compute_novelty(current_behavior, archive, k=5):
     return sum(distances[:k]) / k if len(distances) >= k else sum(distances) / len(distances)
 
 
+def criaGenetico(ficheiro):
+    problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor = ler(ficheiro)
+    print(verifica([problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor]))
+    if verifica([problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor]):
+        tamanhoGeracao = int(tamanhoGeracao.strip())
+        tamanhoPopulacao = int(tamanhoPopulacao.strip())
+        taxaMutacao = float(taxaMutacao.strip())
+        ms = cria(ficheiroMotor,problema,tempo,politica)
+        controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,problema,ms)
+        return controlador
 
+
+
+def verifica(resultado):
+    ambiente, tempo, politica, tamanhoGer, tamanhoPop, taxaMut, fichMotor = resultado
+    if ambiente not in ["R","F"]:
+        return False
+
+    if ambiente == "R":
+        limite = int(tempo)
+        if limite <= 10 or type(limite) is not int:
+            return False
+
+    if politica not in ["fixo","aleatorio","reforco","genetico"]:
+        return False
+
+    tamanhoGeracao = int(tamanhoGer)
+    if tamanhoGeracao <= 10 or type(tamanhoGeracao) is not int:
+        return False
+
+    tamanhoPopulacao = int(tamanhoPop)
+    if tamanhoPopulacao <= 10 or type(tamanhoPopulacao) is not int:
+        return False
+
+    taxaMut = float(taxaMut)
+    if taxaMut <= 0 or type(taxaMut) is not float:
+        return False
+
+    #python é estúpido
+    #if not os.path.exists(fichMotor) or not os.path.isfile(fichMotor):
+    #    return False
+
+    return True
+
+def ler(nome):
+    fich = open(nome, "r")
+    linhas = fich.readlines()
+    fich.close()
+    tipo = linhas[0].strip()
+    i=1
+    if tipo == "R":
+        tempo = linhas[i].strip()
+        i+=1
+    else:
+        tempo = None
+
+    politica = linhas[i].strip()
+    i+=1
+
+    tamanhoGer = linhas[i].strip()
+    i+=1
+
+    tamanhoPop = linhas[i].strip()
+    i+=1
+
+    taxaMut = linhas[i].strip()
+    i+=1
+
+    partes = linhas[i].split()
+    if partes[0] == "MS":
+        fichMotor = "./" + partes[1]
+    else:
+        fichMotor = None
+
+    resultado = [tipo,tempo,politica,tamanhoGer,tamanhoPop,taxaMut,fichMotor]
+
+    return resultado
 
