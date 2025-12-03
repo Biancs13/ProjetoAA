@@ -17,13 +17,13 @@ class MotorSimulacao:
         self.tipo = tipo #pode ser F ou R
         self.modo = modo #pode ser T ou A
 
-
     def listaAgentes(self):
         return self.agentes
 
     def executa(self):
         i = 1
-        print(self.representa())
+        if self.modo == "T":
+            print(self.representa())
         self.inicializarObservacao()
         while not self.ambiente.condicaoFim(self.agentes):
             print(i)
@@ -43,8 +43,9 @@ class MotorSimulacao:
                         if ele.getId() != (-1,-1,-1) and self.tipo == "R" and ele.getNome() == "ninho":
                             pts = agente.getPontosColetaveis()
                             self.ambiente.recolher(pts)
-            print(self.representa())
-            sleep(0.5) #Quando queremos testar
+            if self.modo == "T":
+                print(self.representa())
+                sleep(0.5) #Quando queremos testar
 
     def obterEstadoAtual(self):
         obs = self.ambiente.getObservacao(self.agentes)
@@ -229,7 +230,14 @@ def verificaFicheiro(resultado):
         pts = int(pts_str)
         if type(pts) is not int:
             return False
-
     return True
 
+def criaGenetico(ficheiro):
+    with open(ficheiro, "r") as f:
+        linhas = [l.strip() for l in f.readlines()]
+
+    geracoes=int(linhas[0])
+    individuos = int(linhas[1])
+    mutacao = int(linhas[2])
+    fich_simulacao = (linhas[3])
 
