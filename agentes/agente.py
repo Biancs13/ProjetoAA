@@ -27,10 +27,9 @@ class Agente(ABC):
     def atualizarEstadoAtual(self,direcaoObj1,direcaoObj2 = None):
         novoEstado = []
         novoEstado.append(self.angulo/360)# o angulo fica em 0, 0.25, 0.5 ou 0.75 para indicar a orientação
-        print(self.observacaoAtual)
         for elemento in self.observacaoAtual.getElementos():
             if elemento is None:
-                novoEstado.extend([-2, -2, -2])
+                novoEstado.extend([-1, 0, -1])
             else:
                 novoEstado.extend(elemento)
         if self.tipoProblema == "F":
@@ -48,7 +47,6 @@ class Agente(ABC):
                 novoEstado.append(-1)
                 novoEstado.append(-1)
             self.estadoAtual = novoEstado
-        print(self.sensor)
 
     @abstractmethod
     def age(self):

@@ -31,8 +31,8 @@ class MotorSimulacao:
             for agente in self.agentes:
                 acao = agente.age()
                 novaPos, novoAng = atuar(agente, acao)
-                #novaPos, novoAng = agente.ageAleatorio(self.ambientes.tamanhoGrelha)
                 print(novaPos, novoAng)
+                print(acao)
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
                     if ele.getId() == (-1,-1,-1) or (ele != (-1,-1,-1) and not ele.isSolido()):

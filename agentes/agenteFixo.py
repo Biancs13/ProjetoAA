@@ -26,7 +26,7 @@ class AgenteFixo(Agente):
             vetorFarol = Vetor(direcaoFarol[0], direcaoFarol[1])
             melhorAcao = melhor_acao_para_direcao(angulo, vetorFarol)
 
-            if not existeSolido(elementos, melhorAcao):
+            if not existeSolido(elementos, melhorAcao) and not estaFora(elementos,melhorAcao):
                 self.ultima_acao = melhorAcao
                 return melhorAcao
 
@@ -50,7 +50,7 @@ class AgenteFixo(Agente):
                 Acao.FRENTE:   elementos[5],
                 Acao.DIREITA:  elementos[8],
             }
-            opcoes_validas = {a: p for a, p in opcoes.items() if p >= 0 and not existeSolido(a,elementos)} # se existe lá qualquer coletavel
+            opcoes_validas = {a: p for a, p in opcoes.items() if p >= 0 and not existeSolido(elementos,a) and not estaFora(elementos,a) } # se existe lá qualquer coletavel
             if opcoes_validas:
                 melhor_acao = max(opcoes_validas, key=opcoes_validas.get)
                 return melhor_acao
@@ -64,14 +64,15 @@ class AgenteFixo(Agente):
                     melhorAcao = melhor_acao_para_direcao(angulo, direcaoNinho)
                 else:
                     melhorAcao = melhor_acao_para_direcao(angulo, direcaoColetavel)
+            print("melhor: ", melhorAcao)
             if melhorAcao == Acao.MEIA_VOLTA:
                 return Acao.MEIA_VOLTA
-            if not existeSolido(elementos, melhorAcao):
+            if not existeSolido(elementos, melhorAcao) and not estaFora(elementos,melhorAcao):
                  return melhorAcao
             outras_acoes = [Acao.ESQUERDA, Acao.FRENTE, Acao.DIREITA]
 
             outras_acoes.remove(melhorAcao)
-            acoes_validas = [a for a in outras_acoes if not existeSolido(elementos, a)]
+            acoes_validas = [a for a in outras_acoes if not existeSolido(elementos, a) and not estaFora(elementos,a)]
             if not acoes_validas:
                  return Acao.MEIA_VOLTA
             escolha = random.choice(acoes_validas)
@@ -96,13 +97,14 @@ def existeSolido(elementos,acao):
 
 def estaFora(elementos,acao):
     if acao == Acao.ESQUERDA:
-        if elementos[1] == -2:
+        if elementos[0] == -1 and elementos[1] == 0 and elementos[2] == -1:
+            print("entrei")
             return True
     elif acao == Acao.FRENTE:
-        if elementos[4] == -2:
+        if elementos[3] == -1 and elementos[4] == 0 and elementos[5] == -1:
             return True
     elif acao == Acao.DIREITA:
-        if elementos[7] == -2:
+        if elementos[6] == -1 and elementos[7] == 0 and elementos[8] == -1:
             return True
     return False
 
