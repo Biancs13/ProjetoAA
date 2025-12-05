@@ -1,6 +1,6 @@
 A
-F
 5
+200
 AG agenteAleatorio.txt
 E farol (3,3) False False 100
 E parede (1,2) False True 0
