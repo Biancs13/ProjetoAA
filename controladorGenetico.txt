@@ -1,0 +1,6 @@
+F
+fixo
+50
+30
+0.01
+MS simulacao_farol.txt

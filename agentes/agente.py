@@ -97,7 +97,7 @@ class Agente(ABC):
         return (f"Agente {self.id}: Posicao={self.posicaoAtual}, " f"Angulo={self.angulo}°")
 
 
-def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema):
+def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica):
     from agentes.agenteFixo import AgenteFixo
     from agentes.agenteReforco import AgenteReforco
     from agentes.agenteGenetico import AgenteGenetico
@@ -108,8 +108,7 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema):
         id = int(ag[0])
         x_str, y_str = ag[1].strip("()").split(',')
         posicao = Posicao(int(x_str), int(y_str))
-        politica = ag[2]
-        angulo = int(ag[3])
+        angulo = int(ag[2])
 
         if politica == "fixo" :
             agente = AgenteFixo(id,posicao,tipoProblema, angulo)
@@ -120,7 +119,7 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema):
         if politica == "aleatorio":
             agente = AgenteAleatorio(id,posicao,tipoProblema, angulo)
 
-        sen = ag[4].split()
+        sen = ag[3].split()
         campoVisao =[]
         for v in sen[1:]:
             x, y = v.strip("()").split(',')
@@ -132,7 +131,7 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema):
 
 
 def verificaFicheiro(agente,tamanhoGrelha):
-    id_str,pos,politica,ang_str, sen = agente
+    id_str,pos,ang_str, sen = agente
     id = int(id_str)
     if type(id) is not int or id < 0:
         return False
@@ -160,9 +159,6 @@ def verificaFicheiro(agente,tamanhoGrelha):
 
     valido = valida_posicao(pos)
     if not valido:
-        return False
-
-    if politica not in ["fixo","genetico","reforco","aleatorio"]:
         return False
 
     ang = int(ang_str)

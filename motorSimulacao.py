@@ -11,11 +11,12 @@ from objetos.vetor import getDirecao
 
 
 class MotorSimulacao:
-    def __init__(self,modo,agentes,ambiente,tipo):
+    def __init__(self,modo,agentes,ambiente,tipo,numeroPassos):
         self.agentes = agentes
         self.ambiente = ambiente
         self.tipo = tipo #pode ser F ou R
         self.modo = modo #pode ser T ou A
+        self.numeroPassos = numeroPassos
 
     def listaAgentes(self):
         return self.agentes
@@ -94,20 +95,22 @@ class MotorSimulacao:
             linhas.append(" ".join(linha))
         return "\n".join(linhas)
 
-def cria(ficheiro):
-    modo,tipo,tempoLim, tamanhoGrelha, agentes_str, elementos_str = lerFicheiro(ficheiro)
+def cria(ficheiro,tipo,tempo,politica):
+    modo, tamanhoGrelha,numeroPassos, agentes_str, elementos_str = lerFicheiro(ficheiro)
     agentes = []
-    if verificaFicheiro([modo,tipo,tempoLim, tamanhoGrelha, agentes_str,elementos_str]):
+    if verificaFicheiro([modo, tamanhoGrelha,numeroPassos, agentes_str,elementos_str]):
         tamanhoGrelha = int(tamanhoGrelha.strip())
-        tipo = tipo.strip()
         if tipo == "R":
-            ambiente = Recolecao(tamanhoGrelha,int(tempoLim))
+            ambiente = Recolecao(tamanhoGrelha,tempo)
         elif tipo == "F":
             ambiente = Farol(tamanhoGrelha)
         modo = modo.strip()
+
+        numeroPassos = int(numeroPassos.strip())
+
         for ag in agentes_str:
             path = "agentes/"+ag
-            agentes.append(criaAgente(path,tamanhoGrelha,tipo))
+            agentes.append(criaAgente(path,tamanhoGrelha,tipo,politica))
 
         for ele in elementos_str:
             _, nome, pos, coletavel, solido, pts = ele
@@ -118,7 +121,7 @@ def cria(ficheiro):
             coletavel_bool = True if coletavel == "True" else False
             elemento = Elemento(nome, pts, coletavel_bool, solido_bool)
             ambiente.adicionar(elemento,posicao)
-        ms = MotorSimulacao(modo,agentes,ambiente,tipo)
+        ms = MotorSimulacao(modo,agentes,ambiente,tipo,numeroPassos)
         return ms
 
 def lerFicheiro(nome):
@@ -127,24 +130,15 @@ def lerFicheiro(nome):
     fich.close()
 
     modoFich = linhas[0]
-    tipoFich = linhas[1]
 
     agentesFich = []
     sensoresFich = []
     elementosFich = []
 
-    i = 2
-    tipoFich = linhas[1].strip()
-    if tipoFich == "R":
-        tempoLim = linhas[i]
-        i += 1
-    else:
-        tempoLim = None
+    tamanhoFich = linhas[1]
+    numeroPas = linhas[2]
 
-    tamanhoFich = linhas[i]
-    i += 1
-
-    for linha in linhas[i:]:
+    for linha in linhas[3:]:
         partes = linha.split()
 
         if partes[0] == "AG":
@@ -159,32 +153,25 @@ def lerFicheiro(nome):
         else:
             pass
 
-    resultado = [modoFich,tipoFich,tempoLim,tamanhoFich,agentesFich,elementosFich]
+    resultado = [modoFich,tamanhoFich,numeroPas,agentesFich,elementosFich]
 
     return resultado
 
 def verificaFicheiro(resultado):
-    modo,tipo, tempoLim, tamanhoGrelha, agentesFich, elementos = resultado
+    modo, tamanhoGrelha,numeroPas, agentesFich, elementos = resultado
 
     modo = modo.strip()
     if modo not in ["A", "T"]:
         return False
 
-    tipo = tipo.strip()
-    if tipo not in ["R", "F"]:
-        return False
-
-    if tipo == "R":
-        limite = int(tempoLim.strip())
-        if limite <= 10:
-            return False
-        elif type(limite) is not int:
-            return False
-
     tamanho_grelha_int = int(tamanhoGrelha.strip())
     if tamanho_grelha_int < 3:
         return False
     elif type(tamanho_grelha_int) is not int:
+        return False
+
+    numeroPassos = int(numeroPas.strip())
+    if numeroPassos < 10 or type(numeroPassos) is not int:
         return False
 
     for agenteFich in agentesFich:
@@ -232,12 +219,4 @@ def verificaFicheiro(resultado):
             return False
     return True
 
-def criaGenetico(ficheiro):
-    with open(ficheiro, "r") as f:
-        linhas = [l.strip() for l in f.readlines()]
-
-    geracoes=int(linhas[0])
-    individuos = int(linhas[1])
-    mutacao = int(linhas[2])
-    fich_simulacao = (linhas[3])
 
