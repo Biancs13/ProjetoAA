@@ -1,6 +1,6 @@
 F
-fixo
-50
-30
-0.01
-MS simulacao_farol.txt
+genetico
+100
+500
+0.35
+MS simulacao_farol_genetico.txt

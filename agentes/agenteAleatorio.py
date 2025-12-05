@@ -4,8 +4,8 @@ from agentes.agente import Agente
 
 class AgenteAleatorio(Agente):
 
-    def __init__(self, id, posicaoInicial, tipo, angulo):
-        super().__init__(id,posicaoInicial,tipo, angulo)
+    def __init__(self, id, posicaoInicial, tipo, angulo,ficheiro):
+        super().__init__(id,posicaoInicial,tipo, angulo,ficheiro)
         self.acoes = []
 
     def age(self):

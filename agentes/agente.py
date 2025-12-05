@@ -4,7 +4,7 @@ from objetos.posicao import dentroLimites
 from objetos.sensor import Sensor
 
 class Agente(ABC):
-    def __init__(self, id, posicaoAtual, tipoProblema, angulo):
+    def __init__(self, id, posicaoAtual, tipoProblema, angulo,ficheiro):
         self.id = id
         self.posicaoAtual = posicaoAtual
         self.angulo = angulo
@@ -17,6 +17,7 @@ class Agente(ABC):
         self.num_colisoes = 0
         self.num_pontos_recolhidos = 0
         self.condicaoFim = False
+        self.ficheiro = ficheiro
 
     def getId(self):
         return self.id
@@ -63,6 +64,10 @@ class Agente(ABC):
     def avaliacaoEstadoAtual(self,recompensa):
         pass
 
+    @abstractmethod
+    def escreverMelhor(self):
+        pass
+
     def instala(self,sensor):
         if self.sensor is None:
             self.sensor = sensor
@@ -100,8 +105,10 @@ class Agente(ABC):
     def getColetaveis(self):
         return self.coletaveis
 
+
     def __str__(self):
         return (f"Agente {self.id}: Posicao={self.posicaoAtual}, " f"Angulo={self.angulo}°")
+
 
 
 def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica):
@@ -118,13 +125,13 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica):
         angulo = int(ag[2])
 
         if politica == "fixo" :
-            agente = AgenteFixo(id,posicao,tipoProblema, angulo)
+            agente = AgenteFixo(id,posicao,tipoProblema, angulo,ficheiro_agentes)
         if politica == "genetico":
-            agente = AgenteGenetico(id,posicao,tipoProblema, angulo)
+            agente = AgenteGenetico(id,posicao,tipoProblema, angulo,ficheiro_agentes)
         if politica == "reforco":
-            agente = AgenteReforco(id,posicao,tipoProblema, angulo)
+            agente = AgenteReforco(id,posicao,tipoProblema, angulo,ficheiro_agentes)
         if politica == "aleatorio":
-            agente = AgenteAleatorio(id,posicao,tipoProblema, angulo)
+            agente = AgenteAleatorio(id,posicao,tipoProblema, angulo,ficheiro_agentes)
 
         sen = ag[3].split()
         campoVisao =[]

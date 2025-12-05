@@ -7,8 +7,8 @@ from objetos.vetor import Vetor
 
 class AgenteFixo(Agente):
 
-    def __init__(self, id, posicaoInicial, tipo, angulo):
-        super().__init__(id,posicaoInicial,tipo, angulo)
+    def __init__(self, id, posicaoInicial, tipo, angulo,ficheiro):
+        super().__init__(id,posicaoInicial,tipo, angulo,ficheiro)
         self.ultima_acao = None
 
     def age(self):

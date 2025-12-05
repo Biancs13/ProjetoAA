@@ -11,7 +11,7 @@ from objetos.vetor import getDirecao
 
 
 class MotorSimulacao:
-    def _init_(self,modo,agentes,ambiente,tipo,num_passos):
+    def __init__(self,modo,agentes,ambiente,tipo,num_passos):
         self.agentes = agentes
         self.ambiente = ambiente
         self.tipo = tipo #pode ser F ou R
@@ -27,7 +27,6 @@ class MotorSimulacao:
             print(self.representa())
         self.inicializarObservacao()
         while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos:
-            print(i)
             self.atualizarEstadoAgentes()
             for agente in self.agentes:
                 acao = agente.age()
@@ -45,10 +44,10 @@ class MotorSimulacao:
                             self.ambiente.adicionarPontos(pts)
                     else:
                         agente.num_colisoes +=1
+                i +=1
 
             if self.modo == "T":
-                print(self.representa())
-                sleep(0.5) #Quando queremos testar
+                print(self.representa(),"\n")
         if self.tipo != "R":
             for a in self.agentes:
                 if self.ambiente.condicaoFim(self.agentes) :
@@ -62,7 +61,6 @@ class MotorSimulacao:
         for agente in self.agentes:
             obs, pos = self.ambiente.observacaoParaAgente(agente)
             agente.observacao(obs)
-            print("atualizando estado atual")
             if self.tipo == "F":
                 direcao1 = getDirecao(agente.posicaoAtual,self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"farol"))
                 agente.atualizarEstadoAtual(direcao1)
@@ -103,7 +101,7 @@ class MotorSimulacao:
         return "\n".join(linhas)
 
 
-def cria(ficheiro,tipo,tempo,politica):
+def cria(ficheiro, tipo, politica, tempo=0):
     modo, tamanhoGrelha,numeroPassos, agentes_str, elementos_str = lerFicheiro(ficheiro)
     agentes = []
     if verificaFicheiro([modo, tamanhoGrelha,numeroPassos, agentes_str,elementos_str]):
