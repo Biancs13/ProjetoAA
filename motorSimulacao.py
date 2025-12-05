@@ -1,6 +1,7 @@
 import os
 from time import sleep
 
+from controladores.controladorGenetico import ControladorGenetico
 from objetos.acao import atuar
 from agentes.agente import criaAgente
 from ambientes.farol import Farol
@@ -11,11 +12,12 @@ from objetos.vetor import getDirecao
 
 
 class MotorSimulacao:
-    def __init__(self,modo,agentes,ambiente,tipo):
+    def __init__(self,modo,agentes,ambiente,tipo,num_passos):
         self.agentes = agentes
         self.ambiente = ambiente
         self.tipo = tipo #pode ser F ou R
         self.modo = modo #pode ser T ou A
+        self.num_passos = num_passos
 
     def listaAgentes(self):
         return self.agentes
@@ -25,14 +27,12 @@ class MotorSimulacao:
         if self.modo == "T":
             print(self.representa())
         self.inicializarObservacao()
-        while not self.ambiente.condicaoFim(self.agentes):
+        while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos:
             print(i)
             self.atualizarEstadoAgentes()
             for agente in self.agentes:
                 acao = agente.age()
                 novaPos, novoAng = atuar(agente, acao)
-                print(novaPos, novoAng)
-                print(acao)
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
                     if ele.getId() == (-1,-1,-1) or (ele != (-1,-1,-1) and not ele.isSolido()):
@@ -42,10 +42,19 @@ class MotorSimulacao:
                             self.ambiente.atualizacao(novaPos)
                         if ele.getId() != (-1,-1,-1) and self.tipo == "R" and ele.getNome() == "ninho":
                             pts = agente.getPontosColetaveis()
-                            self.ambiente.recolher(pts)
+                            agente.recolher(pts)
+                            self.ambiente.adicionarPontos(pts)
+                    else:
+                        agente.num_colisoes +=1
+
             if self.modo == "T":
                 print(self.representa())
                 sleep(0.5) #Quando queremos testar
+        if self.tipo != "R":
+            for a in self.agentes:
+                if self.ambiente.condicaoFim(self.agentes) :
+                    a.condicaoFim = True
+
 
     def obterEstadoAtual(self):
         obs = self.ambiente.getObservacao(self.agentes)
@@ -231,7 +240,7 @@ def verificaFicheiro(resultado):
         if type(pts) is not int:
             return False
     return True
-
+'''
 def criaGenetico(ficheiro):
     with open(ficheiro, "r") as f:
         linhas = [l.strip() for l in f.readlines()]
@@ -241,3 +250,15 @@ def criaGenetico(ficheiro):
     mutacao = int(linhas[2])
     fich_simulacao = (linhas[3])
 
+    modo, tipo, _, _, _, _ = lerFicheiro(fich_simulacao)
+
+    controlador = ControladorGenetico(
+        geracoes=geracoes,
+        tamanho_populacao=individuos,
+        taxa_mutacao=mutacao,
+        problema=tipo,
+        ficheiro=fich_simulacao
+    )
+
+    return controlador
+'''

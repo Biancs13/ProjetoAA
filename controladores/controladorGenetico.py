@@ -1,25 +1,24 @@
 import random
+from motorSimulacao import MotorSimulacao, cria
 from objetos.redeNeuronal import *
 
 class ControladorGenetico:
 
-    def __init__(self,geracoes, tamanho_populacao, taxa_mutacao,problema, motorSimulacao):
+    def __init__(self,geracoes, tamanho_populacao, taxa_mutacao,problema, ficheiro):
         self.geracoes = geracoes
         self.tamanho_populacao = tamanho_populacao
         self.taxa_mutacao = taxa_mutacao
         if problema == "F":
-            estado_tamanho = 12
+            self.tamanho_individuo = 12
         else:
-            estado_tamanho = 15
-        self.tamanho_individuo = estado_tamanho
+            self.tamanho_individuo = 15
+        self.ficheiro = ficheiro
         self.elite_rate = 0.1
         self.novelty_weight = 1000
         self.k_novel = 5
         self.arquivo_por_geracao = 5
-        #self.procura_novelty = NoveltySearch(self.k_novel,self.arquivo_por_geracao)
-        self.archive = []
-        self.motor = motorSimulacao
-
+        self.arquivo = set()
+        self.fitness_medio_geracao = []
 
     def criar_populacao(self):
         return [[random.uniform(-1, 1) for _ in range(self.tamanho_individuo)] for _ in range(self.tamanho_populacao)]
@@ -38,76 +37,78 @@ class ControladorGenetico:
                 individuo[i] += random.gauss(0, escala)
                 individuo[i] = max(-1, min(1, individuo[i]))
 
-'''
-def fitness(individuo, funcao_fitness, n=5):
-    total = 0
-    for _ in range(n):
-        total += funcao_fitness(individuo, random.randint(1,100))
-    return total // n
-'''
+    def avaliar_individuo(self, pesos):
+        motor = cria(self.ficheiro)
+        for ag in motor.agentes:
+            ag.pesos=pesos
+            ag.reiniciar()
+        motor.execute()
+        fitness_total = 0
+        for ag in motor.agentes:
+            comportamento = set(ag.comportamento)
+            novelty_total = calcular_novelty(comportamento, self.arquivo, k=self.k_novel)
+            objetivo_total = ag.calcular_fitness_objetivo()
+            ag.fitness = objetivo_total + novelty_total * self.novelty_weight
+            fitness_total += ag.fitness
+            self.arquivo.add(comportamento)
+        return fitness_total / len(motor.agentes)  #depende do q se quer
 
-def executar(self):
-    populacao = self.criar_populacao()
-    fitness_dict = {}
+    def executar(self):
+        populacao_pesos = self.criar_populacao()
+        populacao_agentes = []
 
-    for g in range(self.geracoes):
-        total_fitness = 0
-        print(f"\n=== Geração {g} ===")
-        for ind in populacao:
-            self.motor.executa()
-            key = tuple(ind)
-            if key not in fitness_dict:
-                fitness_dict[key] = self.avaliar_individuo(ind)
 
-        fitnesses = list(fitness_dict.values())
-        best = max(fitnesses)
-        media = sum(fitnesses) / len(fitnesses)
-        dp = np.std(fitnesses)
+        for g in range(self.geracoes):
+            total_fitness = 0
+            fitness_dicionario = {}
+            print(f"\n=== Geração {g} ===")
+            for ind in populacao_pesos:
+                fitness = self.avaliar_individuo(ind)
+                fitness_dicionario[ind] = fitness
+                total_fitness += fitness
 
-        print(f"Melhor fitness: {best}")
-        print(f"Média da população: {media:.2f}")
+            populacao_agentes.sort(key=lambda x: x.fitness, reverse=True)
+            fitness_medio = total_fitness / self.tamanho_populacao
+            self.fitness_medio_geracao.append(fitness_medio)
+            melhor_novelty = calcular_novelty(populacao_agentes[0], self.arquivo)
+            melhor_objetivo = populacao_agentes[0].calcular_fitness_objetivo()
 
-        if best >= self.target_fitness:
-            break
+            print(f"Gen {g + 1}/{self.geracoes} | Avg Combined: {fitness_medio:.2f} | Best Combined: {populacao_agentes[0].combined_fitness:.2f} (Nov: {melhor_novelty:.2f}, Obj: {melhor_objetivo:.2f})")
 
-        escala = 0.3 if dp < 7.5 else 0.1
+            populacao_agentes.sort(key=lambda x: calcular_novelty(x.comportamento, self.arquivo), reverse=True)
 
-        elites = sorted(
-            populacao,
-            key=lambda ind: fitness_dict[tuple(ind)],
-            reverse=True
-        )[: int(self.elite_rate * self.tamanho_populacao)]
+            for i in range(self.arquivo_por_geracao):
+                self.arquivo.add(populacao_agentes[i].comportamento)
 
-        nova_pop = elites[:]
+            populacao_agentes.sort(key=lambda x: x.fitness, reverse=True)
+            pesos_ordenados = [agente.pesos for agente in populacao_agentes]
 
-        while len(nova_pop) < self.tamanho_populacao:
-            pai1 = self.selecionar(fitness_dict)
-            pai2 = self.selecionar(fitness_dict)
-            filho = self.reproduzir(pai1, pai2)
-            self.mutacao(filho, escala)
-            nova_pop.append(filho)
+            nova_populacao = []
 
-        populacao = nova_pop
-        elite_keys = [tuple(e) for e in elites]
-        fitness_dict = {k: v for k, v in fitness_dict.items() if k in elite_keys}
+            n_elite = self.elite_rate*self.tamanho_populacao
+            nova_populacao.extend(pesos_ordenados[:n_elite])
 
-    melhor = max(fitness_dict, key=fitness_dict.get)
-    return list(melhor), fitness_dict[melhor]
+            while len(nova_populacao) < self.tamanho_populacao:
+                pai1 = self.selecionar(fitness_dicionario)
+                pai2 = self.selecionar(fitness_dicionario)
+                filho = self.reproduzir(pai1, pai2)
+                self.mutacao(filho, self.taxa_mutacao)
+                nova_populacao.append(filho)
 
-def jaccard_distance(set1, set2):
-    intersection = len(set1 & set2)
-    union = len(set1 | set2)
-    return 1 - intersection / union if union != 0 else 0
+            populacao_pesos = nova_populacao
 
-def compute_novelty(current_behavior, archive, k=5):
-    #empty archive case
-    if not archive:
-        # The first item is, by definition, maximally novel
+
+def distancia_jaccard(set1, set2):
+    intersecao = len(set1 & set2)
+    uniao = len(set1 | set2)
+    return 1 - intersecao / uniao if uniao != 0 else 0
+
+def calcular_novelty(comportamento, arquivo, k=5):
+    if not arquivo:
         return 1.0
-
-    distances = [jaccard_distance(current_behavior, b) for b in archive]
-    distances.sort()
-    return sum(distances[:k]) / k if len(distances) >= k else sum(distances) / len(distances)
+    distancias = [distancia_jaccard(comportamento, b) for b in arquivo]
+    distancias.sort()
+    return sum(distancias[:k]) / k if len(distancias) >= k else sum(distancias) / len(distancias)
 
 
 
