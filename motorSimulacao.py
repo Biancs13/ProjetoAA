@@ -1,6 +1,7 @@
 import os
 from time import sleep
 
+from agentes.agenteReforco import AgenteReforco
 from objetos.acao import atuar
 from agentes.agente import criaAgente
 from ambientes.farol import Farol
@@ -31,6 +32,9 @@ class MotorSimulacao:
             for agente in self.agentes:
                 acao = agente.age()
                 novaPos, novoAng = atuar(agente, acao)
+                print(novaPos, novoAng)
+                print(acao)
+                recompensa = self.ambiente.getRecompensa(novaPos,len(agente.coletaveis))
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
                     if ele.getId() == (-1,-1,-1) or (ele != (-1,-1,-1) and not ele.isSolido()):
@@ -45,7 +49,8 @@ class MotorSimulacao:
                     else:
                         agente.num_colisoes +=1
                 i +=1
-
+                if isinstance(agente, AgenteReforco):
+                    agente.avaliacaoEstadoAtual(recompensa)
             if self.modo == "T":
                 print(self.representa(),"\n")
         if self.tipo != "R":
@@ -61,6 +66,7 @@ class MotorSimulacao:
         for agente in self.agentes:
             obs, pos = self.ambiente.observacaoParaAgente(agente)
             agente.observacao(obs)
+            print("atualizando estado atual")
             if self.tipo == "F":
                 direcao1 = getDirecao(agente.posicaoAtual,self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"farol"))
                 agente.atualizarEstadoAtual(direcao1)

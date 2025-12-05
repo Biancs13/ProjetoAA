@@ -18,6 +18,7 @@ class Agente(ABC):
         self.num_pontos_recolhidos = 0
         self.condicaoFim = False
         self.ficheiro = ficheiro
+        self.estadoAntigo = [] #Para o reforço, mas fica mais universal aqui
 
     def getId(self):
         return self.id
@@ -54,6 +55,7 @@ class Agente(ABC):
             else:
                 novoEstado.append(-1)
                 novoEstado.append(-1)
+            self.estadoAntigo = self.estadoAtual
             self.estadoAtual = novoEstado
 
     @abstractmethod
@@ -105,10 +107,8 @@ class Agente(ABC):
     def getColetaveis(self):
         return self.coletaveis
 
-
     def __str__(self):
         return (f"Agente {self.id}: Posicao={self.posicaoAtual}, " f"Angulo={self.angulo}°")
-
 
 
 def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica):
