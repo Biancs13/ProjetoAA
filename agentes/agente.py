@@ -14,9 +14,16 @@ class Agente(ABC):
         self.observacaoAtual = None
         self.estadoAtual = None
         self.tipoProblema = tipoProblema #Pode ser F ou R
+        self.num_colisoes = 0
+        self.num_pontos_recolhidos = 0
+        self.condicaoFim = False
 
     def getId(self):
         return self.id
+
+    def recolher(self,pontos):
+        self.num_pontos_recolhidos += pontos
+        self.coletaveis = []
 
     def getPosicao(self):
         return self.posicaoAtual
