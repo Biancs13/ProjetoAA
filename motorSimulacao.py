@@ -12,12 +12,12 @@ from objetos.vetor import getDirecao
 
 
 class MotorSimulacao:
-    def __init__(self,modo,agentes,ambiente,tipo,numeroPassos):
+    def __init__(self,modo,agentes,ambiente,tipo,num_passos):
         self.agentes = agentes
         self.ambiente = ambiente
         self.tipo = tipo #pode ser F ou R
         self.modo = modo #pode ser T ou A
-        self.numeroPassos = numeroPassos
+        self.num_passos = num_passos
 
     def listaAgentes(self):
         return self.agentes
@@ -27,8 +27,7 @@ class MotorSimulacao:
         if self.modo == "T":
             print(self.representa())
         self.inicializarObservacao()
-        while not self.ambiente.condicaoFim(self.agentes):
-            print(i)
+        while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos:
             self.atualizarEstadoAgentes()
             for agente in self.agentes:
                 acao = agente.age()
@@ -45,13 +44,20 @@ class MotorSimulacao:
                             self.ambiente.atualizacao(novaPos)
                         if ele.getId() != (-1,-1,-1) and self.tipo == "R" and ele.getNome() == "ninho":
                             pts = agente.getPontosColetaveis()
-                            self.ambiente.recolher(pts)
+                            agente.recolher(pts)
+                            self.ambiente.adicionarPontos(pts)
+                    else:
+                        agente.num_colisoes +=1
+                i +=1
                 if isinstance(agente, AgenteReforco):
                     agente.avaliacaoEstadoAtual(recompensa)
-
             if self.modo == "T":
-                print(self.representa())
-                sleep(0.5) #Quando queremos testar
+                print(self.representa(),"\n")
+        if self.tipo != "R":
+            for a in self.agentes:
+                if self.ambiente.condicaoFim(self.agentes) :
+                    a.condicaoFim = True
+
 
     def obterEstadoAtual(self):
         obs = self.ambiente.getObservacao(self.agentes)
@@ -72,7 +78,6 @@ class MotorSimulacao:
                     agente.atualizarEstadoAtual(direcao1,direcao2)
                 else:
                     agente.atualizarEstadoAtual(direcao1)
-
 
     def inicializarObservacao(self):
         for agente in self.agentes:
@@ -100,6 +105,7 @@ class MotorSimulacao:
                         linha.append(str(elemento))
             linhas.append(" ".join(linha))
         return "\n".join(linhas)
+
 
 def cria(ficheiro, tipo, politica, tempo=0):
     modo, tamanhoGrelha,numeroPassos, agentes_str, elementos_str = lerFicheiro(ficheiro)

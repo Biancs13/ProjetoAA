@@ -4,19 +4,28 @@ from objetos.posicao import dentroLimites
 from objetos.sensor import Sensor
 
 class Agente(ABC):
-    def __init__(self, id, posicaoAtual, tipoProblema, angulo):
+    def __init__(self, id, posicaoAtual, tipoProblema, angulo,ficheiro):
         self.id = id
         self.posicaoAtual = posicaoAtual
         self.angulo = angulo
+        #self.politica = politica
         self.sensor = None
         self.coletaveis = []
         self.observacaoAtual = None
         self.estadoAtual = None
         self.tipoProblema = tipoProblema #Pode ser F ou R
+        self.num_colisoes = 0
+        self.num_pontos_recolhidos = 0
+        self.condicaoFim = False
+        self.ficheiro = ficheiro
         self.estadoAntigo = [] #Para o reforço, mas fica mais universal aqui
 
     def getId(self):
         return self.id
+
+    def recolher(self,pontos):
+        self.num_pontos_recolhidos += pontos
+        self.coletaveis = []
 
     def getPosicao(self):
         return self.posicaoAtual
@@ -55,6 +64,10 @@ class Agente(ABC):
 
     @abstractmethod
     def avaliacaoEstadoAtual(self,recompensa):
+        pass
+
+    @abstractmethod
+    def escreverMelhor(self):
         pass
 
     def instala(self,sensor):
@@ -112,13 +125,13 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica):
         angulo = int(ag[2])
 
         if politica == "fixo" :
-            agente = AgenteFixo(id,posicao,tipoProblema, angulo)
+            agente = AgenteFixo(id,posicao,tipoProblema, angulo,ficheiro_agentes)
         if politica == "genetico":
-            agente = AgenteGenetico(id,posicao,tipoProblema, angulo)
+            agente = AgenteGenetico(id,posicao,tipoProblema, angulo,ficheiro_agentes)
         if politica == "reforco":
-            agente = AgenteReforco(id,posicao,tipoProblema, angulo)
+            agente = AgenteReforco(id,posicao,tipoProblema, angulo,ficheiro_agentes)
         if politica == "aleatorio":
-            agente = AgenteAleatorio(id,posicao,tipoProblema, angulo)
+            agente = AgenteAleatorio(id,posicao,tipoProblema, angulo,ficheiro_agentes)
 
         sen = ag[3].split()
         campoVisao =[]

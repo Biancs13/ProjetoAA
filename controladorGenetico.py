@@ -1,32 +1,31 @@
-import os
 import random
 
+from ambientes import ambiente
+from motorSimulacao import MotorSimulacao, cria
 from objetos.redeNeuronal import *
-from motorSimulacao import *
-
 
 class ControladorGenetico:
 
-    def __init__(self,geracoes, tamanho_populacao, taxa_mutacao,problema, motorSimulacao):
+    def __init__(self,geracoes, tamanho_populacao, taxa_mutacao,problema, ficheiro_motor,tempo,tipo):
         self.geracoes = geracoes
         self.tamanho_populacao = tamanho_populacao
         self.taxa_mutacao = taxa_mutacao
         if problema == "F":
-            estado_tamanho = 12
+            self.num_pesos = 44
         else:
-            estado_tamanho = 15
-        self.tamanho_individuo = estado_tamanho
-        self.elite_rate = 0.1
+            self.num_pesos = 50
+        self.ficheiro_motor = ficheiro_motor
+        self.elite_rate = 0.2
         self.novelty_weight = 1000
         self.k_novel = 5
         self.arquivo_por_geracao = 5
-        #self.procura_novelty = NoveltySearch(self.k_novel,self.arquivo_por_geracao)
-        self.archive = []
-        self.motor = motorSimulacao
-
+        self.arquivo = set()
+        self.fitness_medio_geracao = []
+        self.tipo = tipo
+        self.tempo = tempo
 
     def criar_populacao(self):
-        return [[random.uniform(-1, 1) for _ in range(self.tamanho_individuo)] for _ in range(self.tamanho_populacao)]
+        return [[random.uniform(-1, 1) for _ in range(self.num_pesos)] for _ in range(self.tamanho_populacao)]
 
     def selecionar(self,fitness_dict,tamanho_torneio=2):
         torneio = random.sample(list(fitness_dict.items()), tamanho_torneio)
@@ -42,89 +41,87 @@ class ControladorGenetico:
                 individuo[i] += random.gauss(0, escala)
                 individuo[i] = max(-1, min(1, individuo[i]))
 
-'''
-def fitness(individuo, funcao_fitness, n=5):
-    total = 0
-    for _ in range(n):
-        total += funcao_fitness(individuo, random.randint(1,100))
-    return total // n
-'''
+    def avaliar_individuo(self, pesos):
+        motor = cria(self.ficheiro_motor,self.tipo,"genetico",self.tempo)
+        agente = motor.agentes[0]
+        agente.pesos = pesos
+        motor.executa()
+        comportamento = tuple(agente.comportamento)
+        novelty_total = calcular_novelty(comportamento, self.arquivo, k=self.k_novel)
+        objetivo_total = agente.calcular_fitness_objetivo()
+        agente.fitness = objetivo_total + novelty_total * self.novelty_weight
+        self.arquivo.add(comportamento)
+        return agente,agente.fitness
 
-def executar(self):
-    populacao = self.criar_populacao()
-    fitness_dict = {}
+    def executar(self):
+        populacao_pesos = self.criar_populacao()
+        for g in range(self.geracoes):
+            total_fitness = 0
+            fitness_dicionario = {}
+            populacao_agentes = []
+            i=0
+            print(f"\n=== Geração {g+1} ===")
+            for ind in populacao_pesos:
+                agente,fitness = self.avaliar_individuo(ind)
+                fitness_dicionario[tuple(ind)] = fitness
+                total_fitness += fitness
+                populacao_agentes.append(agente)
+                i+=1
 
-    for g in range(self.geracoes):
-        total_fitness = 0
-        print(f"\n=== Geração {g} ===")
-        for ind in populacao:
-            self.motor.executa()
-            key = tuple(ind)
-            if key not in fitness_dict:
-                fitness_dict[key] = self.avaliar_individuo(ind)
+            melhor_fitness = max(fitness_dicionario.values())
 
-        fitnesses = list(fitness_dict.values())
-        best = max(fitnesses)
-        media = sum(fitnesses) / len(fitnesses)
-        dp = np.std(fitnesses)
-
-        print(f"Melhor fitness: {best}")
-        print(f"Média da população: {media:.2f}")
-
-        if best >= self.target_fitness:
-            break
-
-        escala = 0.3 if dp < 7.5 else 0.1
-
-        elites = sorted(
-            populacao,
-            key=lambda ind: fitness_dict[tuple(ind)],
-            reverse=True
-        )[: int(self.elite_rate * self.tamanho_populacao)]
-
-        nova_pop = elites[:]
-
-        while len(nova_pop) < self.tamanho_populacao:
-            pai1 = self.selecionar(fitness_dict)
-            pai2 = self.selecionar(fitness_dict)
-            filho = self.reproduzir(pai1, pai2)
-            self.mutacao(filho, escala)
-            nova_pop.append(filho)
-
-        populacao = nova_pop
-        elite_keys = [tuple(e) for e in elites]
-        fitness_dict = {k: v for k, v in fitness_dict.items() if k in elite_keys}
-
-    melhor = max(fitness_dict, key=fitness_dict.get)
-    return list(melhor), fitness_dict[melhor]
+            fitness_medio = total_fitness / self.tamanho_populacao
+            self.fitness_medio_geracao.append(fitness_medio)
 
 
+            populacao_agentes.sort(key=lambda x: calcular_novelty(x.comportamento, self.arquivo), reverse=True)
 
-def jaccard_distance(set1, set2):
-    intersection = len(set1 & set2)
-    union = len(set1 | set2)
-    return 1 - intersection / union if union != 0 else 0
+            for i in range(self.arquivo_por_geracao):
+                self.arquivo.add(tuple(populacao_agentes[i].comportamento))
 
-def compute_novelty(current_behavior, archive, k=5):
-    #empty archive case
-    if not archive:
-        # The first item is, by definition, maximally novel
+            populacao_agentes.sort(key=lambda x: x.fitness, reverse=True)
+            pesos_ordenados = [agente.pesos for agente in populacao_agentes] #já estão ordenados pelo fitness
+
+            print(f"Gen {g + 1}/{self.geracoes} | Avg Combined: {fitness_medio:.2f} | Melhor fitness: {melhor_fitness:.2f})")
+
+            nova_populacao = []
+
+            n_elite = max(1, int(self.elite_rate * self.tamanho_populacao))
+            nova_populacao.extend(pesos_ordenados[:n_elite])
+
+            while len(nova_populacao) < self.tamanho_populacao:
+                pai1 = self.selecionar(fitness_dicionario)
+                pai2 = self.selecionar(fitness_dicionario)
+                filho = self.reproduzir(pai1, pai2)
+                self.mutacao(filho, self.taxa_mutacao)
+                nova_populacao.append(filho)
+
+            populacao_pesos = nova_populacao
+
+
+def distancia_jaccard(seq1, seq2):
+    s1 = set(seq1)
+    s2 = set(seq2)
+    intersecao = len(s1 & s2)
+    uniao = len(s1 | s2)
+    return 0.0 if uniao == 0 else 1.0 - intersecao / uniao
+
+def calcular_novelty(comportamento, arquivo, k=5):
+    if not arquivo:
         return 1.0
-
-    distances = [jaccard_distance(current_behavior, b) for b in archive]
-    distances.sort()
-    return sum(distances[:k]) / k if len(distances) >= k else sum(distances) / len(distances)
+    distancias = [distancia_jaccard(comportamento, b) for b in arquivo]
+    distancias.sort()
+    k_use = min(k, len(distancias))
+    return sum(distancias[:k_use]) / k_use if k_use > 0 else 0.0
 
 
 def criaGenetico(ficheiro):
     problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor = ler(ficheiro)
-    print(verifica([problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor]))
     if verifica([problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor]):
         tamanhoGeracao = int(tamanhoGeracao.strip())
         tamanhoPopulacao = int(tamanhoPopulacao.strip())
         taxaMutacao = float(taxaMutacao.strip())
-        ms = cria(ficheiroMotor, problema, politica, tempo)
-        controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,problema,ms)
+        controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,problema,ficheiroMotor,tempo,problema)
         return controlador
 
 
@@ -133,7 +130,6 @@ def verifica(resultado):
     ambiente, tempo, politica, tamanhoGer, tamanhoPop, taxaMut, fichMotor = resultado
     if ambiente not in ["R","F"]:
         return False
-
     if ambiente == "R":
         limite = int(tempo)
         if limite <= 10 or type(limite) is not int:
@@ -151,12 +147,9 @@ def verifica(resultado):
         return False
 
     taxaMut = float(taxaMut)
-    if taxaMut <= 0 or type(taxaMut) is not float:
+    if taxaMut <= 0 or taxaMut > 1 or type(taxaMut) is not float:
         return False
 
-    #python é estúpido
-    #if not os.path.exists(fichMotor) or not os.path.isfile(fichMotor):
-    #    return False
 
     return True
 
@@ -194,3 +187,7 @@ def ler(nome):
 
     return resultado
 
+
+controlador = criaGenetico("controladorGenetico.txt")
+if controlador:
+    controlador.executar()

@@ -83,10 +83,4 @@ def getOutput(inputs, pesos, biases, funcaoAtivacao):
 
 
 
-rede_neuronal = criarRedeNeuronal(10)
-print(rede_neuronal.getPesos())
-pesos = [random.uniform(-1, 1) for i in range(40)]
-rede_neuronal.carregaPesos(pesos)
-ind = [0.5,1,1,0,-1,-1,-1,-1,-1,-1]
-acao = rede_neuronal.decidirAcao(ind)
-print(acao)
+

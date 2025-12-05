@@ -8,12 +8,11 @@ class Recolecao(Ambiente):
         super().__init__(tamanho)
         self.tempoLimite = tempoLimite
         self.tempoInicial = time.time()
-        self.totalPontosRecolhidos = 0
+        self.pontos_totais = 0
 
 
-    def recolher(self,pontosTotais):
-        self.totalPontosRecolhidos += pontosTotais
-
+    def adicionarPontos(self,pontos):
+        self.pontos_totais += pontos
 
     def condicaoFim(self, agentes=None):
         found_grelha = False

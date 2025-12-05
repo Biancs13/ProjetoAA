@@ -1,6 +1,6 @@
 A
 5
-200
+20
 AG agenteGenetico.txt
 E farol (3,3) False False 100
 E parede (1,2) False True 0
