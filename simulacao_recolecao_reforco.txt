@@ -1,0 +1,6 @@
+A
+5
+AG agenteFixo.txt
+S 1 (0,-1) (0,1) (1,0)
+E ninho (3,3) False False 0
+E ovo (2,1) True False 10

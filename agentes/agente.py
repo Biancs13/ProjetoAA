@@ -8,12 +8,12 @@ class Agente(ABC):
         self.id = id
         self.posicaoAtual = posicaoAtual
         self.angulo = angulo
-        #self.politica = politica
         self.sensor = None
         self.coletaveis = []
         self.observacaoAtual = None
         self.estadoAtual = None
         self.tipoProblema = tipoProblema #Pode ser F ou R
+        self.estadoAntigo = [] #Para o reforço, mas fica mais universal aqui
 
     def getId(self):
         return self.id
@@ -46,6 +46,7 @@ class Agente(ABC):
             else:
                 novoEstado.append(-1)
                 novoEstado.append(-1)
+            self.estadoAntigo = self.estadoAtual
             self.estadoAtual = novoEstado
 
     @abstractmethod

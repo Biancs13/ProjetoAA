@@ -1,6 +1,7 @@
 import os
 from time import sleep
 
+from agentes.agenteReforco import AgenteReforco
 from objetos.acao import atuar
 from agentes.agente import criaAgente
 from ambientes.farol import Farol
@@ -34,6 +35,7 @@ class MotorSimulacao:
                 novaPos, novoAng = atuar(agente, acao)
                 print(novaPos, novoAng)
                 print(acao)
+                recompensa = self.ambiente.getRecompensa(novaPos,len(agente.coletaveis))
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
                     if ele.getId() == (-1,-1,-1) or (ele != (-1,-1,-1) and not ele.isSolido()):
@@ -44,6 +46,9 @@ class MotorSimulacao:
                         if ele.getId() != (-1,-1,-1) and self.tipo == "R" and ele.getNome() == "ninho":
                             pts = agente.getPontosColetaveis()
                             self.ambiente.recolher(pts)
+                if isinstance(agente, AgenteReforco):
+                    agente.avaliacaoEstadoAtual(recompensa)
+
             if self.modo == "T":
                 print(self.representa())
                 sleep(0.5) #Quando queremos testar
@@ -67,6 +72,7 @@ class MotorSimulacao:
                     agente.atualizarEstadoAtual(direcao1,direcao2)
                 else:
                     agente.atualizarEstadoAtual(direcao1)
+
 
     def inicializarObservacao(self):
         for agente in self.agentes:
@@ -95,7 +101,7 @@ class MotorSimulacao:
             linhas.append(" ".join(linha))
         return "\n".join(linhas)
 
-def cria(ficheiro,tipo,tempo,politica):
+def cria(ficheiro, tipo, politica, tempo=0):
     modo, tamanhoGrelha,numeroPassos, agentes_str, elementos_str = lerFicheiro(ficheiro)
     agentes = []
     if verificaFicheiro([modo, tamanhoGrelha,numeroPassos, agentes_str,elementos_str]):

@@ -123,7 +123,7 @@ def criaGenetico(ficheiro):
         tamanhoGeracao = int(tamanhoGeracao.strip())
         tamanhoPopulacao = int(tamanhoPopulacao.strip())
         taxaMutacao = float(taxaMutacao.strip())
-        ms = cria(ficheiroMotor,problema,tempo,politica)
+        ms = cria(ficheiroMotor, problema, politica, tempo)
         controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,problema,ms)
         return controlador
 

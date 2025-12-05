@@ -58,6 +58,9 @@ class Ambiente(ABC):
             if elemento != (-1,-1,-1) and elemento.isColetavel():
                 self.grelha[novaPosAgente] = Elemento("Vazio",-1,-1,-1)
 
+    @abstractmethod
+    def getRecompensa(self,pos,numColetaveis = 0):
+        pass
 
     @abstractmethod
     def condicaoFim(self,agentes=None):

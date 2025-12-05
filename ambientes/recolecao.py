@@ -28,3 +28,19 @@ class Recolecao(Ambiente):
                     found_agente= True
                     break
         return (not found_grelha and not found_agente) or time.time() - self.tempoInicial >= self.tempoLimite
+
+
+    def getRecompensa(self,pos,numColetaveis=0,pts=0):
+        #Falta novelty
+        ele = self.getElemento(pos)
+        if ele.isSolido() or ele.getId() == (-1,0,-1):
+            return -80
+        if ele.isColetavel():
+            return ele.getPontos() * 50
+        if ele.getNome() == "ninho":
+            if numColetaveis == 0:
+                return -200
+            else:
+                return pts * 50 + 100
+        return 0
+

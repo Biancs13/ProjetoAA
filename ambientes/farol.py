@@ -19,3 +19,12 @@ class Farol(Ambiente):
                 return True
         return False
 
+    def getRecompensa(self,pos,numColetaveis=0):
+        #NOTA: AINDA NÂO INTRODUZ NOVELTY
+        if pos == self.getPosicaoElementoMaisProximo(pos,'farol'):
+            return 500
+        ele = self.getElemento(pos)
+        if ele.isSolido() or ele.getId() == (-1,0,-1):
+            return -80
+        return 0
+
