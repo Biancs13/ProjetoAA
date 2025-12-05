@@ -19,7 +19,7 @@ class Farol(Ambiente):
                 return True
         return False
 
-    def getRecompensa(self,pos,numColetaveis=0):
+    def getRecompensa(self,pos,numColetaveis=0,pts=0):
         #NOTA: AINDA NÂO INTRODUZ NOVELTY
         if pos == self.getPosicaoElementoMaisProximo(pos,'farol'):
             return 500

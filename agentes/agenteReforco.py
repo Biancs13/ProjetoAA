@@ -21,6 +21,8 @@ class AgenteReforco(Agente):
         self.ultima_acao = self.escolher_acao(self.estadoAntigo)
         return self.ultima_acao
 
+
+    #TODO fazer taxa de exploracao ir diminuindo
     def escolher_acao(self,s):
         if random.random() < self.exploracao:
             return getAcaoAleatoria()
@@ -55,10 +57,6 @@ class AgenteReforco(Agente):
         self.q[self.estadoAntigo][self.ultima_acao] =(
                 q_atual + self.tx_aprendizagem * (recompensa + self.desconto*max_q_novo - q_atual))
 
-
-
-
-        pass
 
 def escreverDicionario(dic,nome):
     dados = []

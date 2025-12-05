@@ -34,7 +34,7 @@ class MotorSimulacao:
                 novaPos, novoAng = atuar(agente, acao)
                 print(novaPos, novoAng)
                 print(acao)
-                recompensa = self.ambiente.getRecompensa(novaPos,len(agente.coletaveis))
+                pts =0
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
                     if ele.getId() == (-1,-1,-1) or (ele != (-1,-1,-1) and not ele.isSolido()):
@@ -48,6 +48,7 @@ class MotorSimulacao:
                             self.ambiente.adicionarPontos(pts)
                     else:
                         agente.num_colisoes +=1
+                recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis),pts)
                 i +=1
                 if isinstance(agente, AgenteReforco):
                     agente.avaliacaoEstadoAtual(recompensa)
