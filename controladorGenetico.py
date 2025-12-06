@@ -3,8 +3,8 @@ from objetos.redeNeuronal import *
 
 class ControladorGenetico(Controlador):
 
-    def __init__(self,geracoes,tamanho_populacao,taxa_mutacao,elite_rate,novelty_weight,k_novel,arquivos_por_geracao,problema,ficheiro_motor,tempo,tipo):
-        super().__init__(ficheiro_motor, problema, tempo)
+    def __init__(self,geracoes,tamanho_populacao,taxa_mutacao,elite_rate,novelty_weight,k_novel,arquivos_por_geracao,problema,ficheiro_motor,tempo,modo):
+        super().__init__(ficheiro_motor, problema, tempo,modo)
         self.geracoes = geracoes
         self.tamanho_populacao = tamanho_populacao
         self.taxa_mutacao = taxa_mutacao
@@ -15,7 +15,7 @@ class ControladorGenetico(Controlador):
         self.arquivos_por_geracao = arquivos_por_geracao
         self.arquivo = set()
         self.fitness_medio_geracao = []
-        self.tipo = tipo
+        self.modo = modo
 
     def criar_populacao(self):
         return [[random.uniform(-1, 1) for _ in range(self.num_pesos)] for _ in range(self.tamanho_populacao)]
@@ -46,8 +46,9 @@ class ControladorGenetico(Controlador):
         self.arquivo.add(comportamento)
         return agente,agente.fitness
 
-    def executar(self):
+    def executar_aprendizagem(self):
         populacao_pesos = self.criar_populacao()
+        melhorAgente,melhorFitnessGlobal = None, -float('inf')
         for g in range(self.geracoes):
             total_fitness = 0
             fitness_dicionario = {}
@@ -64,8 +65,12 @@ class ControladorGenetico(Controlador):
             melhor_fitness = max(fitness_dicionario.values())
             fitness_medio = total_fitness / self.tamanho_populacao
             self.fitness_medio_geracao.append(fitness_medio)
+            agenteMelhorGeracao = max(populacao_agentes, key=lambda x: x.fitness)
+            if melhor_fitness > melhorFitnessGlobal:
+                melhorFitnessGlobal = melhor_fitness
+                melhorAgente = agenteMelhorGeracao
             populacao_agentes.sort(key=lambda x: calcular_novelty(x.comportamento, self.arquivo), reverse=True)
-            for i in range(self.arquivo_por_geracao):
+            for i in range(self.arquivos_por_geracao):
                 self.arquivo.add(tuple(populacao_agentes[i].comportamento))
             populacao_agentes.sort(key=lambda x: x.fitness, reverse=True)
             pesos_ordenados = [agente.pesos for agente in populacao_agentes] #já estão ordenados pelo fitness
@@ -82,6 +87,13 @@ class ControladorGenetico(Controlador):
                 self.mutacao(filho, self.taxa_mutacao)
                 nova_populacao.append(filho)
             populacao_pesos = nova_populacao
+        if melhorAgente is not None:
+            melhorAgente.escreverMelhor()
+
+    def executar_teste(self):
+        motor = self.criar_motor("genetico")
+
+        motor.executa()
 
 
 def distancia_jaccard(seq1, seq2):
@@ -101,8 +113,8 @@ def calcular_novelty(comportamento, arquivo, k=5):
 
 
 def criaGenetico(ficheiro):
-    problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,ficheiroMotor = ler(ficheiro)
-    if verifica([problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor]):
+    modo,problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,ficheiroMotor = ler(ficheiro)
+    if verifica([modo,problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor]):
         tamanhoGeracao = int(tamanhoGeracao.strip())
         tamanhoPopulacao = int(tamanhoPopulacao.strip())
         taxaMutacao = float(taxaMutacao.strip())
@@ -110,13 +122,15 @@ def criaGenetico(ficheiro):
         noveltyWeight = float(noveltyWeight.strip())
         kNovel = int(kNovel.strip())
         arquivosGeracao = int(arquivosGeracao.strip())
-        controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,problema,ficheiroMotor,tempo,problema)
+        controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,problema,ficheiroMotor,tempo,modo)
         return controlador
 
 
 #não atualizado para o novo ficheiro
 def verifica(resultado):
-    ambiente, tempo, politica, tamanhoGer, tamanhoPop, taxaMut, fichMotor = resultado
+    modo,ambiente, tempo, politica, tamanhoGer, tamanhoPop, taxaMut, fichMotor = resultado
+    if modo not in ["T","A"]:
+        return False
     if ambiente not in ["R","F"]:
         return False
     if ambiente == "R":
@@ -144,8 +158,9 @@ def ler(nome):
     fich = open(nome, "r")
     linhas = fich.readlines()
     fich.close()
-    tipo = linhas[0].strip()
-    i=1
+    modo = linhas[0].strip()
+    tipo = linhas[1].strip()
+    i=2
     if tipo == "R":
         tempo = linhas[i].strip()
         i+=1
@@ -173,7 +188,7 @@ def ler(nome):
         fichMotor = "./" + partes[1]
     else:
         fichMotor = None
-    resultado = [tipo,tempo,politica,tamanhoGer,tamanhoPop,taxaMut,eliteRate,noveltyWeight,kNovel,arquivosGeracao,fichMotor]
+    resultado = [modo,tipo,tempo,politica,tamanhoGer,tamanhoPop,taxaMut,eliteRate,noveltyWeight,kNovel,arquivosGeracao,fichMotor]
     return resultado
 
 

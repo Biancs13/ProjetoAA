@@ -1,6 +1,5 @@
 from abc import abstractmethod, ABC
 from typing import AbstractSet
-
 from objetos.acao import *
 from objetos.posicao import dentroLimites
 from objetos.sensor import Sensor
@@ -112,33 +111,38 @@ class Agente(ABC):
     def __str__(self):
         return (f"Agente {self.id}: Posicao={self.posicaoAtual}, " f"Angulo={self.angulo}°")
 
-def escrever(ficheiro, lista):
-    fich = open(ficheiro,'w')
+def escrever(ficheiro,lista):
+    fich = open(ficheiro,'r+')
+    linhas = fich.readlines()
+    primeiras = linhas[:4]
+    fich.seek(0)
+    for linha in primeiras:
+        fich.write(linha)
     for i in lista:
         fich.write(str(i) + '\n')
+    fich.truncate()
 
 def ler(ficheiro,tamanhoLista,tipo):
     fich = open(ficheiro, 'r')
     lista = [linha.strip() for linha in fich.readlines()]
-    correto = valida(lista, tamanhoLista)
+    fich.close()
+    pesos = lista[4:] #se o que queremos ler for a partir de linhas diferentes
+    correto = valida(pesos, tamanhoLista) #, acrescentar atributo com linha a começar leitura
     resultado = []
     if correto:
-        for i in lista:
+        for i in pesos:
             resultado.append(tipo(i))
         return resultado
-    return None
+
 #alterar pq pode ser string
 def valida(lista,tamanhoLista):
-    for i in lista:
-        if float(i) is not float:
-            return False
-    if tamanhoLista == len(lista):
+    if tamanhoLista != len(lista):
         return False
     return True
 
-def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica):
+def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica,carregarMelhor):
     from agentes.agenteFixo import AgenteFixo
-    from agentes.agenteReforco import AgenteReforco
+    from agentes.agenteReforco import AgenteReforco, lerDicionario
     from agentes.agenteGenetico import AgenteGenetico
     from agentes.agenteAleatorio import AgenteAleatorio
     fich = open(ficheiro_agentes,"r")
@@ -158,6 +162,21 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica):
         if politica == "aleatorio":
             agente = AgenteAleatorio(id,posicao,tipoProblema, angulo,ficheiro_agentes)
 
+        if carregarMelhor:
+            if politica == "genetico":
+                if tipoProblema == "F":
+                    num_pesos = 44
+                else:
+                    num_pesos = 50
+                pesos = ler(ficheiro_agentes,num_pesos,float)
+                if pesos:
+                    agente.pesos = pesos
+            elif politica == "reforco":
+                q = lerDicionario(ficheiro_agentes)
+                if q:
+                    agente.q = q
+                    agente.exploracao = 0.0
+
         sen = ag[3].split()
         campoVisao =[]
         for v in sen[1:]:
@@ -170,7 +189,7 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica):
 
 
 def verificaFicheiro(agente,tamanhoGrelha):
-    id_str,pos,ang_str, sen = agente
+    id_str,pos,ang_str, sen = agente[0:4]
     id = int(id_str)
     if type(id) is not int or id < 0:
         return False
