@@ -1,4 +1,6 @@
 from abc import abstractmethod, ABC
+from typing import AbstractSet
+
 from objetos.acao import *
 from objetos.posicao import dentroLimites
 from objetos.sensor import Sensor
@@ -110,6 +112,29 @@ class Agente(ABC):
     def __str__(self):
         return (f"Agente {self.id}: Posicao={self.posicaoAtual}, " f"Angulo={self.angulo}°")
 
+def escrever(ficheiro, lista):
+    fich = open(ficheiro,'w')
+    for i in lista:
+        fich.write(str(i) + '\n')
+
+def ler(ficheiro,tamanhoLista,tipo):
+    fich = open(ficheiro, 'r')
+    lista = [linha.strip() for linha in fich.readlines()]
+    correto = valida(lista, tamanhoLista)
+    resultado = []
+    if correto:
+        for i in lista:
+            resultado.append(tipo(i))
+        return resultado
+    return None
+#alterar pq pode ser string
+def valida(lista,tamanhoLista):
+    for i in lista:
+        if float(i) is not float:
+            return False
+    if tamanhoLista == len(lista):
+        return False
+    return True
 
 def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica):
     from agentes.agenteFixo import AgenteFixo
@@ -201,7 +226,6 @@ def verificaFicheiro(agente,tamanhoGrelha):
             return False
 
     return True
-
 
 # No final do ficheiro agente.py, substitua ou adapte o bloco main:
 

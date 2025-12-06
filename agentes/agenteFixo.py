@@ -1,7 +1,7 @@
 import random
 
 from objetos.acao import Acao, melhor_acao_para_direcao
-from agentes.agente import Agente
+from agentes.agente import Agente, escrever
 from objetos.vetor import Vetor
 
 
@@ -81,6 +81,9 @@ class AgenteFixo(Agente):
 
     def avaliacaoEstadoAtual(self,recompensa):
         pass
+
+    def escreverMelhor(self):
+        escrever(self.ficheiro,self.ultima_acao)
 
 
 def existeSolido(elementos,acao):

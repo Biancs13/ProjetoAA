@@ -1,5 +1,5 @@
 from objetos.acao import Acao,getAcaoAleatoria
-from agentes.agente import Agente
+from agentes.agente import Agente, escrever
 
 
 class AgenteAleatorio(Agente):
@@ -26,6 +26,9 @@ class AgenteAleatorio(Agente):
 
     def avaliacaoEstadoAtual(self,recompensa):
         pass
+
+    def escreverMelhor(self):
+        escrever(self.ficheiro,self.acoes)
 
 
 def existeSolido(elementos,acao):
