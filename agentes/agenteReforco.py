@@ -58,15 +58,20 @@ class AgenteReforco(Agente):
                 q_atual + self.tx_aprendizagem * (recompensa + self.desconto*max_q_novo - q_atual))
 
 
-def escreverDicionario(dic,nome):
-    dados = []
-    for estado, acaoRecompensa in dic.items():
-        for acao,recompensa in acaoRecompensa.items():
-            linha = f"{'|'.join(map(str, estado))},{acao.name},{str(recompensa)}"
-            dados.append(linha)
-    ficheiro = open(nome,'w')
-    for linha in dados:
-        ficheiro.write(linha + '\n')
+    def escreverDicionario(self,dic):
+        dados = []
+        for estado, acaoRecompensa in dic.items():
+            for acao,recompensa in acaoRecompensa.items():
+                linha = f"{'|'.join(map(str, estado))},{acao.name},{str(recompensa)}"
+                dados.append(linha)
+        fich = open(self.ficheiro,'r+')
+        linhas = fich.readlines()
+        primeiras = linhas[:4]
+        fich.seek(0)
+        for linha in primeiras:
+            fich.write(linha)
+        for linha in dados:
+            fich.write(linha + '\n')
 
 def lerDicionario(nome):
     dic = {}
@@ -89,23 +94,3 @@ def lerDicionario(nome):
                 dic[chave] = {}
             dic[chave][acao] = recompensa
     return dic
-
-if __name__ == '__main__':
-    NOME_FICHEIRO = "teste.txt"
-    q_table_original = {
-        (0, -1, 0, -1, 0, 0, 1): {
-            Acao.FRENTE: 10,
-            Acao.DIREITA: -5
-        },
-        (0, 0, 0, 0, -1, -1): {
-            Acao.ESQUERDA: 5,
-            Acao.MEIA_VOLTA: 0
-        }
-    }
-
-    print("--- Início do Teste ---")
-    print(f"Original: {q_table_original}")
-    escreverDicionario(q_table_original, NOME_FICHEIRO)
-    q_table_carregada = lerDicionario(NOME_FICHEIRO)
-
-    print(f"\nCarregada: {q_table_carregada}")

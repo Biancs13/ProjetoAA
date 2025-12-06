@@ -32,8 +32,8 @@ class MotorSimulacao:
             for agente in self.agentes:
                 acao = agente.age()
                 novaPos, novoAng = atuar(agente, acao)
-                print(novaPos, novoAng)
-                print(acao)
+                #print(novaPos, novoAng)
+                #print(acao)
                 pts =0
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
@@ -46,9 +46,15 @@ class MotorSimulacao:
                             pts = agente.getPontosColetaveis()
                             agente.recolher(pts)
                             self.ambiente.adicionarPontos(pts)
+                        recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis), pts)
+
                     else:
                         agente.num_colisoes +=1
-                recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis),pts)
+                        recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis), pts)
+
+                else:
+                    agente.num_colisoes += 1
+                    recompensa = -80
                 i +=1
                 if isinstance(agente, AgenteReforco):
                     agente.avaliacaoEstadoAtual(recompensa)
@@ -67,7 +73,6 @@ class MotorSimulacao:
         for agente in self.agentes:
             obs, pos = self.ambiente.observacaoParaAgente(agente)
             agente.observacao(obs)
-            print("atualizando estado atual")
             if self.tipo == "F":
                 direcao1 = getDirecao(agente.posicaoAtual,self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"farol"))
                 agente.atualizarEstadoAtual(direcao1)
@@ -108,22 +113,25 @@ class MotorSimulacao:
         return "\n".join(linhas)
 
 
-def cria(ficheiro, tipo, politica, tempo=0):
-    modo, tamanhoGrelha,numeroPassos, agentes_str, elementos_str = lerFicheiro(ficheiro)
+def cria(ficheiro, tipo, politica,modo,tempo=0):
+    tamanhoGrelha,numeroPassos, agentes_str, elementos_str = lerFicheiro(ficheiro)
     agentes = []
-    if verificaFicheiro([modo, tamanhoGrelha,numeroPassos, agentes_str,elementos_str]):
+    if verificaFicheiro([tamanhoGrelha,numeroPassos, agentes_str,elementos_str]):
+        if modo.strip() == "T":
+            carregaMelhor = True
+        else:
+            carregaMelhor = False
         tamanhoGrelha = int(tamanhoGrelha.strip())
         if tipo == "R":
             ambiente = Recolecao(tamanhoGrelha,tempo)
         elif tipo == "F":
             ambiente = Farol(tamanhoGrelha)
-        modo = modo.strip()
 
         numeroPassos = int(numeroPassos.strip())
 
         for ag in agentes_str:
             path = "agentes/"+ag
-            agentes.append(criaAgente(path,tamanhoGrelha,tipo,politica))
+            agentes.append(criaAgente(path,tamanhoGrelha,tipo,politica,carregaMelhor))
 
         for ele in elementos_str:
             _, nome, pos, coletavel, solido, pts = ele
@@ -142,16 +150,14 @@ def lerFicheiro(nome):
     linhas = fich.readlines()
     fich.close()
 
-    modoFich = linhas[0]
-
     agentesFich = []
     sensoresFich = []
     elementosFich = []
 
-    tamanhoFich = linhas[1]
-    numeroPas = linhas[2]
+    tamanhoFich = linhas[0]
+    numeroPas = linhas[1]
 
-    for linha in linhas[3:]:
+    for linha in linhas[2:]:
         partes = linha.split()
 
         if partes[0] == "AG":
@@ -166,17 +172,12 @@ def lerFicheiro(nome):
         else:
             pass
 
-    resultado = [modoFich,tamanhoFich,numeroPas,agentesFich,elementosFich]
+    resultado = [tamanhoFich,numeroPas,agentesFich,elementosFich]
 
     return resultado
 
 def verificaFicheiro(resultado):
-    modo, tamanhoGrelha,numeroPas, agentesFich, elementos = resultado
-
-    modo = modo.strip()
-    if modo not in ["A", "T"]:
-        return False
-
+    tamanhoGrelha,numeroPas, agentesFich, elementos = resultado
     tamanho_grelha_int = int(tamanhoGrelha.strip())
     if tamanho_grelha_int < 3:
         return False

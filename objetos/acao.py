@@ -57,7 +57,7 @@ def melhor_acao_para_direcao(anguloAgente, direcao):
 
 
 def melhor_acao(angA,angD):
-    print(f"anguloA: {angA} | anguloD: {angD}")
+    #print(f"anguloA: {angA} | anguloD: {angD}")
     if angA == 0:
         if  angD < 45 or angD >= 315:
             return Acao.FRENTE
