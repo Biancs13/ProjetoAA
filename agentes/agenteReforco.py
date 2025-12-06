@@ -88,7 +88,6 @@ def lerDicionario(nome):
             if chave not in dic:
                 dic[chave] = {}
             dic[chave][acao] = recompensa
-
     return dic
 
 if __name__ == '__main__':

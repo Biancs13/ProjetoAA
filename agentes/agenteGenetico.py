@@ -1,5 +1,5 @@
 import random
-from agentes.agente import Agente
+from agentes.agente import Agente, escrever, ler
 from objetos.acao import Acao
 from objetos.redeNeuronal import criarRedeNeuronal
 
@@ -37,44 +37,17 @@ class AgenteGenetico(Agente):
         return total_pontos
 
     def escreverMelhor(self):
-        escreverPesos(self.ficheiro,self.pesos)
-
-
-
-def escreverPesos(ficheiro,lista):
-    fich = open(ficheiro,'w')
-    for i in lista:
-        fich.write(str(i) + '\n')
-
-def lerPesos(ficheiro,tamanhoLista):
-    fich = open(ficheiro,'r')
-    lista = [linha.strip() for linha in fich.readlines()]
-    correto = valida(lista,tamanhoLista)
-    resultado = []
-    if correto:
-        for i in lista:
-            resultado.append(float(i))
-        return resultado
-    return None
-
-
-def valida(lista,tamanhoLista):
-    for i in lista:
-        if float(i) is not float:
-            return False
-    if tamanhoLista == len(lista):
-        return False
-    return True
+        escrever(self.ficheiro,self.pesos)
 
 if __name__ == "__main__":
     nome_ficheiro = "teste_pesos.txt"
     tamanho_esperado = 20
     pesos_originais = [round(random.uniform(-1, 1), 6) for _ in range(tamanho_esperado)]
-    escreverPesos(nome_ficheiro, pesos_originais)
-    pesos_lidos = lerPesos(nome_ficheiro, tamanho_esperado)
+    escrever(nome_ficheiro, pesos_originais)
+    pesos_lidos = ler(nome_ficheiro, tamanho_esperado)
     for p in pesos_lidos:
         print(p)
     nome_ficheiro2 = "teste_errado.txt"
-    escreverPesos(nome_ficheiro2, [0.5, "ERRO_STRING", 0.9])
-    pesos_lidos_falha_tipo = lerPesos(nome_ficheiro2, 3)
+    escrever(nome_ficheiro2, [0.5, "ERRO_STRING", 0.9])
+    pesos_lidos_falha_tipo = ler(nome_ficheiro2, 3)
     print(pesos_lidos_falha_tipo)

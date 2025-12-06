@@ -1,28 +1,21 @@
-import random
-
-from ambientes import ambiente
-from motorSimulacao import MotorSimulacao, cria
+from controlador import Controlador
 from objetos.redeNeuronal import *
 
-class ControladorGenetico:
+class ControladorGenetico(Controlador):
 
-    def __init__(self,geracoes, tamanho_populacao, taxa_mutacao,problema, ficheiro_motor,tempo,tipo):
+    def __init__(self,geracoes,tamanho_populacao,taxa_mutacao,elite_rate,novelty_weight,k_novel,arquivos_por_geracao,problema,ficheiro_motor,tempo,tipo):
+        super().__init__(ficheiro_motor, problema, tempo)
         self.geracoes = geracoes
         self.tamanho_populacao = tamanho_populacao
         self.taxa_mutacao = taxa_mutacao
-        if problema == "F":
-            self.num_pesos = 44
-        else:
-            self.num_pesos = 50
-        self.ficheiro_motor = ficheiro_motor
-        self.elite_rate = 0.2
-        self.novelty_weight = 1000
-        self.k_novel = 5
-        self.arquivo_por_geracao = 5
+        self.num_pesos = 44 if problema == "F" else 50
+        self.elite_rate = elite_rate
+        self.novelty_weight = novelty_weight
+        self.k_novel = k_novel
+        self.arquivos_por_geracao = arquivos_por_geracao
         self.arquivo = set()
         self.fitness_medio_geracao = []
         self.tipo = tipo
-        self.tempo = tempo
 
     def criar_populacao(self):
         return [[random.uniform(-1, 1) for _ in range(self.num_pesos)] for _ in range(self.tamanho_populacao)]
@@ -42,12 +35,12 @@ class ControladorGenetico:
                 individuo[i] = max(-1, min(1, individuo[i]))
 
     def avaliar_individuo(self, pesos):
-        motor = cria(self.ficheiro_motor,self.tipo,"genetico",self.tempo)
+        motor = self.criar_motor("genetico")
         agente = motor.agentes[0]
         agente.pesos = pesos
         motor.executa()
         comportamento = tuple(agente.comportamento)
-        novelty_total = calcular_novelty(comportamento, self.arquivo, k=self.k_novel)
+        novelty_total = calcular_novelty(comportamento, self.arquivo, self.k_novel)
         objetivo_total = agente.calcular_fitness_objetivo()
         agente.fitness = objetivo_total + novelty_total * self.novelty_weight
         self.arquivo.add(comportamento)
@@ -69,33 +62,25 @@ class ControladorGenetico:
                 i+=1
 
             melhor_fitness = max(fitness_dicionario.values())
-
             fitness_medio = total_fitness / self.tamanho_populacao
             self.fitness_medio_geracao.append(fitness_medio)
-
-
             populacao_agentes.sort(key=lambda x: calcular_novelty(x.comportamento, self.arquivo), reverse=True)
-
             for i in range(self.arquivo_por_geracao):
                 self.arquivo.add(tuple(populacao_agentes[i].comportamento))
-
             populacao_agentes.sort(key=lambda x: x.fitness, reverse=True)
             pesos_ordenados = [agente.pesos for agente in populacao_agentes] #já estão ordenados pelo fitness
 
             print(f"Gen {g + 1}/{self.geracoes} | Avg Combined: {fitness_medio:.2f} | Melhor fitness: {melhor_fitness:.2f})")
 
             nova_populacao = []
-
             n_elite = max(1, int(self.elite_rate * self.tamanho_populacao))
             nova_populacao.extend(pesos_ordenados[:n_elite])
-
             while len(nova_populacao) < self.tamanho_populacao:
                 pai1 = self.selecionar(fitness_dicionario)
                 pai2 = self.selecionar(fitness_dicionario)
                 filho = self.reproduzir(pai1, pai2)
                 self.mutacao(filho, self.taxa_mutacao)
                 nova_populacao.append(filho)
-
             populacao_pesos = nova_populacao
 
 
@@ -116,16 +101,20 @@ def calcular_novelty(comportamento, arquivo, k=5):
 
 
 def criaGenetico(ficheiro):
-    problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor = ler(ficheiro)
+    problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,ficheiroMotor = ler(ficheiro)
     if verifica([problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor]):
         tamanhoGeracao = int(tamanhoGeracao.strip())
         tamanhoPopulacao = int(tamanhoPopulacao.strip())
         taxaMutacao = float(taxaMutacao.strip())
-        controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,problema,ficheiroMotor,tempo,problema)
+        eliteRate = float(eliteRate.strip())
+        noveltyWeight = float(noveltyWeight.strip())
+        kNovel = int(kNovel.strip())
+        arquivosGeracao = int(arquivosGeracao.strip())
+        controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,problema,ficheiroMotor,tempo,problema)
         return controlador
 
 
-
+#não atualizado para o novo ficheiro
 def verifica(resultado):
     ambiente, tempo, politica, tamanhoGer, tamanhoPop, taxaMut, fichMotor = resultado
     if ambiente not in ["R","F"]:
@@ -149,8 +138,6 @@ def verifica(resultado):
     taxaMut = float(taxaMut)
     if taxaMut <= 0 or taxaMut > 1 or type(taxaMut) is not float:
         return False
-
-
     return True
 
 def ler(nome):
@@ -167,27 +154,29 @@ def ler(nome):
 
     politica = linhas[i].strip()
     i+=1
-
     tamanhoGer = linhas[i].strip()
     i+=1
-
     tamanhoPop = linhas[i].strip()
     i+=1
-
     taxaMut = linhas[i].strip()
     i+=1
-
+    eliteRate = linhas[i].strip()
+    i += 1
+    noveltyWeight = linhas[i].strip()
+    i += 1
+    kNovel = linhas[i].strip()
+    i += 1
+    arquivosGeracao = linhas[i].strip()
+    i += 1
     partes = linhas[i].split()
     if partes[0] == "MS":
         fichMotor = "./" + partes[1]
     else:
         fichMotor = None
-
-    resultado = [tipo,tempo,politica,tamanhoGer,tamanhoPop,taxaMut,fichMotor]
-
+    resultado = [tipo,tempo,politica,tamanhoGer,tamanhoPop,taxaMut,eliteRate,noveltyWeight,kNovel,arquivosGeracao,fichMotor]
     return resultado
 
 
-controlador = criaGenetico("controladorGenetico.txt")
+controlador = criaGenetico("controladorGenetico_farol.txt")
 if controlador:
     controlador.executar()

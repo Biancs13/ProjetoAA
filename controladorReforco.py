@@ -1,20 +1,16 @@
-from motorSimulacao import cria
+from controlador import Controlador
 
-
-class ControladorReforco():
-
+class ControladorReforco(Controlador):
 
     def __init__(self,episodios,ficheiro_motor,problema,tempo=0):
         self.episodios = episodios
-        self.ficheiro_motor = ficheiro_motor
-        self.problema = problema
-        self.tempo = tempo
+        super().__init__(ficheiro_motor, problema, tempo)
 
 
     def executar(self):
         q = {}
         for i in range(self.episodios):
-            motor = cria(self.ficheiro_motor,self.problema,"reforco",self.tempo)
+            motor = self.criar_motor("reforco")
             motor.agentes[0].q = q
             motor.executa() # aqui treinamos
             q = motor.agentes[0].q
