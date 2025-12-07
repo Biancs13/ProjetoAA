@@ -2,12 +2,12 @@ from controlador import Controlador
 
 class ControladorReforco(Controlador):
 
-    def __init__(self,episodios,ficheiro_motor,problema,tempo=0):
+    def __init__(self,episodios,ficheiro_motor,problema,modo,tempo=0):
         self.episodios = episodios
-        super().__init__(ficheiro_motor, problema, tempo)
+        super().__init__(ficheiro_motor, problema,modo,tempo)
 
 
-    def executar(self):
+    def executar_aprendizagem(self):
         q = {}
         for i in range(self.episodios):
             motor = self.criar_motor("reforco")
@@ -15,8 +15,13 @@ class ControladorReforco(Controlador):
             motor.executa() # aqui treinamos
             q = motor.agentes[0].q
             print(i,q)
-
+            motor.agentes[0].escreverDicionario(q)
         # TODO pôr aqui para guardar o melhor individuo
+
+    def executar_teste(self):
+        motor = self.criar_motor("reforco")
+
+        motor.executa()
 
 
 def get_max_recompensa_q(q):
