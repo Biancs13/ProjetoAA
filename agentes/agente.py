@@ -4,12 +4,13 @@ from objetos.acao import *
 from objetos.posicao import dentroLimites
 from objetos.sensor import Sensor
 
+
+
 class Agente(ABC):
     def __init__(self, id, posicaoAtual, tipoProblema, angulo,ficheiro):
         self.id = id
         self.posicaoAtual = posicaoAtual
         self.angulo = angulo
-        #self.politica = politica
         self.sensor = None
         self.coletaveis = []
         self.observacaoAtual = None
@@ -140,7 +141,7 @@ def valida(lista,tamanhoLista):
         return False
     return True
 
-def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica,carregarMelhor):
+def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica,carregarMelhor=False):
     from agentes.agenteFixo import AgenteFixo
     from agentes.agenteReforco import AgenteReforco, lerDicionario
     from agentes.agenteGenetico import AgenteGenetico
@@ -246,25 +247,3 @@ def verificaFicheiro(agente,tamanhoGrelha):
 
     return True
 
-# No final do ficheiro agente.py, substitua ou adapte o bloco main:
-
-def main():
-    tamanho_da_grelha = 10
-    agente = criaAgente("agente.txt", tamanho_da_grelha)
-    if agente:
-        print(" Criação do Agente SUCESSO:")
-        print(agente)
-
-        sensor = agente.getSensor()
-        if sensor:
-            campo_visao_str = [str(v) for v in sensor.getCampoVisao()]
-            print(f"   - Campo de Visão: {campo_visao_str}")
-        else:
-            print("   - Sensor: Nenhum sensor instalado.")
-
-    else:
-        print(" Criação do Agente FALHOU.")
-
-
-if __name__ == "__main__":
-    main()

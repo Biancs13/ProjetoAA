@@ -26,20 +26,6 @@ class Controlador(ABC):
     def executar_teste(self):
         pass
 
-#adaptar quando se tiver Reforço feito
-def criarControlador(ficheiro):
-    from controladorGenetico import criaGenetico
-    tipo_politica = ler(ficheiro)
-    if tipo_politica == "genetico":
-        return criaGenetico(ficheiro)
-    return None
-'''  
-    if tipo_politica == "reforco":
-        return criaReforco(ficheiro)
-'''
 
-def ler(ficheiro):
-    fich = open(ficheiro, "r")
-    linhas = fich.readlines()
-    fich.close()
-    return linhas[1].strip()
+
+

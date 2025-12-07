@@ -1,0 +1,11 @@
+T
+R 30
+genetico
+150
+300
+0.35
+0.2
+1000
+5
+5
+MS simulacao_recolecao_genetico.txt

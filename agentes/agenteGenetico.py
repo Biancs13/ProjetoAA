@@ -39,15 +39,3 @@ class AgenteGenetico(Agente):
     def escreverMelhor(self):
         escrever(self.ficheiro,self.pesos)
 
-if __name__ == "__main__":
-    nome_ficheiro = "teste_pesos.txt"
-    tamanho_esperado = 20
-    pesos_originais = [round(random.uniform(-1, 1), 6) for _ in range(tamanho_esperado)]
-    escrever(nome_ficheiro, pesos_originais)
-    pesos_lidos = ler(nome_ficheiro, tamanho_esperado)
-    for p in pesos_lidos:
-        print(p)
-    nome_ficheiro2 = "teste_errado.txt"
-    escrever(nome_ficheiro2, [0.5, "ERRO_STRING", 0.9])
-    pesos_lidos_falha_tipo = ler(nome_ficheiro2, 3)
-    print(pesos_lidos_falha_tipo)

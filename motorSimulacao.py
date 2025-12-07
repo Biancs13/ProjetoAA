@@ -32,8 +32,6 @@ class MotorSimulacao:
             for agente in self.agentes:
                 acao = agente.age()
                 novaPos, novoAng = atuar(agente, acao)
-                #print(novaPos, novoAng)
-                #print(acao)
                 pts =0
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
@@ -60,6 +58,7 @@ class MotorSimulacao:
                     agente.avaliacaoEstadoAtual(recompensa)
             if self.modo == "T":
                 print(self.representa(),"\n")
+                sleep(0.5)
         if self.tipo != "R":
             for a in self.agentes:
                 if self.ambiente.condicaoFim(self.agentes) :
@@ -149,7 +148,6 @@ def lerFicheiro(nome):
     fich = open(nome, "r")
     linhas = fich.readlines()
     fich.close()
-
     agentesFich = []
     sensoresFich = []
     elementosFich = []

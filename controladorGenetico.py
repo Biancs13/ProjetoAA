@@ -92,7 +92,6 @@ class ControladorGenetico(Controlador):
 
     def executar_teste(self):
         motor = self.criar_motor("genetico")
-
         motor.executa()
 
 
@@ -111,87 +110,22 @@ def calcular_novelty(comportamento, arquivo, k=5):
     k_use = min(k, len(distancias))
     return sum(distancias[:k_use]) / k_use if k_use > 0 else 0.0
 
-
-def criaGenetico(ficheiro):
-    modo,problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,ficheiroMotor = ler(ficheiro)
-    if verifica([modo,problema, tempo, politica, tamanhoGeracao, tamanhoPopulacao, taxaMutacao, ficheiroMotor]):
-        tamanhoGeracao = int(tamanhoGeracao.strip())
-        tamanhoPopulacao = int(tamanhoPopulacao.strip())
-        taxaMutacao = float(taxaMutacao.strip())
-        eliteRate = float(eliteRate.strip())
-        noveltyWeight = float(noveltyWeight.strip())
-        kNovel = int(kNovel.strip())
-        arquivosGeracao = int(arquivosGeracao.strip())
-        controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,problema,ficheiroMotor,tempo,modo)
-        return controlador
-
-
-#não atualizado para o novo ficheiro
-def verifica(resultado):
-    modo,ambiente, tempo, politica, tamanhoGer, tamanhoPop, taxaMut, fichMotor = resultado
-    if modo not in ["T","A"]:
-        return False
-    if ambiente not in ["R","F"]:
-        return False
-    if ambiente == "R":
-        limite = int(tempo)
-        if limite <= 10 or type(limite) is not int:
-            return False
-
-    if politica not in ["fixo","aleatorio","reforco","genetico"]:
-        return False
-
-    tamanhoGeracao = int(tamanhoGer)
-    if tamanhoGeracao <= 10 or type(tamanhoGeracao) is not int:
-        return False
-
-    tamanhoPopulacao = int(tamanhoPop)
-    if tamanhoPopulacao <= 10 or type(tamanhoPopulacao) is not int:
-        return False
-
-    taxaMut = float(taxaMut)
-    if taxaMut <= 0 or taxaMut > 1 or type(taxaMut) is not float:
-        return False
-    return True
-
-def ler(nome):
-    fich = open(nome, "r")
-    linhas = fich.readlines()
-    fich.close()
-    modo = linhas[0].strip()
-    tipo = linhas[1].strip()
-    i=2
-    if tipo == "R":
-        tempo = linhas[i].strip()
-        i+=1
+# TODO Acrescentar verifica ao conteudo APENAS !!!
+def criaGenetico(modo,problema,conteudo):
+    tamanhoGeracao, tamanhoPopulacao, taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,ficheiroMotor = conteudo
+    tamanhoGeracao = int(tamanhoGeracao.strip())
+    tamanhoPopulacao = int(tamanhoPopulacao.strip())
+    taxaMutacao = float(taxaMutacao.strip())
+    eliteRate = float(eliteRate.strip())
+    noveltyWeight = float(noveltyWeight.strip())
+    kNovel = int(kNovel.strip())
+    arquivosGeracao = int(arquivosGeracao.strip())
+    problema = problema.split(" ")
+    if problema[0] == "R":
+        tempo = int(problema[1])
     else:
         tempo = None
+    ficheiroMotor = ficheiroMotor.split(" ")[1]
+    controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,problema[0],ficheiroMotor,tempo,modo)
+    return controlador
 
-    politica = linhas[i].strip()
-    i+=1
-    tamanhoGer = linhas[i].strip()
-    i+=1
-    tamanhoPop = linhas[i].strip()
-    i+=1
-    taxaMut = linhas[i].strip()
-    i+=1
-    eliteRate = linhas[i].strip()
-    i += 1
-    noveltyWeight = linhas[i].strip()
-    i += 1
-    kNovel = linhas[i].strip()
-    i += 1
-    arquivosGeracao = linhas[i].strip()
-    i += 1
-    partes = linhas[i].split()
-    if partes[0] == "MS":
-        fichMotor = "./" + partes[1]
-    else:
-        fichMotor = None
-    resultado = [modo,tipo,tempo,politica,tamanhoGer,tamanhoPop,taxaMut,eliteRate,noveltyWeight,kNovel,arquivosGeracao,fichMotor]
-    return resultado
-
-
-controlador = criaGenetico("controladorGenetico_farol.txt")
-if controlador:
-    controlador.executar()
