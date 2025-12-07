@@ -7,20 +7,28 @@ from objetos.vetor import Vetor
 
 class AgenteFixo(Agente):
 
-    def __init__(self, id, posicaoInicial, tipo, angulo,ficheiro):
+    def __init__(self, id, posicaoInicial, tipo, angulo,ficheiro,treino = False):
         super().__init__(id,posicaoInicial,tipo, angulo,ficheiro)
         self.ultima_acao = None
+        self.acoes = []
+        self.treino = treino
 
     def age(self):
-        print(self.estadoAtual)
+        print(self.acoes)
+        if self.treino:
+            acao = self.acoes.pop(0)
+            return acao
         elementos = self.estadoAtual[1:10]
         angulo = self.estadoAtual[0] * 360
         if len(self.estadoAtual) == 12:
             if elementos[2] == 1:
+                self.acoes.append(Acao.ESQUERDA)
                 return Acao.ESQUERDA
             elif elementos[5] == 1:
+                self.acoes.append(Acao.FRENTE)
                 return Acao.FRENTE
             elif elementos[8] == 1:
+                self.acoes.append(Acao.DIREITA)
                 return Acao.DIREITA
             direcaoFarol = self.estadoAtual[10:]
             vetorFarol = Vetor(direcaoFarol[0], direcaoFarol[1])
@@ -28,6 +36,7 @@ class AgenteFixo(Agente):
 
             if not existeSolido(elementos, melhorAcao) and not estaFora(elementos,melhorAcao):
                 self.ultima_acao = melhorAcao
+                self.acoes.append(melhorAcao)
                 return melhorAcao
 
             alternativas = [Acao.ESQUERDA, Acao.FRENTE, Acao.DIREITA]
@@ -39,9 +48,11 @@ class AgenteFixo(Agente):
             for acao in alternativas:
                 if not existeSolido(elementos, acao) and not estaFora(elementos,acao):
                     self.ultima_acao = acao
+                    self.acoes.append(acao)
                     return acao
 
             self.ultima_acao = Acao.MEIA_VOLTA
+            self.acoes.append(Acao.MEIA_VOLTA)
             return Acao.MEIA_VOLTA
 
         elif len(self.estadoAtual) == 15:
@@ -83,7 +94,7 @@ class AgenteFixo(Agente):
         pass
 
     def escreverMelhor(self):
-        escrever(self.ficheiro,self.ultima_acao)
+        escrever(self.ficheiro,self.acoes)
 
 
 def existeSolido(elementos,acao):

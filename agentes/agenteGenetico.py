@@ -1,5 +1,5 @@
 import random
-from agentes.agente import Agente, escrever, ler
+from agentes.agente import Agente, escrever
 from objetos.acao import Acao
 from objetos.redeNeuronal import criarRedeNeuronal
 

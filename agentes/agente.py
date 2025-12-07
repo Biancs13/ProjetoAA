@@ -123,14 +123,20 @@ def escrever(ficheiro,lista):
     for linha in primeiras:
         fich.write(linha)
     for i in lista:
-        fich.write(str(i) + '\n')
+        fich.write('\n' + str(i) )
     fich.truncate()
 
-def ler(lista,tipo):
+def lerFloats(lista):
     resultado = []
     for i in lista:
-        resultado.append(tipo(i))
+        resultado.append(float(i))
     return resultado
+
+def lerAcoes(lista):
+    acoes = []
+    for acao in lista:
+        acoes.append(Acao[acao.split(".")[-1]])
+    return acoes
 
 #Tirei para ser mais fácil
 #alterar pq pode ser string
@@ -139,7 +145,7 @@ def valida(lista,tamanhoLista):
         return False
     return True
 
-def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica,passos,carregarMelhor=False):
+def criaAgente(ficheiro_agentes, tamanhoGrelha, tipoProblema, politica, passos, modo="A", carregarMelhor=False):
     from agentes.agenteFixo import AgenteFixo
     from agentes.agenteReforco import AgenteReforco, lerDicionario
     from agentes.agenteGenetico import AgenteGenetico
@@ -152,8 +158,9 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica,passos,carre
         posicao = Posicao(int(x_str), int(y_str))
         angulo = int(ag[2])
         melhor = ag[4:]
+        treino = (modo == "T")
         if politica == "fixo" :
-            agente = AgenteFixo(id,posicao,tipoProblema, angulo,ficheiro_agentes)
+            agente = AgenteFixo(id,posicao,tipoProblema, angulo,ficheiro_agentes,treino)
         if politica == "genetico":
             agente = AgenteGenetico(id,posicao,tipoProblema, angulo,ficheiro_agentes)
         if politica == "reforco":
@@ -167,11 +174,11 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica,passos,carre
             agente = AgenteReforco(id, posicao, tipoProblema, angulo, ficheiro_agentes, alpha, gama, epsilon_inicial,
                                    epsilon_final)
         if politica == "aleatorio":
-            agente = AgenteAleatorio(id,posicao,tipoProblema, angulo,ficheiro_agentes)
+            agente = AgenteAleatorio(id,posicao,tipoProblema, angulo,ficheiro_agentes,treino)
 
         if carregarMelhor:
             if politica == "genetico":
-                pesos = ler(melhor,float)
+                pesos = lerFloats(melhor)
                 if pesos:
                     agente.pesos = pesos
             elif politica == "reforco":
@@ -179,6 +186,10 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica,passos,carre
                 if q:
                     agente.q = q
                     agente.epsilon = 0.0
+            elif politica == "fixo" or politica == "aleatorio":
+                acoes = lerAcoes(melhor)
+                if acoes:
+                    agente.acoes = acoes
 
         sen = ag[3].split()
         campoVisao =[]

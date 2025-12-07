@@ -23,7 +23,6 @@ class AgenteReforco(Agente):
         return self.ultima_acao
 
 
-    #TODO fazer taxa de exploracao ir diminuindo
     def escolher_acao(self):
         if random.random() < self.epsilon:
             return getAcaoAleatoria()
@@ -48,7 +47,6 @@ class AgenteReforco(Agente):
                 self.epsilon = self.epsilon_final
 
     #na verdade aqui é avaliacao do EstadoAntigo  Podemos mudar
-
     def avaliacaoEstadoAtual(self,recompensa):
         if self.ultima_acao is None or self.estadoAntigo is None:
             return

@@ -4,12 +4,15 @@ from agentes.agente import Agente, escrever
 
 class AgenteAleatorio(Agente):
 
-    def __init__(self, id, posicaoInicial, tipo, angulo,ficheiro):
+    def __init__(self, id, posicaoInicial, tipo, angulo,ficheiro,treino = False):
         super().__init__(id,posicaoInicial,tipo, angulo,ficheiro)
         self.acoes = []
+        self.treino = treino
 
     def age(self):
-        print(self.estadoAtual)
+        if self.treino:
+            acao = self.acoes.pop(0)
+            return acao
         elementos = self.estadoAtual[1:10]
         while True:
             acao = getAcaoAleatoria()

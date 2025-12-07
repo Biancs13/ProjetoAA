@@ -1,6 +1,5 @@
-A
 5
-200
+50
 AG agenteFixo.txt
 E farol (3,3) False False 100
 E parede (1,2) False True 0
