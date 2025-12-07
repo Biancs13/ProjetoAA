@@ -1,6 +1,7 @@
 
 
 from controladorGenetico import criaGenetico, ControladorGenetico
+from controladorReforco import criarReforco
 
 
 def ler(nome):
@@ -15,17 +16,13 @@ def criarControlador(ficheiro):
     politica = conteudo[2]
     if politica == "genetico":
         return criaGenetico(modo, problema, conteudo[3:])
+    elif politica == "reforco":
+        return criarReforco(modo, problema, conteudo[3:])
     return None
 
 
-'''  
-    if tipo_politica == "reforco":
-        return criaReforco(ficheiro)
-'''
-
-
 def main():
-    controlador = criarControlador("controladorGenetico_recolecao.txt")
+    controlador = criarControlador("controladorReforco_recolecao.txt")
     controlador.executar()
 
 

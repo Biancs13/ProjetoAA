@@ -27,7 +27,7 @@ class MotorSimulacao:
         if self.modo == "T":
             print(self.representa())
         self.inicializarObservacao()
-        while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos:
+        while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos * len(self.agentes):
             self.atualizarEstadoAgentes()
             for agente in self.agentes:
                 acao = agente.age()
@@ -130,7 +130,7 @@ def cria(ficheiro, tipo, politica,modo,tempo=0):
 
         for ag in agentes_str:
             path = "agentes/"+ag
-            agentes.append(criaAgente(path,tamanhoGrelha,tipo,politica,carregaMelhor))
+            agentes.append(criaAgente(path,tamanhoGrelha,tipo,politica,numeroPassos,carregaMelhor))
 
         for ele in elementos_str:
             _, nome, pos, coletavel, solido, pts = ele

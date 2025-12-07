@@ -37,7 +37,7 @@ class Agente(ABC):
 
     def atualizarEstadoAtual(self,direcaoObj1,direcaoObj2 = None):
         novoEstado = []
-        novoEstado.append(self.angulo/360)# o angulo fica em 0, 0.25, 0.5 ou 0.75 para indicar a orientação
+        novoEstado.append(self.angulo/360) # o angulo fica em 0, 0.25, 0.5 ou 0.75 para indicar a orientação
         for elemento in self.observacaoAtual.getElementos():
             if elemento is None:
                 novoEstado.extend([-1, 0, -1])
@@ -57,8 +57,11 @@ class Agente(ABC):
             else:
                 novoEstado.append(-1)
                 novoEstado.append(-1)
+        if self.estadoAtual is None:
+            self.estadoAntigo = novoEstado
+        else:
             self.estadoAntigo = self.estadoAtual
-            self.estadoAtual = novoEstado
+        self.estadoAtual = novoEstado
 
     @abstractmethod
     def age(self):
@@ -80,7 +83,7 @@ class Agente(ABC):
         else:
             if self.angulo != 0:
                 sensor.rodar(self.angulo,self.angulo)
-            self.sensor.getCampoVisao().append(sensor.getCampoVisao())
+            self.sensor.getCampoVisao().extend(sensor.getCampoVisao())
 
     def getSensor(self):
         return self.sensor
@@ -123,25 +126,20 @@ def escrever(ficheiro,lista):
         fich.write(str(i) + '\n')
     fich.truncate()
 
-def ler(ficheiro,tamanhoLista,tipo):
-    fich = open(ficheiro, 'r')
-    lista = [linha.strip() for linha in fich.readlines()]
-    fich.close()
-    pesos = lista[4:] #se o que queremos ler for a partir de linhas diferentes
-    correto = valida(pesos, tamanhoLista) #, acrescentar atributo com linha a começar leitura
+def ler(lista,tipo):
     resultado = []
-    if correto:
-        for i in pesos:
-            resultado.append(tipo(i))
-        return resultado
+    for i in lista:
+        resultado.append(tipo(i))
+    return resultado
 
+#Tirei para ser mais fácil
 #alterar pq pode ser string
 def valida(lista,tamanhoLista):
     if tamanhoLista != len(lista):
         return False
     return True
 
-def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica,carregarMelhor=False):
+def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica,passos,carregarMelhor=False):
     from agentes.agenteFixo import AgenteFixo
     from agentes.agenteReforco import AgenteReforco, lerDicionario
     from agentes.agenteGenetico import AgenteGenetico
@@ -153,30 +151,34 @@ def criaAgente(ficheiro_agentes,tamanhoGrelha,tipoProblema,politica,carregarMelh
         x_str, y_str = ag[1].strip("()").split(',')
         posicao = Posicao(int(x_str), int(y_str))
         angulo = int(ag[2])
-
+        melhor = ag[4:]
         if politica == "fixo" :
             agente = AgenteFixo(id,posicao,tipoProblema, angulo,ficheiro_agentes)
         if politica == "genetico":
             agente = AgenteGenetico(id,posicao,tipoProblema, angulo,ficheiro_agentes)
         if politica == "reforco":
-            agente = AgenteReforco(id,posicao,tipoProblema, angulo,ficheiro_agentes)
+            conteudo = ag[4:8]
+            melhor = ag[8:]
+            alpha,gama,epsilon_inicial,epsilon_final = conteudo
+            alpha = float(alpha.strip())
+            gama = float(gama.strip())
+            epsilon_inicial = float(epsilon_inicial.strip())
+            epsilon_final = float(epsilon_final.strip())
+            agente = AgenteReforco(id, posicao, tipoProblema, angulo, ficheiro_agentes, alpha, gama, epsilon_inicial,
+                                   epsilon_final)
         if politica == "aleatorio":
             agente = AgenteAleatorio(id,posicao,tipoProblema, angulo,ficheiro_agentes)
 
         if carregarMelhor:
             if politica == "genetico":
-                if tipoProblema == "F":
-                    num_pesos = 44
-                else:
-                    num_pesos = 50
-                pesos = ler(ficheiro_agentes,num_pesos,float)
+                pesos = ler(melhor,float)
                 if pesos:
                     agente.pesos = pesos
             elif politica == "reforco":
                 q = lerDicionario(ficheiro_agentes)
                 if q:
                     agente.q = q
-                    agente.exploracao = 0.0
+                    agente.epsilon = 0.0
 
         sen = ag[3].split()
         campoVisao =[]
@@ -246,4 +248,5 @@ def verificaFicheiro(agente,tamanhoGrelha):
             return False
 
     return True
+
 

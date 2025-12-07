@@ -4,7 +4,7 @@ class ControladorReforco(Controlador):
 
     def __init__(self,episodios,ficheiro_motor,problema,modo,tempo=0):
         self.episodios = episodios
-        super().__init__(ficheiro_motor, problema,modo,tempo)
+        super().__init__(ficheiro_motor, problema,tempo,modo)
 
 
     def executar_aprendizagem(self):
@@ -14,13 +14,13 @@ class ControladorReforco(Controlador):
             motor.agentes[0].q = q
             motor.executa() # aqui treinamos
             q = motor.agentes[0].q
-            print(i,q)
-            motor.agentes[0].escreverDicionario(q)
-        # TODO pôr aqui para guardar o melhor individuo
+        motor = self.criar_motor("reforco")
+        motor.agentes[0].q = q
+        motor.agentes[0].escreverMelhor()
+        print(get_max_recompensa_q(q))
 
     def executar_teste(self):
         motor = self.criar_motor("reforco")
-
         motor.executa()
 
 
@@ -31,6 +31,14 @@ def get_max_recompensa_q(q):
             max_val = max(max_val, max(dic_acoes.values()))
     return max_val
 
-
-
+def criarReforco(modo,problema,conteudo):
+    episodios,ficheiro_motor = conteudo
+    episodios = int(episodios.strip())
+    ficheiro_motor = ficheiro_motor.split(" ")[1]
+    problema = problema.split(" ")
+    if problema[0] == "R":
+        tempo = int(problema[1])
+    else:
+        tempo = None
+    return ControladorReforco(episodios,ficheiro_motor,problema[0],modo,tempo)
     

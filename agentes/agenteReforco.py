@@ -9,64 +9,78 @@ from objetos.acao import Acao
 
 class AgenteReforco(Agente):
 
-    def __init__(self, id, posicaoInicial, tipo, angulo,tx_aprendizagem,desconto,exploracao):
-        super().__init__(id,posicaoInicial,tipo, angulo)
+    def __init__(self, id, posicaoInicial, tipo, angulo, ficheiro, alpha, desconto, epsilon_inicial, epsilon_final):
+        super().__init__(id,posicaoInicial,tipo, angulo,ficheiro)
         self.q = {} # Dicionario de dicionarios, para cada estado damos um dicionario com acao,Q
-        self.tx_aprendizagem = tx_aprendizagem
+        self.alpha = alpha
         self.desconto = desconto
-        self.exploracao = exploracao
+        self.epsilon = epsilon_inicial
+        self.epsilon_final = epsilon_final
         self.ultima_acao = None
 
     def age(self):
-        self.ultima_acao = self.escolher_acao(self.estadoAntigo)
+        self.ultima_acao = self.escolher_acao()
         return self.ultima_acao
 
 
     #TODO fazer taxa de exploracao ir diminuindo
-    def escolher_acao(self,s):
-        if random.random() < self.exploracao:
+    def escolher_acao(self):
+        if random.random() < self.epsilon:
             return getAcaoAleatoria()
         else:
-            return self.getAcaoComMaiorQ(s)
+            return self.getAcaoComMaiorQ()
 
-    def getAcaoComMaiorQ(self,estadoAtual):
-        if estadoAtual not in self.q:
-            self.q[self.estadoAntigo] = {acao: 0 for acao in list(Acao)}
+    def getAcaoComMaiorQ(self):
+        estado = tuple(self.estadoAntigo)
+        if estado not in self.q:
+            self.q[estado] = {acao: 0 for acao in list(Acao)}
             return getAcaoAleatoria()
 
-        dic_acoes = self.q[estadoAtual]
+        dic_acoes = self.q[estado]
         max_q = max(dic_acoes.values())
         melhores_acoes = [acao for acao, q in dic_acoes.items() if q == max_q]
         return random.choice(melhores_acoes) # para lidar com empates
 
+    def atualizar_espilon(self):
+        if self.epsilon > self.epsilon_final:
+            self.epsilon -= 1/self.passos_totais
+            if self.epsilon < self.epsilon_final:
+                self.epsilon = self.epsilon_final
 
     #na verdade aqui é avaliacao do EstadoAntigo  Podemos mudar
 
     def avaliacaoEstadoAtual(self,recompensa):
+        if self.ultima_acao is None or self.estadoAntigo is None:
+            return
 
-        if self.estadoAntigo not in self.q:
-            self.q[self.estadoAntigo] = {acao: 0 for acao in list(Acao)}
+        print("entrei")
+        estado_atual = tuple(self.estadoAtual)
+        estado_antigo = tuple(self.estadoAntigo)
 
-        q_atual = self.q[self.estadoAntigo][self.ultima_acao]
+        if estado_antigo not in self.q:
+            self.q[estado_antigo] = {acao: 0 for acao in list(Acao)}
 
-        if self.estadoAtual not in self.q:
-            self.q[self.estadoAtual] = {acao: 0 for acao in list(Acao)}
+        q_atual = self.q[estado_antigo][self.ultima_acao]
 
-        max_q_novo = max(self.q[self.estadoAtual].values(), default=0)
+        if estado_atual not in self.q:
+            self.q[estado_atual] = {acao: 0 for acao in list(Acao)}
 
-        self.q[self.estadoAntigo][self.ultima_acao] =(
-                q_atual + self.tx_aprendizagem * (recompensa + self.desconto*max_q_novo - q_atual))
+        max_q_novo = max(self.q[estado_atual].values(), default=0)
+
+        self.q[estado_antigo][self.ultima_acao] =(
+                q_atual + self.alpha * (recompensa + self.desconto*max_q_novo - q_atual))
+        self.epsilon = max(self.epsilon_final, self.epsilon * 0.995)
 
 
-    def escreverDicionario(self,dic):
+    def escreverMelhor(self):
         dados = []
-        for estado, acaoRecompensa in dic.items():
+        for estado, acaoRecompensa in self.q.items():
             for acao,recompensa in acaoRecompensa.items():
-                linha = f"{'|'.join(map(str, estado))},{acao.name},{str(recompensa)}"
+                linha = f"{'|'.join(f'{e:.6f}' for e in estado)},{acao.name},{recompensa:.6f}"
                 dados.append(linha)
         fich = open(self.ficheiro,'r+')
         linhas = fich.readlines()
-        primeiras = linhas[:4]
+        primeiras = linhas[:8]
         fich.seek(0)
         for linha in primeiras:
             fich.write(linha)
@@ -84,12 +98,10 @@ def lerDicionario(nome):
         if len(partes) == 3:
             estado_str = partes[0]
             acao_str = partes[1]
-            recompensa = int(partes[2])
-
-            estado = [int(e) for e in estado_str.split('|')]
+            recompensa = float(partes[2])
+            estado = [float(e) for e in estado_str.split('|')]
             chave = tuple(estado)
             acao = Acao[acao_str]
-
             if chave not in dic:
                 dic[chave] = {}
             dic[chave][acao] = recompensa
