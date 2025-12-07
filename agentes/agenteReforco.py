@@ -22,6 +22,9 @@ class AgenteReforco(Agente):
         self.ultima_acao = self.escolher_acao()
         return self.ultima_acao
 
+    #Para que o Q learning nao crie imensas linhas
+    def _obter_chave_estado(self, estado_original):
+        return tuple(estado_original)
 
     def escolher_acao(self):
         if random.random() < self.epsilon:
@@ -30,7 +33,7 @@ class AgenteReforco(Agente):
             return self.getAcaoComMaiorQ()
 
     def getAcaoComMaiorQ(self):
-        estado = tuple(self.estadoAntigo)
+        estado = self._obter_chave_estado(self.estadoAntigo)
         if estado not in self.q:
             self.q[estado] = {acao: 0 for acao in list(Acao)}
             return getAcaoAleatoria()
@@ -50,10 +53,11 @@ class AgenteReforco(Agente):
     def avaliacaoEstadoAtual(self,recompensa):
         if self.ultima_acao is None or self.estadoAntigo is None:
             return
+        if recompensa > 0:
+            print(recompensa)
 
-        print("entrei")
-        estado_atual = tuple(self.estadoAtual)
-        estado_antigo = tuple(self.estadoAntigo)
+        estado_atual = self._obter_chave_estado(self.estadoAtual)
+        estado_antigo = self._obter_chave_estado(self.estadoAntigo)
 
         if estado_antigo not in self.q:
             self.q[estado_antigo] = {acao: 0 for acao in list(Acao)}
@@ -67,14 +71,14 @@ class AgenteReforco(Agente):
 
         self.q[estado_antigo][self.ultima_acao] =(
                 q_atual + self.alpha * (recompensa + self.desconto*max_q_novo - q_atual))
-        self.epsilon = max(self.epsilon_final, self.epsilon * 0.995)
+        self.epsilon = max(self.epsilon_final, self.epsilon * 0.9999)
 
 
     def escreverMelhor(self):
         dados = []
         for estado, acaoRecompensa in self.q.items():
             for acao,recompensa in acaoRecompensa.items():
-                linha = f"{'|'.join(f'{e:.6f}' for e in estado)},{acao.name},{recompensa:.6f}"
+                linha = f"{'|'.join(f'{e:.1f}' for e in estado)},{acao.name},{recompensa:.2f}"
                 dados.append(linha)
         fich = open(self.ficheiro,'r+')
         linhas = fich.readlines()
@@ -83,7 +87,7 @@ class AgenteReforco(Agente):
         for linha in primeiras:
             fich.write(linha)
         for linha in dados:
-            fich.write(linha + '\n')
+            fich.write('\n' + linha)
 
 def lerDicionario(nome):
     dic = {}

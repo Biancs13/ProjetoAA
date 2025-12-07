@@ -1,5 +1,5 @@
 5
-50
+400
 AG agenteReforco.txt
 E ninho (3,3) False False 0
 E ovo (2,1) True False 10

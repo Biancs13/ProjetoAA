@@ -10,14 +10,16 @@ class ControladorReforco(Controlador):
     def executar_aprendizagem(self):
         q = {}
         for i in range(self.episodios):
+            print(f"===Episodio {i}===")
             motor = self.criar_motor("reforco")
             motor.agentes[0].q = q
             motor.executa() # aqui treinamos
             q = motor.agentes[0].q
+            print("Recompensa máxima encontrada:",get_max_recompensa_q(q))
         motor = self.criar_motor("reforco")
         motor.agentes[0].q = q
         motor.agentes[0].escreverMelhor()
-        print(get_max_recompensa_q(q))
+
 
     def executar_teste(self):
         motor = self.criar_motor("reforco")

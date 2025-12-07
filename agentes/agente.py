@@ -1,6 +1,7 @@
 from abc import abstractmethod, ABC
 from typing import AbstractSet
 from objetos.acao import *
+from objetos.acao import Acao
 from objetos.posicao import dentroLimites
 from objetos.sensor import Sensor
 
@@ -260,4 +261,29 @@ def verificaFicheiro(agente,tamanhoGrelha):
 
     return True
 
+
+def estaFora(elementos,acao):
+    if acao == Acao.ESQUERDA:
+        if elementos[0] == -1 and elementos[1] == 0 and elementos[2] == -1:
+            print("entrei")
+            return True
+    elif acao == Acao.FRENTE:
+        if elementos[3] == -1 and elementos[4] == 0 and elementos[5] == -1:
+            return True
+    elif acao == Acao.DIREITA:
+        if elementos[6] == -1 and elementos[7] == 0 and elementos[8] == -1:
+            return True
+    return False
+
+def existeSolido(elementos,acao):
+    if acao == Acao.ESQUERDA:
+        if elementos[1] == 1:
+            return True
+    elif acao == Acao.FRENTE:
+        if elementos[4] == 1:
+            return True
+    elif acao == Acao.DIREITA:
+        if elementos[7] == 1:
+            return True
+    return False
 

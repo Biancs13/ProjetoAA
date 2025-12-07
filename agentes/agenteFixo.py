@@ -1,7 +1,7 @@
 import random
 
 from objetos.acao import Acao, melhor_acao_para_direcao
-from agentes.agente import Agente, escrever
+from agentes.agente import Agente, escrever, estaFora, existeSolido
 from objetos.vetor import Vetor
 
 
@@ -34,7 +34,7 @@ class AgenteFixo(Agente):
             vetorFarol = Vetor(direcaoFarol[0], direcaoFarol[1])
             melhorAcao = melhor_acao_para_direcao(angulo, vetorFarol)
 
-            if not existeSolido(elementos, melhorAcao) and not estaFora(elementos,melhorAcao):
+            if not existeSolido(elementos, melhorAcao) and not estaFora(elementos, melhorAcao):
                 self.ultima_acao = melhorAcao
                 self.acoes.append(melhorAcao)
                 return melhorAcao
@@ -46,7 +46,7 @@ class AgenteFixo(Agente):
                 alternativas.remove(self.ultima_acao)
 
             for acao in alternativas:
-                if not existeSolido(elementos, acao) and not estaFora(elementos,acao):
+                if not existeSolido(elementos, acao) and not estaFora(elementos, acao):
                     self.ultima_acao = acao
                     self.acoes.append(acao)
                     return acao
@@ -61,7 +61,7 @@ class AgenteFixo(Agente):
                 Acao.FRENTE:   elementos[5],
                 Acao.DIREITA:  elementos[8],
             }
-            opcoes_validas = {a: p for a, p in opcoes.items() if p >= 0 and not existeSolido(elementos,a) and not estaFora(elementos,a) } # se existe lá qualquer coletavel
+            opcoes_validas = {a: p for a, p in opcoes.items() if p >= 0 and not existeSolido(elementos,a) and not estaFora(elementos, a)} # se existe lá qualquer coletavel
             if opcoes_validas:
                 melhor_acao = max(opcoes_validas, key=opcoes_validas.get)
                 return melhor_acao
@@ -78,12 +78,12 @@ class AgenteFixo(Agente):
             print("melhor: ", melhorAcao)
             if melhorAcao == Acao.MEIA_VOLTA:
                 return Acao.MEIA_VOLTA
-            if not existeSolido(elementos, melhorAcao) and not estaFora(elementos,melhorAcao):
+            if not existeSolido(elementos, melhorAcao) and not estaFora(elementos, melhorAcao):
                  return melhorAcao
             outras_acoes = [Acao.ESQUERDA, Acao.FRENTE, Acao.DIREITA]
 
             outras_acoes.remove(melhorAcao)
-            acoes_validas = [a for a in outras_acoes if not existeSolido(elementos, a) and not estaFora(elementos,a)]
+            acoes_validas = [a for a in outras_acoes if not existeSolido(elementos, a) and not estaFora(elementos, a)]
             if not acoes_validas:
                  return Acao.MEIA_VOLTA
             escolha = random.choice(acoes_validas)
@@ -97,29 +97,5 @@ class AgenteFixo(Agente):
         escrever(self.ficheiro,self.acoes)
 
 
-def existeSolido(elementos,acao):
-    if acao == Acao.ESQUERDA:
-        if elementos[1] == 1:
-            return True
-    elif acao == Acao.FRENTE:
-        if elementos[4] == 1:
-            return True
-    elif acao == Acao.DIREITA:
-        if elementos[7] == 1:
-            return True
-    return False
-
-def estaFora(elementos,acao):
-    if acao == Acao.ESQUERDA:
-        if elementos[0] == -1 and elementos[1] == 0 and elementos[2] == -1:
-            print("entrei")
-            return True
-    elif acao == Acao.FRENTE:
-        if elementos[3] == -1 and elementos[4] == 0 and elementos[5] == -1:
-            return True
-    elif acao == Acao.DIREITA:
-        if elementos[6] == -1 and elementos[7] == 0 and elementos[8] == -1:
-            return True
-    return False
 
 

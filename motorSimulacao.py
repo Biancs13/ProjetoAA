@@ -44,17 +44,13 @@ class MotorSimulacao:
                             pts = agente.getPontosColetaveis()
                             agente.recolher(pts)
                             self.ambiente.adicionarPontos(pts)
-                        recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis), pts)
-
                     else:
                         agente.num_colisoes +=1
-                        recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis), pts)
-
                 else:
                     agente.num_colisoes += 1
-                    recompensa = -80
                 i +=1
-                if isinstance(agente, AgenteReforco) and self.modo == "A": #Só se tivermos no modo teste
+                recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis), pts)
+                if isinstance(agente, AgenteReforco) and self.modo == "A": #Só se tivermos no modo aprendizagem
                     agente.avaliacaoEstadoAtual(recompensa)
             if self.modo == "T":
                 print(self.representa(),"\n")
