@@ -1,9 +1,10 @@
 from controlador import Controlador
+from objetos.acao import atuar
 from objetos.redeNeuronal import *
 
 class ControladorGenetico(Controlador):
 
-    def __init__(self,geracoes,tamanho_populacao,taxa_mutacao,elite_rate,novelty_weight,k_novel,arquivos_por_geracao,problema,ficheiro_motor,tempo,modo):
+    def __init__(self,geracoes,tamanho_populacao,taxa_mutacao,elite_rate,novelty_weight,k_novel,arquivos_por_geracao,problema,ficheiro_motor,tempo,modo,tamanho_torneio):
         super().__init__(ficheiro_motor, problema, tempo,modo)
         self.geracoes = geracoes
         self.tamanho_populacao = tamanho_populacao
@@ -16,11 +17,13 @@ class ControladorGenetico(Controlador):
         self.arquivo = set()
         self.fitness_medio_geracao = []
         self.modo = modo
+        self.tamanho_torneio = tamanho_torneio
+        self.melhores_caminhos_gen = []
 
     def criar_populacao(self):
         return [[random.uniform(-1, 1) for _ in range(self.num_pesos)] for _ in range(self.tamanho_populacao)]
 
-    def selecionar(self,fitness_dict,tamanho_torneio=2):
+    def selecionar(self,fitness_dict,tamanho_torneio):
         torneio = random.sample(list(fitness_dict.items()), tamanho_torneio)
         return max(torneio, key=lambda x: x[1])[0]
 
@@ -68,6 +71,7 @@ class ControladorGenetico(Controlador):
             if melhor_fitness > melhorFitnessGlobal:
                 melhorFitnessGlobal = melhor_fitness
                 melhorAgente = agenteMelhorGeracao
+            self.melhores_caminhos_gen.append(melhorAgente.comportamento)
             populacao_agentes.sort(key=lambda x: calcular_novelty(x.comportamento, self.arquivo,self.k_novel), reverse=True)
             for i in range(self.arquivos_por_geracao):
                 self.arquivo.add(tuple(populacao_agentes[i].comportamento))
@@ -80,8 +84,8 @@ class ControladorGenetico(Controlador):
             n_elite = max(1, int(self.elite_rate * self.tamanho_populacao))
             nova_populacao.extend(pesos_ordenados[:n_elite])
             while len(nova_populacao) < self.tamanho_populacao:
-                pai1 = self.selecionar(fitness_dicionario)
-                pai2 = self.selecionar(fitness_dicionario)
+                pai1 = self.selecionar(fitness_dicionario,self.tamanho_torneio)
+                pai2 = self.selecionar(fitness_dicionario,self.tamanho_torneio)
                 filho = self.reproduzir(pai1, pai2)
                 self.mutacao(filho, self.taxa_mutacao)
                 nova_populacao.append(filho)
@@ -109,9 +113,20 @@ def calcular_novelty(comportamento, arquivo, k):
     k_use = min(k, len(distancias))
     return sum(distancias[:k_use]) / k_use if k_use > 0 else 0.0
 
+#Para os gráficos
+def reconstruir_caminho(posicao,angulo, comportamento):
+    caminho = []
+    for a in comportamento:
+        novaPos, novaAng = atuar(posicao,angulo,a)
+        caminho.append(posicao)
+        posicao = novaPos
+        angulo = novaAng
+    return caminho
+
+
 # TODO Acrescentar verifica ao conteudo APENAS !!!
 def criaGenetico(modo,problema,conteudo):
-    tamanhoGeracao, tamanhoPopulacao, taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,ficheiroMotor = conteudo
+    tamanhoGeracao, tamanhoPopulacao, taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,torneio,ficheiroMotor = conteudo
     tamanhoGeracao = int(tamanhoGeracao.strip())
     tamanhoPopulacao = int(tamanhoPopulacao.strip())
     taxaMutacao = float(taxaMutacao.strip())
@@ -119,12 +134,13 @@ def criaGenetico(modo,problema,conteudo):
     noveltyWeight = float(noveltyWeight.strip())
     kNovel = int(kNovel.strip())
     arquivosGeracao = int(arquivosGeracao.strip())
+    torneio = int(torneio.strip())
     problema = problema.split(" ")
     if problema[0] == "R":
         tempo = int(problema[1])
     else:
         tempo = None
     ficheiroMotor = ficheiroMotor.split(" ")[1]
-    controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,problema[0],ficheiroMotor,tempo,modo)
+    controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,problema[0],ficheiroMotor,tempo,modo,torneio)
     return controlador
 

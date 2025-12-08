@@ -1,4 +1,4 @@
 T
 F
 fixo
-MS simulação_recolecao_fixo.txt
+MS simulacao_recolecao_fixo.txt

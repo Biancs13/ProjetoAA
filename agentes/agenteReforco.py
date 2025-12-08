@@ -53,9 +53,6 @@ class AgenteReforco(Agente):
     def avaliacaoEstadoAtual(self,recompensa):
         if self.ultima_acao is None or self.estadoAntigo is None:
             return
-        if recompensa > 0:
-            print(recompensa)
-
         estado_atual = self._obter_chave_estado(self.estadoAtual)
         estado_antigo = self._obter_chave_estado(self.estadoAntigo)
 

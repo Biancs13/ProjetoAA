@@ -34,15 +34,15 @@ class Recolecao(Ambiente):
     def getRecompensa(self,pos,numColetaveis=0,pts=0):
         #Falta novelty
         if not dentroLimites(pos,self.tamanhoGrelha):
-            return -10
+            return -80
         ele = self.getElemento(pos)
         if ele.isSolido():
-            return -10
+            return -80
         if ele.isColetavel():
             return ele.getPontos() * 150
         if ele.getNome() == "ninho":
             if pts == 0:
-                return -5
+                return -25
             else:
                 return pts * 150 + 300
         return -0.1

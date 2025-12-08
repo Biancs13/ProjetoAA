@@ -34,9 +34,9 @@ class MotorSimulacao:
             self.atualizarEstadoAgentes()
             for agente in self.agentes:
                 acao = agente.age()
-                novaPos, novoAng = atuar(agente, acao)
-                pts = 0
-                if dentroLimites(novaPos, self.ambiente.tamanhoGrelha):
+                novaPos, novoAng = atuar(agente.posicaoAtual,agente.angulo, acao)
+                pts =0
+                if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
                     if ele.getId() == (-1, -1, -1) or (ele != (-1, -1, -1) and not ele.isSolido()):
                         agente.alterar(novaPos, novoAng)

@@ -33,8 +33,8 @@ class Acao(Enum):
 def normalizarAngulo(angulo):
     return angulo % 360
 
-def atuar(agente, acao):
-    novaPos, novoAng = acao.getNovaPosicao(agente.posicaoAtual, agente.angulo)
+def atuar(posicao,angulo, acao):
+    novaPos, novoAng = acao.getNovaPosicao(posicao, angulo)
     return novaPos, novoAng
 
 def getAcaoAleatoria():

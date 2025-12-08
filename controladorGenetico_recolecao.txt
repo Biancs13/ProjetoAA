@@ -8,4 +8,5 @@ genetico
 1000
 5
 5
-MS simulação_recolecao_genetico.txt
+5
+MS simulacao_recolecao_genetico.txt

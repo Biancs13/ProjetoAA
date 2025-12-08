@@ -2,4 +2,4 @@ T
 R 30
 reforco
 10000
-MS simulação_recolecao_reforco.txt
+MS simulacao_recolecao_reforco.txt
