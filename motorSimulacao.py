@@ -9,15 +9,17 @@ from objetos.posicao import Posicao, dentroLimites
 from objetos.elemento import Elemento
 from ambientes.recolecao import Recolecao
 from objetos.vetor import getDirecao
+from gui import GUI
 
 
 class MotorSimulacao:
-    def __init__(self,modo,agentes,ambiente,tipo,num_passos):
+    def __init__(self, modo, agentes, ambiente, tipo, num_passos):
         self.agentes = agentes
         self.ambiente = ambiente
-        self.tipo = tipo #pode ser F ou R
-        self.modo = modo #pode ser T ou A
+        self.tipo = tipo  # pode ser F ou R
+        self.modo = modo  # pode ser T ou A
         self.num_passos = num_passos
+        self.janela = None
 
     def listaAgentes(self):
         return self.agentes
@@ -25,7 +27,8 @@ class MotorSimulacao:
     def executa(self):
         i = 1
         if self.modo == "T":
-            print(self.representa())
+            #self.janela = GUI(self.ambiente.tamanhoGrelha)
+            self.representa_TUI()
         self.inicializarObservacao()
         while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos * len(self.agentes):
             self.atualizarEstadoAgentes()
@@ -35,29 +38,32 @@ class MotorSimulacao:
                 pts =0
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
-                    if ele.getId() == (-1,-1,-1) or (ele != (-1,-1,-1) and not ele.isSolido()):
+                    if ele.getId() == (-1, -1, -1) or (ele != (-1, -1, -1) and not ele.isSolido()):
                         agente.alterar(novaPos, novoAng)
-                        if ele.getId() != (-1,-1,-1) and ele.isColetavel():
+                        if ele.getId() != (-1, -1, -1) and ele.isColetavel():
                             (agente.coleta(ele))
                             self.ambiente.atualizacao(novaPos)
-                        if ele.getId() != (-1,-1,-1) and self.tipo == "R" and ele.getNome() == "ninho":
+                        if ele.getId() != (-1, -1, -1) and self.tipo == "R" and ele.getNome() == "ninho":
                             pts = agente.getPontosColetaveis()
                             agente.recolher(pts)
                             self.ambiente.adicionarPontos(pts)
                     else:
-                        agente.num_colisoes +=1
+                        agente.num_colisoes += 1
                 else:
                     agente.num_colisoes += 1
-                i +=1
+                i += 1
                 recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis), pts)
-                if isinstance(agente, AgenteReforco) and self.modo == "A": #Só se tivermos no modo aprendizagem
+                if isinstance(agente, AgenteReforco) and self.modo == "A":  # Só se tivermos no modo aprendizagem
                     agente.avaliacaoEstadoAtual(recompensa)
             if self.modo == "T":
-                print(self.representa(),"\n")
+                self.representa_TUI()
+                #self.janela.representa(self.ambiente, self.agentes)
                 sleep(0.5)
+        #if self.modo == "T":            #meter para GUI
+            #self.janela.root.mainloop()
         if self.tipo != "R":
             for a in self.agentes:
-                if self.ambiente.condicaoFim(self.agentes) :
+                if self.ambiente.condicaoFim(self.agentes):
                     a.condicaoFim = True
 
 
@@ -69,25 +75,27 @@ class MotorSimulacao:
             obs, pos = self.ambiente.observacaoParaAgente(agente)
             agente.observacao(obs)
             if self.tipo == "F":
-                direcao1 = getDirecao(agente.posicaoAtual,self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"farol"))
+                direcao1 = getDirecao(agente.posicaoAtual,
+                                      self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "farol"))
                 agente.atualizarEstadoAtual(direcao1)
             elif self.tipo == "R":
-                direcao1 = getDirecao(agente.posicaoAtual,self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"ninho"))
-                posOvo = self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual,"ovo")
+                direcao1 = getDirecao(agente.posicaoAtual,
+                                      self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ninho"))
+                posOvo = self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ovo")
                 if posOvo is not None:
-                    direcao2 = getDirecao(agente.posicaoAtual,posOvo)
-                    agente.atualizarEstadoAtual(direcao1,direcao2)
+                    direcao2 = getDirecao(agente.posicaoAtual, posOvo)
+                    agente.atualizarEstadoAtual(direcao1, direcao2)
                 else:
                     agente.atualizarEstadoAtual(direcao1)
 
     def inicializarObservacao(self):
         for agente in self.agentes:
-            obs,_ = self.ambiente.observacaoParaAgente(agente)
+            obs, _ = self.ambiente.observacaoParaAgente(agente)
             agente.observacao(obs)
 
-    def representa(self):
+    def representa_TUI(self):
         pos_agentes = [a.getPosicao() for a in self.agentes]
-        pos_vistas = [pos for a in self.agentes for pos in self.ambiente.observacaoParaAgente(a)[1] ]
+        pos_vistas = [pos for a in self.agentes for pos in self.ambiente.observacaoParaAgente(a)[1]]
         linhas = []
         for y in range(self.ambiente.tamanhoGrelha):
             linha = []
@@ -108,38 +116,39 @@ class MotorSimulacao:
         return "\n".join(linhas)
 
 
-def cria(ficheiro, tipo, politica,modo,tempo=0):
-    tamanhoGrelha,numeroPassos, agentes_str, elementos_str = lerFicheiro(ficheiro)
+def cria(ficheiro, tipo, politica, modo, tempo=0):
+    tamanhoGrelha, numeroPassos, agentes_str, elementos_str = lerFicheiro(ficheiro)
     agentes = []
-    if verificaFicheiro([tamanhoGrelha,numeroPassos, agentes_str,elementos_str]):
+    if verificaFicheiro([tamanhoGrelha, numeroPassos, agentes_str, elementos_str]):
         if modo.strip() == "T":
             carregaMelhor = True
         else:
             carregaMelhor = False
         tamanhoGrelha = int(tamanhoGrelha.strip())
         if tipo == "R":
-            ambiente = Recolecao(tamanhoGrelha,tempo)
+            ambiente = Recolecao(tamanhoGrelha, tempo)
         elif tipo == "F":
             ambiente = Farol(tamanhoGrelha)
 
         numeroPassos = int(numeroPassos.strip())
 
         for ag in agentes_str:
-            path = "agentes/"+ag
+            path = "agentes/" + ag
             agentes.append(criaAgente(path, tamanhoGrelha, tipo, politica, numeroPassos, modo.strip(), carregaMelhor))
 
         for ele in elementos_str:
             _, nome, pos, coletavel, solido, pts = ele
-            x,y = pos.strip("()").split(',')
-            posicao = Posicao(int(x),int(y))
+            x, y = pos.strip("()").split(',')
+            posicao = Posicao(int(x), int(y))
             pts = int(pts.strip())
             solido_bool = True if solido == "True" else False
             coletavel_bool = True if coletavel == "True" else False
             elemento = Elemento(nome, pts, coletavel_bool, solido_bool)
-            ambiente.adicionar(elemento,posicao)
+            ambiente.adicionar(elemento, posicao)
 
-        ms = MotorSimulacao(modo,agentes,ambiente,tipo,numeroPassos)
+        ms = MotorSimulacao(modo, agentes, ambiente, tipo, numeroPassos)
         return ms
+
 
 def lerFicheiro(nome):
     fich = open(nome, "r")
@@ -167,12 +176,13 @@ def lerFicheiro(nome):
         else:
             pass
 
-    resultado = [tamanhoFich,numeroPas,agentesFich,elementosFich]
+    resultado = [tamanhoFich, numeroPas, agentesFich, elementosFich]
 
     return resultado
 
+
 def verificaFicheiro(resultado):
-    tamanhoGrelha,numeroPas, agentesFich, elementos = resultado
+    tamanhoGrelha, numeroPas, agentesFich, elementos = resultado
     tamanho_grelha_int = int(tamanhoGrelha.strip())
     if tamanho_grelha_int < 3:
         return False
@@ -191,9 +201,9 @@ def verificaFicheiro(resultado):
     def valida_coordenada(c_str):
         c = int(c_str)
         if c < 0 or c >= tamanho_grelha_int:
-            return False,None
+            return False, None
         elif type(c) is not int:
-            return False,None
+            return False, None
         return True, c
 
     def valida_posicao(pos_str):
@@ -213,7 +223,7 @@ def verificaFicheiro(resultado):
         if len(ele) != 6:
             return False
 
-        _, nome_str, pos_str, coletavel_str, solido_str,pts_str = ele
+        _, nome_str, pos_str, coletavel_str, solido_str, pts_str = ele
 
         valido = valida_posicao(pos_str)
         if not valido:
