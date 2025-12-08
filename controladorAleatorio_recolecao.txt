@@ -1,4 +1,4 @@
 T
 R 30
 aleatorio
-MS simulação_recolecao_aleatorio.txt
+MS simulacao_recolecao_aleatorio.txt

@@ -1,4 +1,4 @@
 T
 F
 aleatorio
-MS simulação_farol_aleatorio.txt
+MS simulacao_farol_aleatorio.txt

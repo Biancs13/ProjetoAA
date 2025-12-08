@@ -28,7 +28,7 @@ class AgenteGenetico(Agente):
 
     def calcular_fitness_objetivo(self):
         total_pontos = self.num_colisoes * -25
-        #total_pontos += len(self.comportamento) * -0.1 #para nao beneficiar tanto de andar parado
+        total_pontos += len(self.comportamento) * -0.1 #para nao beneficiar tanto de andar parado
         if self.tipoProblema == "F":
             if self.condicaoFim:
                 total_pontos+=500
