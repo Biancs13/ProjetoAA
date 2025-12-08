@@ -1,5 +1,0 @@
-5
-200
-AG agenteFixo.txt
-E ninho (3,3) False False 0
-E ovo (2,1) True False 10

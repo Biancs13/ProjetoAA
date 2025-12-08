@@ -1,11 +1,11 @@
-A
+T
 F
 genetico
-150
-300
-0.35
+100
+200
+0.1
 0.2
 1000
 5
 5
-MS simulacao_farol_genetico.txt
+MS simulação_farol_genetico.txt

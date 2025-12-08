@@ -47,7 +47,6 @@ def multiplicar_vetor_matriz(vetor, matriz):
 
 def vetor_para_angulo(vetor):
     ang_std = math.degrees(math.atan2(vetor.y, vetor.x)) % 360
-    print(ang_std)
     return ang_std
 
 

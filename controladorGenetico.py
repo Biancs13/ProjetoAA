@@ -54,7 +54,6 @@ class ControladorGenetico(Controlador):
             fitness_dicionario = {}
             populacao_agentes = []
             i=0
-            print(f"\n=== Geração {g+1} ===")
             for ind in populacao_pesos:
                 agente,fitness = self.avaliar_individuo(ind)
                 fitness_dicionario[tuple(ind)] = fitness
@@ -69,7 +68,7 @@ class ControladorGenetico(Controlador):
             if melhor_fitness > melhorFitnessGlobal:
                 melhorFitnessGlobal = melhor_fitness
                 melhorAgente = agenteMelhorGeracao
-            populacao_agentes.sort(key=lambda x: calcular_novelty(x.comportamento, self.arquivo), reverse=True)
+            populacao_agentes.sort(key=lambda x: calcular_novelty(x.comportamento, self.arquivo,self.k_novel), reverse=True)
             for i in range(self.arquivos_por_geracao):
                 self.arquivo.add(tuple(populacao_agentes[i].comportamento))
             populacao_agentes.sort(key=lambda x: x.fitness, reverse=True)
@@ -102,7 +101,7 @@ def distancia_jaccard(seq1, seq2):
     uniao = len(s1 | s2)
     return 0.0 if uniao == 0 else 1.0 - intersecao / uniao
 
-def calcular_novelty(comportamento, arquivo, k=5):
+def calcular_novelty(comportamento, arquivo, k):
     if not arquivo:
         return 1.0
     distancias = [distancia_jaccard(comportamento, b) for b in arquivo]

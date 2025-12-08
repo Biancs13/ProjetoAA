@@ -11,7 +11,7 @@ class ControladorFixoAleatorio(Controlador):
         self.acoes =  []
 
     def executar_aprendizagem(self):
-        if self.aleatorio:
+        if self.aleatorio == True:
             motor = self.criar_motor("aleatorio")
         else:
             motor = self.criar_motor("fixo")

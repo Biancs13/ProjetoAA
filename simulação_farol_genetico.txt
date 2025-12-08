@@ -1,0 +1,7 @@
+5
+50
+AG agente_genetico_farol.txt
+ E farol (3,3) False False 100
+E parede (1,2) False True 0
+E parede (1,3) False True 0
+E parede (1,4) False True 0

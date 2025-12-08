@@ -14,7 +14,7 @@ class Controlador(ABC):
         return cria(self.ficheiro_motor, self.problema, politica, self.modo,self.tempo)
 
 
-    def executar(self):
+    def executa(self):
         if self.modo == 'A':
             self.executar_aprendizagem()
         if self.modo == 'T':
@@ -39,7 +39,6 @@ def criarControlador(ficheiro):
     from controladorGenetico import criaGenetico, ControladorGenetico
     from controladorReforco import criarReforco
     from controladorFixoAleatorio import criaFixoAleatorio
-
 
     conteudo = ler(ficheiro)
     modo = conteudo[0]

@@ -14,7 +14,6 @@ class AgenteFixo(Agente):
         self.treino = treino
 
     def age(self):
-        print(self.acoes)
         if self.treino:
             acao = self.acoes.pop(0)
             return acao
@@ -75,7 +74,6 @@ class AgenteFixo(Agente):
                     melhorAcao = melhor_acao_para_direcao(angulo, direcaoNinho)
                 else:
                     melhorAcao = melhor_acao_para_direcao(angulo, direcaoColetavel)
-            print("melhor: ", melhorAcao)
             if melhorAcao == Acao.MEIA_VOLTA:
                 return Acao.MEIA_VOLTA
             if not existeSolido(elementos, melhorAcao) and not estaFora(elementos, melhorAcao):

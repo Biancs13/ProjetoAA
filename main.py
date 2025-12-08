@@ -2,8 +2,8 @@ from controlador import criarControlador
 
 
 def main():
-    controlador = criarControlador("controladorReforco_recolecao.txt")
-    controlador.executar()
+    controlador = criarControlador("controladorAleatorio_farol.txt")
+    controlador.executa()
 
 
 if __name__ == "__main__":

@@ -1,4 +1,0 @@
-5
-50
-AG agenteGenetico.txt
-E farol (3,3) False False 100

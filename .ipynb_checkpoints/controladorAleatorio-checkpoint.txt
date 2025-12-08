@@ -1,4 +1,3 @@
-T
-F
-aleatorio
+A
+Taleatorio
 MS simulação_farol_aleatorio.txt
