@@ -1,5 +1,6 @@
 from ambientes.ambiente import Ambiente
-from objetos.posicao import getDistancia
+from objetos.posicao import getDistancia, dentroLimites
+
 
 class Farol(Ambiente):
     def __init__(self,tamanho):
@@ -21,10 +22,12 @@ class Farol(Ambiente):
 
     def getRecompensa(self,pos,numColetaveis=0,pts=0):
         #NOTA: AINDA NÂO INTRODUZ NOVELTY
+        if dentroLimites(pos,self.tamanhoGrelha):
+            return -80
         if pos == self.getPosicaoElementoMaisProximo(pos,'farol'):
             return 500
         ele = self.getElemento(pos)
-        if ele.isSolido() or ele.getId() == (-1,0,-1):
+        if ele.isSolido():
             return -80
-        return 0
+        return -0.1
 

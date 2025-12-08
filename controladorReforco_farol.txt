@@ -1,0 +1,5 @@
+T
+F
+reforco
+2000
+MS simulacao_farol_reforco.txt

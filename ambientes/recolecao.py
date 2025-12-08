@@ -1,6 +1,8 @@
 import time
 
+from agentes.agente import estaFora
 from ambientes.ambiente import Ambiente
+from objetos.posicao import dentroLimites
 
 
 class Recolecao(Ambiente):
@@ -31,15 +33,17 @@ class Recolecao(Ambiente):
 
     def getRecompensa(self,pos,numColetaveis=0,pts=0):
         #Falta novelty
+        if not dentroLimites(pos,self.tamanhoGrelha):
+            return -10
         ele = self.getElemento(pos)
-        if ele.isSolido() or ele.getId() == (-1,0,-1):
-            return -80
+        if ele.isSolido():
+            return -10
         if ele.isColetavel():
-            return ele.getPontos() * 50
+            return ele.getPontos() * 150
         if ele.getNome() == "ninho":
-            if numColetaveis == 0:
-                return -200
+            if pts == 0:
+                return -5
             else:
-                return pts * 50 + 100
-        return 0
+                return pts * 150 + 300
+        return -0.1
 

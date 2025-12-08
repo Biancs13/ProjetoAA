@@ -1,5 +1,5 @@
 import random
-from agentes.agente import Agente, escrever, ler
+from agentes.agente import Agente, escrever
 from objetos.acao import Acao
 from objetos.redeNeuronal import criarRedeNeuronal
 
@@ -28,12 +28,12 @@ class AgenteGenetico(Agente):
 
     def calcular_fitness_objetivo(self):
         total_pontos = self.num_colisoes * -25
-        total_pontos += len(self.comportamento) * 1 - self.num_colisoes
+        #total_pontos += len(self.comportamento) * -0.1 #para nao beneficiar tanto de andar parado
         if self.tipoProblema == "F":
             if self.condicaoFim:
                 total_pontos+=500
         elif self.tipoProblema == "R":
-            total_pontos += self.num_pontos_recolhidos * 50
+            total_pontos += self.num_pontos_recolhidos * 100
         return total_pontos
 
     def escreverMelhor(self):

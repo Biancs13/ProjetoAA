@@ -27,7 +27,7 @@ class MotorSimulacao:
         if self.modo == "T":
             print(self.representa())
         self.inicializarObservacao()
-        while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos:
+        while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos * len(self.agentes):
             self.atualizarEstadoAgentes()
             for agente in self.agentes:
                 acao = agente.age()
@@ -44,17 +44,13 @@ class MotorSimulacao:
                             pts = agente.getPontosColetaveis()
                             agente.recolher(pts)
                             self.ambiente.adicionarPontos(pts)
-                        recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis), pts)
-
                     else:
                         agente.num_colisoes +=1
-                        recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis), pts)
-
                 else:
                     agente.num_colisoes += 1
-                    recompensa = -80
                 i +=1
-                if isinstance(agente, AgenteReforco):
+                recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis), pts)
+                if isinstance(agente, AgenteReforco) and self.modo == "A": #Só se tivermos no modo aprendizagem
                     agente.avaliacaoEstadoAtual(recompensa)
             if self.modo == "T":
                 print(self.representa(),"\n")
@@ -130,7 +126,7 @@ def cria(ficheiro, tipo, politica,modo,tempo=0):
 
         for ag in agentes_str:
             path = "agentes/"+ag
-            agentes.append(criaAgente(path,tamanhoGrelha,tipo,politica,carregaMelhor))
+            agentes.append(criaAgente(path, tamanhoGrelha, tipo, politica, numeroPassos, modo.strip(), carregaMelhor))
 
         for ele in elementos_str:
             _, nome, pos, coletavel, solido, pts = ele
@@ -141,6 +137,7 @@ def cria(ficheiro, tipo, politica,modo,tempo=0):
             coletavel_bool = True if coletavel == "True" else False
             elemento = Elemento(nome, pts, coletavel_bool, solido_bool)
             ambiente.adicionar(elemento,posicao)
+
         ms = MotorSimulacao(modo,agentes,ambiente,tipo,numeroPassos)
         return ms
 
