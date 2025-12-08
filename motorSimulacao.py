@@ -27,8 +27,8 @@ class MotorSimulacao:
     def executa(self):
         i = 1
         if self.modo == "T":
-            #self.janela = GUI(self.ambiente.tamanhoGrelha)
-            self.representa_TUI()
+            self.janela = GUI(self.ambiente.tamanhoGrelha)
+            #self.representa_TUI()
         self.inicializarObservacao()
         while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos * len(self.agentes):
             self.atualizarEstadoAgentes()
@@ -56,11 +56,11 @@ class MotorSimulacao:
                 if isinstance(agente, AgenteReforco) and self.modo == "A":  # Só se tivermos no modo aprendizagem
                     agente.avaliacaoEstadoAtual(recompensa)
             if self.modo == "T":
-                self.representa_TUI()
-                #self.janela.representa(self.ambiente, self.agentes)
+                #self.representa_TUI()
+                self.janela.representa(self.ambiente, self.agentes)
                 sleep(0.5)
-        #if self.modo == "T":            #meter para GUI
-            #self.janela.root.mainloop()
+        if self.modo == "T":            #meter para GUI
+            self.janela.root.mainloop()
         if self.tipo != "R":
             for a in self.agentes:
                 if self.ambiente.condicaoFim(self.agentes):
