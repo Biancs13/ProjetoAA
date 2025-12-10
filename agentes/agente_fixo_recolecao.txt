@@ -2,9 +2,9 @@
 (0,0)
 0
 S (0,-1) (0,1) (1,0)
+Acao.FRENTE
 Acao.DIREITA
 Acao.ESQUERDA
-Acao.FRENTE
 Acao.DIREITA
 Acao.FRENTE
 Acao.ESQUERDA

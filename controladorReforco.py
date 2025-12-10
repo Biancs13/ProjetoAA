@@ -48,13 +48,3 @@ def criarReforco(modo,problema,conteudo):
     else:
         tempo = None
     return ControladorReforco(episodios,ficheiro_motor,problema[0],modo,tempo)
-
-#Para os gráficos
-def reconstruir_caminho(posicao,angulo, comportamento):
-    caminho = []
-    for a in comportamento:
-        novaPos, novaAng = atuar(posicao,angulo,a)
-        caminho.append(posicao)
-        posicao = novaPos
-        angulo = novaAng
-    return caminho
