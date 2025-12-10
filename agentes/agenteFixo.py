@@ -63,6 +63,7 @@ class AgenteFixo(Agente):
             opcoes_validas = {a: p for a, p in opcoes.items() if p >= 0 and not existeSolido(elementos,a) and not estaFora(elementos, a)} # se existe lá qualquer coletavel
             if opcoes_validas:
                 melhor_acao = max(opcoes_validas, key=opcoes_validas.get)
+                self.acoes.append(melhor_acao)
                 return melhor_acao
             else:
                 numColetaveis = self.estadoAtual[10]
@@ -75,16 +76,20 @@ class AgenteFixo(Agente):
                 else:
                     melhorAcao = melhor_acao_para_direcao(angulo, direcaoColetavel)
             if melhorAcao == Acao.MEIA_VOLTA:
+                self.acoes.append(Acao.MEIA_VOLTA)
                 return Acao.MEIA_VOLTA
             if not existeSolido(elementos, melhorAcao) and not estaFora(elementos, melhorAcao):
+                 self.acoes.append(melhorAcao)
                  return melhorAcao
             outras_acoes = [Acao.ESQUERDA, Acao.FRENTE, Acao.DIREITA]
 
             outras_acoes.remove(melhorAcao)
             acoes_validas = [a for a in outras_acoes if not existeSolido(elementos, a) and not estaFora(elementos, a)]
             if not acoes_validas:
-                 return Acao.MEIA_VOLTA
+                self.acoes.append(Acao.MEIA_VOLTA)
+                return Acao.MEIA_VOLTA
             escolha = random.choice(acoes_validas)
+            self.acoes.append(escolha)
             return escolha
 
 
