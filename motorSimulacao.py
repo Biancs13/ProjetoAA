@@ -52,7 +52,7 @@ class MotorSimulacao:
                 else:
                     agente.num_colisoes += 1
                 i += 1
-                recompensa = self.ambiente.getRecompensa(novaPos, len(agente.coletaveis), pts)
+                recompensa = self.ambiente.getRecompensa(novaPos,novoAng, len(agente.coletaveis), pts)
                 if isinstance(agente, AgenteReforco) and self.modo == "A":  # Só se tivermos no modo aprendizagem
                     agente.avaliacaoEstadoAtual(recompensa)
             if self.modo == "T":

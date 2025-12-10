@@ -52,7 +52,7 @@ class ControladorGenetico(Controlador):
 
     def executar_aprendizagem(self):
         populacao_pesos = self.criar_populacao()
-        melhorAgente,melhorFitnessGlobal = None, -float('inf')
+        melhor_agente,melhor_fitness_global = None, -float('inf')
         for g in range(self.geracoes):
             total_fitness = 0
             fitness_dicionario = {}
@@ -67,16 +67,16 @@ class ControladorGenetico(Controlador):
             melhor_fitness = max(fitness_dicionario.values())
             fitness_medio = total_fitness / self.tamanho_populacao
             self.fitness_medio_geracao.append(fitness_medio)
-            agenteMelhorGeracao = max(populacao_agentes, key=lambda x: x.fitness)
-            if melhor_fitness > melhorFitnessGlobal:
-                melhorFitnessGlobal = melhor_fitness
-                melhorAgente = agenteMelhorGeracao
-            self.melhores_caminhos_gen.append(melhorAgente.comportamento)
+            agente_melhor_geracao = max(populacao_agentes, key=lambda x: x.fitness)
+            if melhor_fitness > melhor_fitness_global:
+                melhor_fitness_global = melhor_fitness
+                melhor_agente = agente_melhor_geracao
+            self.melhores_caminhos_gen.append(melhor_agente.comportamento)
             populacao_agentes.sort(key=lambda x: calcular_novelty(x.comportamento, self.arquivo,self.k_novel), reverse=True)
             for i in range(self.arquivos_por_geracao):
                 self.arquivo.add(tuple(populacao_agentes[i].comportamento))
             populacao_agentes.sort(key=lambda x: x.fitness, reverse=True)
-            pesos_ordenados = [agente.pesos for agente in populacao_agentes] #já estão ordenados pelo fitness
+            pesos_ordenados = [agente.pesos for agente in populacao_agentes] #já ordenados pelo fitness
 
             print(f"Gen {g + 1}/{self.geracoes} | Avg Combined: {fitness_medio:.2f} | Melhor fitness: {melhor_fitness:.2f})")
 
@@ -90,8 +90,8 @@ class ControladorGenetico(Controlador):
                 self.mutacao(filho, self.taxa_mutacao)
                 nova_populacao.append(filho)
             populacao_pesos = nova_populacao
-        if melhorAgente is not None:
-            melhorAgente.escreverMelhor()
+        if melhor_agente is not None:
+            melhor_agente.escreverMelhor()
 
     def executar_teste(self):
         motor = self.criar_motor("genetico")
@@ -113,46 +113,44 @@ def calcular_novelty(comportamento, arquivo, k):
     k_use = min(k, len(distancias))
     return sum(distancias[:k_use]) / k_use if k_use > 0 else 0.0
 
+
+
+
 #Para os gráficos
 def reconstruir_caminho(posicao,angulo, comportamento):
-    caminho = []
+    caminho = [posicao]
     for a in comportamento:
-        novaPos, novaAng = atuar(posicao,angulo,a)
+        posicao, angulo = atuar(posicao,angulo,a)
         caminho.append(posicao)
-        posicao = novaPos
-        angulo = novaAng
     return caminho
 
 #Assumimos que os caminhos já estão calculados
 def calcular_mapa(caminhos,tamanho_grelha):
     mapa_visitas = {Posicao(x,y):0 for x in range(tamanho_grelha) for y in range(tamanho_grelha)}
     for c in caminhos:
-        caminho = reconstruir_caminho(posicao,angulo,c)
-
-        for pos in caminho:
-            x = round(pos.getX() / 0.1) * 0.1
-            y = round(pos.getY() / 0.1) * 0.1
-            coordenada = (x,y)
-            mapa_visitas[coordenada] = mapa_visitas.get(coordenada, 0) + 1
+        for pos in c:
+            mapa_visitas[pos] = mapa_visitas[pos] + 1
     return mapa_visitas
+
+
 
 # TODO Acrescentar verifica ao conteudo APENAS !!!
 def criaGenetico(modo,problema,conteudo):
-    tamanhoGeracao, tamanhoPopulacao, taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,torneio,ficheiroMotor = conteudo
-    tamanhoGeracao = int(tamanhoGeracao.strip())
-    tamanhoPopulacao = int(tamanhoPopulacao.strip())
-    taxaMutacao = float(taxaMutacao.strip())
-    eliteRate = float(eliteRate.strip())
-    noveltyWeight = float(noveltyWeight.strip())
-    kNovel = int(kNovel.strip())
-    arquivosGeracao = int(arquivosGeracao.strip())
+    tamanho_geracao, tamanho_populacao, taxa_mutacao,elite_rate,novelty_weight,k_novel,arquivos_geracao,torneio,ficheiro_motor = conteudo
+    tamanho_geracao = int(tamanho_geracao.strip())
+    tamanho_populacao = int(tamanho_populacao.strip())
+    taxa_mutacao = float(taxa_mutacao.strip())
+    elite_rate = float(elite_rate.strip())
+    novelty_weight = float(novelty_weight.strip())
+    k_novel = int(k_novel.strip())
+    arquivos_geracao = int(arquivos_geracao.strip())
     torneio = int(torneio.strip())
     problema = problema.split(" ")
     if problema[0] == "R":
         tempo = int(problema[1])
     else:
         tempo = None
-    ficheiroMotor = ficheiroMotor.split(" ")[1]
-    controlador = ControladorGenetico(tamanhoGeracao,tamanhoPopulacao,taxaMutacao,eliteRate,noveltyWeight,kNovel,arquivosGeracao,problema[0],ficheiroMotor,tempo,modo,torneio)
+    ficheiro_motor = ficheiro_motor.split(" ")[1]
+    controlador = ControladorGenetico(tamanho_geracao,tamanho_populacao,taxa_mutacao,elite_rate,novelty_weight,k_novel,arquivos_geracao,problema[0],ficheiro_motor,tempo,modo,torneio)
     return controlador
 

@@ -3,6 +3,7 @@ from abc import abstractmethod, ABC
 from objetos.elemento import Elemento
 from objetos.observacao import Observacao
 from objetos.posicao import Posicao, dentroLimites, getDistancia
+from objetos.vetor import getDirecao
 
 
 class Ambiente(ABC):
@@ -26,6 +27,9 @@ class Ambiente(ABC):
             i += 1
         return observacao,posicoes
 
+    def get_direcao_objetivo(self,pos_agente,tipo_elemento):
+        pos_ele = self.getPosicaoElementoMaisProximo(pos_agente,tipo_elemento)
+        return getDirecao(pos_agente,pos_ele)
 
     def agir(self,acao,agente):
         reward = 100
