@@ -123,6 +123,17 @@ def reconstruir_caminho(posicao,angulo, comportamento):
         angulo = novaAng
     return caminho
 
+def calcular_mapa(posicao,angulo,caminhos):
+    mapa_visitas = {}
+    for c in caminhos:
+        caminho = reconstruir_caminho(posicao,angulo,c)
+
+        for pos in caminho:
+            x = round(pos.getX() / 0.1) * 0.1
+            y = round(pos.getY() / 0.1) * 0.1
+            coordenada = (x,y)
+            mapa_visitas[coordenada] = mapa_visitas.get(coordenada, 0) + 1
+    return mapa_visitas
 
 # TODO Acrescentar verifica ao conteudo APENAS !!!
 def criaGenetico(modo,problema,conteudo):
