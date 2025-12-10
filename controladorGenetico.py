@@ -1,5 +1,6 @@
 from controlador import Controlador
 from objetos.acao import atuar
+from objetos.posicao import Posicao
 from objetos.redeNeuronal import *
 
 class ControladorGenetico(Controlador):
@@ -63,7 +64,6 @@ class ControladorGenetico(Controlador):
                 total_fitness += fitness
                 populacao_agentes.append(agente)
                 i+=1
-
             melhor_fitness = max(fitness_dicionario.values())
             fitness_medio = total_fitness / self.tamanho_populacao
             self.fitness_medio_geracao.append(fitness_medio)
@@ -123,8 +123,9 @@ def reconstruir_caminho(posicao,angulo, comportamento):
         angulo = novaAng
     return caminho
 
-def calcular_mapa(posicao,angulo,caminhos):
-    mapa_visitas = {}
+#Assumimos que os caminhos já estão calculados
+def calcular_mapa(caminhos,tamanho_grelha):
+    mapa_visitas = {Posicao(x,y):0 for x in range(tamanho_grelha) for y in range(tamanho_grelha)}
     for c in caminhos:
         caminho = reconstruir_caminho(posicao,angulo,c)
 

@@ -1,4 +1,5 @@
 from ambientes.ambiente import Ambiente
+from objetos.acao import mesma_direcao
 from objetos.posicao import getDistancia, dentroLimites
 
 
@@ -20,10 +21,13 @@ class Farol(Ambiente):
                 return True
         return False
 
-    def getRecompensa(self,pos,numColetaveis=0,pts=0):
+    def getRecompensa(self,pos,angulo,num_coletaveis=0,pts=0):
         #NOTA: AINDA NÂO INTRODUZ NOVELTY
         if not dentroLimites(pos,self.tamanhoGrelha):
             return -40
+        direcao = self.get_direcao_objetivo(pos,"farol")
+        if mesma_direcao(angulo,direcao):
+            return 100
         if pos == self.getPosicaoElementoMaisProximo(pos,'farol'):
             return 500
         ele = self.getElemento(pos)

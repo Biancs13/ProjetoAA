@@ -43,11 +43,6 @@ class AgenteReforco(Agente):
         melhores_acoes = [acao for acao, q in dic_acoes.items() if q == max_q]
         return random.choice(melhores_acoes) # para lidar com empates
 
-    def atualizar_espilon(self):
-        if self.epsilon > self.epsilon_final:
-            self.epsilon -= 1/self.passos_totais
-            if self.epsilon < self.epsilon_final:
-                self.epsilon = self.epsilon_final
 
     #na verdade aqui é avaliacao do EstadoAntigo  Podemos mudar
     def avaliacaoEstadoAtual(self,recompensa):
@@ -68,7 +63,7 @@ class AgenteReforco(Agente):
 
         self.q[estado_antigo][self.ultima_acao] =(
                 q_atual + self.alpha * (recompensa + self.desconto*max_q_novo - q_atual))
-        self.epsilon = max(self.epsilon_final, self.epsilon * 0.9999)
+        self.epsilon = max(self.epsilon_final, self.epsilon * 0.9995)
 
 
     def escreverMelhor(self):

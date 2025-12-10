@@ -31,7 +31,7 @@ class Recolecao(Ambiente):
         return (not found_grelha and not found_agente) or time.time() - self.tempoInicial >= self.tempoLimite
 
 
-    def getRecompensa(self,pos,numColetaveis=0,pts=0):
+    def getRecompensa(self,pos,direcaoObj1,direcaoObj2=None,numColetaveis=0,pts=0):
         #Falta novelty
         if not dentroLimites(pos,self.tamanhoGrelha):
             return -80
@@ -40,6 +40,8 @@ class Recolecao(Ambiente):
             return -80
         if ele.isColetavel():
             return ele.getPontos() * 150
+
+
         if ele.getNome() == "ninho":
             if pts == 0:
                 return -25

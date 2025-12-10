@@ -55,6 +55,12 @@ def getVetorFrente(angulo):
 def melhor_acao_para_direcao(anguloAgente, direcao):
     return melhor_acao(anguloAgente,vetor_para_angulo(direcao))
 
+def mesma_direcao(angA,direcao):
+    angulo = vetor_para_angulo(direcao)
+    if angA -45 < angulo < angA + 45:
+        return True
+    else:
+        return False
 
 def melhor_acao(angA,angD):
     #print(f"anguloA: {angA} | anguloD: {angD}")
