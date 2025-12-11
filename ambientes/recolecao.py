@@ -35,19 +35,7 @@ class Recolecao(Ambiente):
     def getRecompensa(self,posAntiga,pos,angulo,numColetaveis=0,pts=0):
         #Falta novelty
         if not dentroLimites(pos,self.tamanhoGrelha):
-            return -80
-        direcao1 = self.get_direcao_objetivo(pos, "ovo")
-        if mesma_direcao(angulo, direcao1):
-            return 10
-        direcao2 = self.get_direcao_objetivo(pos, "ninho")
-        if mesma_direcao(angulo, direcao2):
-            return 10
-        ninho_pos = self.getPosicaoElementoMaisProximo(pos,"ninho")
-        if getDistancia(posAntiga, ninho_pos) < getDistancia(pos, ninho_pos):
-            return 100
-        ovo_pos = self.getPosicaoElementoMaisProximo(pos, "ovo")
-        if getDistancia(posAntiga, ovo_pos) < getDistancia(pos, ovo_pos):
-            return 100
+            return -50
         ele = self.getElemento(pos)
         if ele.isSolido():
             return -80
@@ -58,5 +46,20 @@ class Recolecao(Ambiente):
                 return -25
             else:
                 return pts * 150 + 300
-        return -0.1
+
+        recompensa = 0
+        ovo_pos = self.getPosicaoElementoMaisProximo(pos, "ovo")
+        if ovo_pos != None:
+            if getDistancia(posAntiga, ovo_pos) > getDistancia(pos, ovo_pos):
+                recompensa += 40
+            elif  getDistancia(posAntiga, ovo_pos) < getDistancia(pos, ovo_pos):
+                recompensa -= 20
+
+
+        ninho_pos = self.getPosicaoElementoMaisProximo(pos,"ninho")
+        if getDistancia(posAntiga, ninho_pos) > getDistancia(pos, ninho_pos) and numColetaveis > 0:
+            recompensa += 50
+
+        recompensa -=1
+        return  recompensa
 

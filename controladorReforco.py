@@ -34,7 +34,7 @@ class ControladorReforco(Controlador):
 
             if ep % 100 == 0:
                 self.melhores_recompensas_ep.append(get_max_recompensa_q(q))
-                melhor = max(lista_passos_100)
+                melhor = min(lista_passos_100)
                 self.numero_passos.append(melhor)
                 lista_passos_100 = []
 

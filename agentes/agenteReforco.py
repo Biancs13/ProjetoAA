@@ -27,14 +27,12 @@ class AgenteReforco(Agente):
 
     #Para que o Q learning nao crie imensas linhas
     def _obter_chave_estado(self, estado_original):
-        return tuple(estado_original)
+        return tuple(round(e, 2) for e in estado_original)
 
     def escolher_acao(self):
         if random.random() < self.epsilon:
-            print("acao aleatoria")
             return getAcaoAleatoria()
         else:
-            print("acao recompensa")
             return self.getAcaoComMaiorQ()
 
     def getAcaoComMaiorQ(self):
@@ -68,7 +66,6 @@ class AgenteReforco(Agente):
 
         self.q[estado_antigo][self.ultima_acao] =(
                 q_atual + self.alpha * (recompensa + self.desconto*max_q_novo - q_atual))
-        self.epsilon *= 0.995
 
     def atualizar_epsilon(self, episodio):
         ratio = episodio / self.num_episodios
@@ -81,7 +78,7 @@ class AgenteReforco(Agente):
         dados = []
         for estado, acaoRecompensa in self.q.items():
             for acao,recompensa in acaoRecompensa.items():
-                linha = f"{'|'.join(f'{e:.1f}' for e in estado)},{acao.name},{recompensa:.2f}"
+                linha = f"{'|'.join(f'{e:.2f}' for e in estado)},{acao.name},{recompensa:.2f}"
                 dados.append(linha)
         fich = open(self.ficheiro,'r+')
         linhas = fich.readlines()
