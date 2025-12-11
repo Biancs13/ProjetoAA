@@ -63,7 +63,8 @@ class AgenteReforco(Agente):
 
         self.q[estado_antigo][self.ultima_acao] =(
                 q_atual + self.alpha * (recompensa + self.desconto*max_q_novo - q_atual))
-        self.epsilon = max(self.epsilon_final, self.epsilon * 0.9995)
+        self.epsilon *= 0.995
+        self.epsilon = max(self.epsilon_final, self.epsilon)
 
 
     def escreverMelhor(self):
