@@ -17,6 +17,7 @@ class ControladorGenetico(Controlador):
         self.arquivos_por_geracao = arquivos_por_geracao
         self.arquivo = set()
         self.fitness_medio_geracao = []
+        self.numero_passos = []
         self.modo = modo
         self.tamanho_torneio = tamanho_torneio
         self.melhores_caminhos_gen = []
@@ -72,6 +73,7 @@ class ControladorGenetico(Controlador):
                 melhor_fitness_global = melhor_fitness
                 melhor_agente = agente_melhor_geracao
             self.melhores_caminhos_gen.append(melhor_agente.comportamento)
+            self.numero_passos.append(melhor_agente.num_passos)
             populacao_agentes.sort(key=lambda x: calcular_novelty(x.comportamento, self.arquivo,self.k_novel), reverse=True)
             for i in range(self.arquivos_por_geracao):
                 self.arquivo.add(tuple(populacao_agentes[i].comportamento))

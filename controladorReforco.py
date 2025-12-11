@@ -7,6 +7,7 @@ class ControladorReforco(Controlador):
     def __init__(self,episodios,ficheiro_motor,problema,modo,tempo=0):
         self.episodios = episodios
         self.melhores_recompensas_ep =[]
+        self.numero_passos = []
         super().__init__(ficheiro_motor, problema,tempo,modo)
 
 
@@ -14,11 +15,13 @@ class ControladorReforco(Controlador):
         q = {}
         for i in range(self.episodios +1):
             motor = self.criar_motor("reforco")
-            motor.agentes[0].q = q
+            agente = motor.agentes[0]
+            agente.q = q
             motor.executa() # aqui treinamos
-            q = motor.agentes[0].q
+            q = agente.q
             if i % 100 == 0:
                 self.melhores_recompensas_ep.append(get_max_recompensa_q(q))
+                self.numero_passos.append(agente.num_passos)
             if i % 1000 == 0:
                 print(f"Episódio: {i}/{self.episodios}: Recompensa máxima encontrada:",get_max_recompensa_q(q))
         motor = self.criar_motor("reforco")

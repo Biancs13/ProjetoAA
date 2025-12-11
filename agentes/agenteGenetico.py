@@ -20,6 +20,7 @@ class AgenteGenetico(Agente):
             self.rede_neuronal.carregaPesos(self.pesos)
         acao = self.rede_neuronal.decidirAcao(self.estadoAtual)
         self.comportamento.append(acao)
+        self.num_passos += 1
         return acao
 
     def avaliacaoEstadoAtual(self,recompensa):

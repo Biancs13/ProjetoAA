@@ -20,6 +20,7 @@ class AgenteReforco(Agente):
 
     def age(self):
         self.ultima_acao = self.escolher_acao()
+        self.num_passos += 1
         return self.ultima_acao
 
     #Para que o Q learning nao crie imensas linhas

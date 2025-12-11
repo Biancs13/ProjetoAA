@@ -24,7 +24,9 @@ class AgenteAleatorio(Agente):
                 continue
 
             self.acoes.append(acao)
+            self.num_passos += 1
             return acao
+
 
 
     def avaliacaoEstadoAtual(self,recompensa):
