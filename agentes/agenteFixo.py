@@ -52,6 +52,7 @@ class AgenteFixo(Agente):
 
             self.ultima_acao = Acao.MEIA_VOLTA
             self.acoes.append(Acao.MEIA_VOLTA)
+            self.num_passos += 1
             return Acao.MEIA_VOLTA
 
         elif len(self.estadoAtual) == 15:
