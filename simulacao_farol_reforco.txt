@@ -1,5 +1,5 @@
 5
-50
+20
 AG agente_reforco_farol.txt
  E farol (3,3) False False 100
 E parede (1,2) False True 0

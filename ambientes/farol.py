@@ -27,11 +27,11 @@ class Farol(Ambiente):
             return -40
         direcao = self.get_direcao_objetivo(pos,"farol")
         if mesma_direcao(angulo,direcao):
-            return 100
+            return 10
         if pos == self.getPosicaoElementoMaisProximo(pos,'farol'):
             return 500
         ele = self.getElemento(pos)
         if ele.isSolido():
             return -40
-        return -0.3
+        return 1
 
