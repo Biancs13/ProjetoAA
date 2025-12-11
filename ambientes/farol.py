@@ -21,13 +21,16 @@ class Farol(Ambiente):
                 return True
         return False
 
-    def getRecompensa(self,pos,angulo,num_coletaveis=0,pts=0):
+    def getRecompensa(self,posAntiga,pos,angulo,num_coletaveis=0,pts=0):
         #NOTA: AINDA NÂO INTRODUZ NOVELTY
         if not dentroLimites(pos,self.tamanhoGrelha):
             return -40
         direcao = self.get_direcao_objetivo(pos,"farol")
         if mesma_direcao(angulo,direcao):
             return 10
+        farol = self.getPosicaoElementoMaisProximo(pos,"farol")
+        if getDistancia(posAntiga,farol) < getDistancia(pos,farol):
+            return 100
         if pos == self.getPosicaoElementoMaisProximo(pos,'farol'):
             return 500
         ele = self.getElemento(pos)

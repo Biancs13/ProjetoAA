@@ -63,7 +63,7 @@ class Ambiente(ABC):
                 self.grelha[novaPosAgente] = Elemento("Vazio",-1,-1,-1)
 
     @abstractmethod
-    def getRecompensa(self,pos,angulo,num_coletaveis = 0,pts=0):
+    def getRecompensa(self,posAntiga,pos,angulo,num_coletaveis = 0,pts=0):
         pass
 
     @abstractmethod

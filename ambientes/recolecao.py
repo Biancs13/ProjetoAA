@@ -2,7 +2,8 @@ import time
 
 from agentes.agente import estaFora
 from ambientes.ambiente import Ambiente
-from objetos.posicao import dentroLimites
+from objetos.acao import mesma_direcao
+from objetos.posicao import dentroLimites, getDistancia
 
 
 class Recolecao(Ambiente):
@@ -31,17 +32,27 @@ class Recolecao(Ambiente):
         return (not found_grelha and not found_agente) or time.time() - self.tempoInicial >= self.tempoLimite
 
 
-    def getRecompensa(self,pos,direcaoObj1,direcaoObj2=None,numColetaveis=0,pts=0):
+    def getRecompensa(self,posAntiga,pos,angulo,numColetaveis=0,pts=0):
         #Falta novelty
         if not dentroLimites(pos,self.tamanhoGrelha):
             return -80
+        direcao1 = self.get_direcao_objetivo(pos, "ovo")
+        if mesma_direcao(angulo, direcao1):
+            return 10
+        direcao2 = self.get_direcao_objetivo(pos, "ninho")
+        if mesma_direcao(angulo, direcao2):
+            return 10
+        ninho_pos = self.getPosicaoElementoMaisProximo(pos,"ninho")
+        if getDistancia(posAntiga, ninho_pos) < getDistancia(pos, ninho_pos):
+            return 100
+        ovo_pos = self.getPosicaoElementoMaisProximo(pos, "ovo")
+        if getDistancia(posAntiga, ovo_pos) < getDistancia(pos, ovo_pos):
+            return 100
         ele = self.getElemento(pos)
         if ele.isSolido():
             return -80
         if ele.isColetavel():
             return ele.getPontos() * 150
-
-
         if ele.getNome() == "ninho":
             if pts == 0:
                 return -25

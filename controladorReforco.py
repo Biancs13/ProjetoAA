@@ -13,25 +13,44 @@ class ControladorReforco(Controlador):
 
     def executar_aprendizagem(self):
         q = {}
-        for i in range(self.episodios +1):
-            motor = self.criar_motor("reforco")
+        epsilon = 0
+        lista_passos_100 = []
+
+        for ep in range(self.episodios + 1):
+
+            motor = self.criar_motor("reforco", self.episodios)
             agente = motor.agentes[0]
+
             agente.q = q
-            motor.executa() # aqui treinamos
+            if epsilon != 0:
+                agente.epsilon = epsilon
+
+            motor.executa()
+
+            agente.atualizar_epsilon(ep)
             q = agente.q
-            if i % 100 == 0:
+            epsilon = agente.epsilon
+            lista_passos_100.append(agente.num_passos)
+
+            if ep % 100 == 0:
                 self.melhores_recompensas_ep.append(get_max_recompensa_q(q))
-                self.numero_passos.append(agente.num_passos)
-            if i % 1000 == 0:
-                print(f"Episódio: {i}/{self.episodios}: Recompensa máxima encontrada:",get_max_recompensa_q(q))
-        motor = self.criar_motor("reforco")
+                melhor = max(lista_passos_100)
+                self.numero_passos.append(melhor)
+                lista_passos_100 = []
+
+            if ep % 1000 == 0:
+                print(f"Episódio: {ep}/{self.episodios} | Max R:", get_max_recompensa_q(q))
+        motor = self.criar_motor("reforco", self.episodios)
         motor.agentes[0].q = q
         motor.agentes[0].escreverMelhor()
 
 
+
     def executar_teste(self):
-        motor = self.criar_motor("reforco")
+        motor = self.criar_motor("reforco", self.episodios)
         motor.executa()
+
+
 
 
 def get_max_recompensa_q(q):

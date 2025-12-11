@@ -147,7 +147,7 @@ def valida(lista,tamanhoLista):
         return False
     return True
 
-def criaAgente(ficheiro_agentes, tamanhoGrelha, tipoProblema, politica, passos, modo="A", carregarMelhor=False):
+def criaAgente(ficheiro_agentes, tamanhoGrelha, tipoProblema, politica, episodios=None, modo="A", carregarMelhor=False):
     from agentes.agenteFixo import AgenteFixo
     from agentes.agenteReforco import AgenteReforco, lerDicionario
     from agentes.agenteGenetico import AgenteGenetico
@@ -174,7 +174,7 @@ def criaAgente(ficheiro_agentes, tamanhoGrelha, tipoProblema, politica, passos, 
             epsilon_inicial = float(epsilon_inicial.strip())
             epsilon_final = float(epsilon_final.strip())
             agente = AgenteReforco(id, posicao, tipoProblema, angulo, ficheiro_agentes, alpha, gama, epsilon_inicial,
-                                   epsilon_final)
+                                   epsilon_final,episodios)
         if politica == "aleatorio":
             agente = AgenteAleatorio(id,posicao,tipoProblema, angulo,ficheiro_agentes,treino)
 

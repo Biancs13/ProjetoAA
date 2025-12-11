@@ -10,8 +10,8 @@ class Controlador(ABC):
         self.tempo = tempo
         self.modo = modo
 
-    def criar_motor(self,politica):
-        return cria(self.ficheiro_motor, self.problema, politica, self.modo,self.tempo)
+    def criar_motor(self,politica,episodios=None):
+        return cria(self.ficheiro_motor, self.problema, politica, self.modo,episodios,self.tempo)
 
 
     def executa(self):

@@ -33,6 +33,7 @@ class MotorSimulacao:
         while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos * len(self.agentes):
             self.atualizarEstadoAgentes()
             for agente in self.agentes:
+                posAntiga = agente.getPosicao()
                 acao = agente.age()
                 novaPos, novoAng = atuar(agente.posicaoAtual,agente.angulo, acao)
                 pts =0
@@ -52,7 +53,7 @@ class MotorSimulacao:
                 else:
                     agente.num_colisoes += 1
                 i += 1
-                recompensa = self.ambiente.getRecompensa(novaPos,novoAng, len(agente.coletaveis), pts)
+                recompensa = self.ambiente.getRecompensa(posAntiga,novaPos,novoAng, len(agente.coletaveis), pts)
                 if isinstance(agente, AgenteReforco) and self.modo == "A":  # Só se tivermos no modo aprendizagem
                     agente.avaliacaoEstadoAtual(recompensa)
             if self.modo == "T":
@@ -116,7 +117,7 @@ class MotorSimulacao:
         return "\n".join(linhas)
 
 
-def cria(ficheiro, tipo, politica, modo, tempo=0):
+def cria(ficheiro, tipo, politica, modo,episodios=None, tempo=0):
     tamanhoGrelha, numeroPassos, agentes_str, elementos_str = lerFicheiro(ficheiro)
     agentes = []
     if verificaFicheiro([tamanhoGrelha, numeroPassos, agentes_str, elementos_str]):
@@ -134,7 +135,7 @@ def cria(ficheiro, tipo, politica, modo, tempo=0):
 
         for ag in agentes_str:
             path = "agentes/" + ag
-            agentes.append(criaAgente(path, tamanhoGrelha, tipo, politica, numeroPassos, modo.strip(), carregaMelhor))
+            agentes.append(criaAgente(path, tamanhoGrelha, tipo, politica, episodios, modo.strip(), carregaMelhor))
 
         for ele in elementos_str:
             _, nome, pos, coletavel, solido, pts = ele

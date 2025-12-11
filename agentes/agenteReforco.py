@@ -9,11 +9,13 @@ from objetos.acao import Acao
 
 class AgenteReforco(Agente):
 
-    def __init__(self, id, posicaoInicial, tipo, angulo, ficheiro, alpha, desconto, epsilon_inicial, epsilon_final):
+    def __init__(self, id, posicaoInicial, tipo, angulo, ficheiro, alpha, desconto, epsilon_inicial, epsilon_final,num_episodios):
         super().__init__(id,posicaoInicial,tipo, angulo,ficheiro)
         self.q = {} # Dicionario de dicionarios, para cada estado damos um dicionario com acao,Q
         self.alpha = alpha
         self.desconto = desconto
+        self.num_episodios = num_episodios
+        self.epsilon_inicial = epsilon_inicial
         self.epsilon = epsilon_inicial
         self.epsilon_final = epsilon_final
         self.ultima_acao = None
@@ -29,8 +31,10 @@ class AgenteReforco(Agente):
 
     def escolher_acao(self):
         if random.random() < self.epsilon:
+            print("acao aleatoria")
             return getAcaoAleatoria()
         else:
+            print("acao recompensa")
             return self.getAcaoComMaiorQ()
 
     def getAcaoComMaiorQ(self):
@@ -65,8 +69,13 @@ class AgenteReforco(Agente):
         self.q[estado_antigo][self.ultima_acao] =(
                 q_atual + self.alpha * (recompensa + self.desconto*max_q_novo - q_atual))
         self.epsilon *= 0.995
-        self.epsilon = max(self.epsilon_final, self.epsilon)
 
+    def atualizar_epsilon(self, episodio):
+        ratio = episodio / self.num_episodios
+        self.epsilon = max(
+            self.epsilon_final,
+            self.epsilon_inicial * (1 - ratio)
+        )
 
     def escreverMelhor(self):
         dados = []
