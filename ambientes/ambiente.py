@@ -70,4 +70,8 @@ class Ambiente(ABC):
     def condicaoFim(self,agentes=None):
         pass
 
+    @abstractmethod
+    def calcular_fitness(self,agente):
+        pass
+
 

@@ -17,9 +17,8 @@ class AgenteFixo(Agente):
         if self.treino:
             acao = self.acoes.pop(0)
             return acao
-        elementos = self.estadoAtual[1:10]
-        angulo = self.estadoAtual[0] * 360
-        if len(self.estadoAtual) == 12:
+        elementos = self.estadoAtual[0:9]
+        if len(self.estadoAtual) == 10:
             if elementos[2] == 1:
                 self.acoes.append(Acao.ESQUERDA)
                 return Acao.ESQUERDA
@@ -29,8 +28,7 @@ class AgenteFixo(Agente):
             elif elementos[8] == 1:
                 self.acoes.append(Acao.DIREITA)
                 return Acao.DIREITA
-            direcaoFarol = self.estadoAtual[10:]
-            vetorFarol = Vetor(direcaoFarol[0], direcaoFarol[1])
+
             melhorAcao = melhor_acao_para_direcao(angulo, vetorFarol)
 
             if not existeSolido(elementos, melhorAcao) and not estaFora(elementos, melhorAcao):
@@ -55,7 +53,7 @@ class AgenteFixo(Agente):
             self.num_passos += 1
             return Acao.MEIA_VOLTA
 
-        elif len(self.estadoAtual) == 15:
+        elif len(self.estadoAtual) == 12:
             opcoes = {
                 Acao.ESQUERDA: elementos[2],
                 Acao.FRENTE:   elementos[5],

@@ -41,26 +41,25 @@ class Agente(ABC):
 
     def atualizarEstadoAtual(self,direcaoObj1,direcaoObj2 = None):
         novoEstado = []
-        novoEstado.append(self.angulo/360) # o angulo fica em 0, 0.25, 0.5 ou 0.75 para indicar a orientação
+        vetor_frente = getVetorFrente(self.angulo)
+        #novoEstado.append(self.angulo/360) # o angulo fica em 0, 0.25, 0.5 ou 0.75 para indicar a orientação
         for elemento in self.observacaoAtual.getElementos():
             if elemento is None:
                 novoEstado.extend([-1, 0, -1])
             else:
                 novoEstado.extend(elemento)
         if self.tipoProblema == "F":
-            novoEstado.append(direcaoObj1.x)
-            novoEstado.append(direcaoObj1.y)
-            self.estadoAtual = novoEstado
+            cos_angulo = angulo_normalizado(vetor_frente,direcaoObj1)
+            novoEstado.append(cos_angulo)
         elif self.tipoProblema == "R":
             novoEstado.append(len(self.coletaveis)/100)
-            novoEstado.append(direcaoObj1.x)
-            novoEstado.append(direcaoObj1.y)
+            cos_angulo = angulo_normalizado(vetor_frente, direcaoObj1)
+            novoEstado.append(cos_angulo)
             if direcaoObj2 is not None:
-                novoEstado.append(direcaoObj2.x)
-                novoEstado.append(direcaoObj2.y)
+                cos_angulo2 = angulo_normalizado(vetor_frente, direcaoObj2)
+                novoEstado.append(cos_angulo2)
             else:
-                novoEstado.append(-1)
-                novoEstado.append(-1)
+                novoEstado.append(0)
         if self.estadoAtual is None:
             self.estadoAntigo = novoEstado
         else:

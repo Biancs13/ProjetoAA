@@ -62,41 +62,13 @@ def mesma_direcao(angA,direcao):
     else:
         return False
 
-def melhor_acao(angA,angD):
-    #print(f"anguloA: {angA} | anguloD: {angD}")
-    if angA == 0:
-        if  angD < 45 or angD >= 315:
-            return Acao.FRENTE
-        elif 45 <= angD < 135:
-            return Acao.DIREITA
-        elif 135 <= angD < 225:
-            return Acao.MEIA_VOLTA
-        else:
-            return Acao.ESQUERDA
-    elif angA == 90:
-        if angD < 45 or angD >= 315:
-            return Acao.ESQUERDA
-        elif 45 <= angD < 135:
-            return Acao.FRENTE
-        elif 135 <= angD < 225:
-            return Acao.DIREITA
-        else:
-            return Acao.MEIA_VOLTA
-    elif angA == 180:
-        if angD < 45 or angD >= 315:
-            return Acao.MEIA_VOLTA
-        elif 45 <= angD < 135:
-            return Acao.ESQUERDA
-        elif 135 <= angD < 225:
-            return Acao.FRENTE
-        else:
-            return Acao.DIREITA
+# o angulo dado é dependente do agente
+def melhor_acao(ang):
+    if 0 <= ang < 45:
+        return Acao.DIREITA
+    elif 45 <= ang < 135:
+        return Acao.FRENTE
+    elif 135 <= ang < 180:
+        return Acao.ESQUERDA
     else:
-        if angD < 45 or angD >= 315:
-            return Acao.DIREITA
-        elif 45 <= angD < 135:
-            return Acao.MEIA_VOLTA
-        elif 135 <= angD < 225:
-            return Acao.ESQUERDA
-        else:
-            return Acao.FRENTE
+        return Acao.MEIA_VOLTA

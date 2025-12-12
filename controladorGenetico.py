@@ -46,7 +46,7 @@ class ControladorGenetico(Controlador):
         agente.pesos = pesos
         motor.executa()
         comportamento = tuple(agente.comportamento)
-        objetivo_total = agente.calcular_fitness_objetivo(ambiente)
+        objetivo_total = ambiente.calcular_fitness(agente)
         novelty_total = calcular_novelty(comportamento, self.arquivo, self.k_novel)
         agente.fitness = objetivo_total + novelty_total * self.novelty_weight
         self.arquivo.add(comportamento)

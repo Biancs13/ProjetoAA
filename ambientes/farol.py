@@ -1,5 +1,4 @@
 from ambientes.ambiente import Ambiente
-from objetos.acao import mesma_direcao
 from objetos.posicao import getDistancia, dentroLimites
 
 
@@ -31,3 +30,12 @@ class Farol(Ambiente):
             return 500
         return -1
 
+    def calcular_fitness(self,agente):
+        recompensa = agente.num_colisoes * -20
+        recompensa -= len(agente.comportamento) * 0.1
+        farol_pos = self.getPosicaoElementoMaisProximo(agente.posicaoAtual, "farol")
+        if getDistancia(farol_pos, agente.posicaoAtual) ==0:
+            recompensa += 500
+        else:
+            recompensa += 490//getDistancia(farol_pos, agente.posicaoAtual)
+        return recompensa
