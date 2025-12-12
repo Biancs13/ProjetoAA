@@ -47,19 +47,3 @@ class Recolecao(Ambiente):
             else:
                 return pts * 150 + 300
 
-        recompensa = 0
-        ovo_pos = self.getPosicaoElementoMaisProximo(pos, "ovo")
-        if ovo_pos != None:
-            if getDistancia(posAntiga, ovo_pos) > getDistancia(pos, ovo_pos):
-                recompensa += 40
-            elif  getDistancia(posAntiga, ovo_pos) < getDistancia(pos, ovo_pos):
-                recompensa -= 20
-
-
-        ninho_pos = self.getPosicaoElementoMaisProximo(pos,"ninho")
-        if getDistancia(posAntiga, ninho_pos) > getDistancia(pos, ninho_pos) and numColetaveis > 0:
-            recompensa += 50
-
-        recompensa -=1
-        return  recompensa
-

@@ -2,7 +2,7 @@ from controlador import criarControlador
 
 
 def main():
-    controlador = criarControlador("controladorReforco_farol.txt")
+    controlador = criarControlador("controladorAleatorio_farol.txt")
     controlador.executa()
 
 

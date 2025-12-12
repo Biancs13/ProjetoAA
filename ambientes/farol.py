@@ -26,16 +26,8 @@ class Farol(Ambiente):
             return -50
         if self.getElemento(pos).isSolido():
             return -50
-
         farol = self.getPosicaoElementoMaisProximo(pos, "farol")
-        dist_ant = getDistancia(posAntiga, farol)
-        dist_nova = getDistancia(pos, farol)
         if pos == farol:
             return 500
-        if dist_nova < dist_ant:
-            return 40
-        elif dist_ant < dist_ant:
-            return -20
-
         return -1
 

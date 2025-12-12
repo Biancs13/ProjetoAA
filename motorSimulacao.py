@@ -59,7 +59,7 @@ class MotorSimulacao:
             if self.modo == "T":
                 #self.representa_TUI()
                 self.janela.representa(self.ambiente, self.agentes)
-                sleep(0.5)
+                sleep(0.1)
         if self.modo == "T":            #meter para GUI
             self.janela.root.mainloop()
         if self.tipo != "R":

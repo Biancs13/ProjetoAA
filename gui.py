@@ -3,7 +3,7 @@ import tkinter as tk
 from objetos.posicao import Posicao
 
 class GUI:
-    def __init__(self, tamanho, tamanho_cell=30):
+    def __init__(self, tamanho, tamanho_cell=15):
         self.tamanho = tamanho
         self.tamanho_cell = tamanho_cell
 
@@ -44,7 +44,7 @@ class GUI:
                 if nome == "ninho":
                     cor = "lightcoral"
                 elif nome == "farol":
-                    cor = "lightyellow"
+                    cor = "yellow"
                 elif elemento.isColetavel():
                     cor = "lightgreen"
                 else:
