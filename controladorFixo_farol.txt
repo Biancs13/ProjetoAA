@@ -1,4 +1,4 @@
-T
+A
 F
 fixo
 MS simulacao_farol_fixo.txt

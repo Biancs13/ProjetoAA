@@ -11,6 +11,8 @@ class Agente(ABC):
     def __init__(self, id, posicaoAtual, tipoProblema, angulo,ficheiro):
         self.id = id
         self.num_passos = 0
+        self.posicaoInicial = posicaoAtual
+        self.angulo_Inicial = angulo
         self.posicaoAtual = posicaoAtual
         self.angulo = angulo
         self.sensor = None

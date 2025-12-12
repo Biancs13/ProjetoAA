@@ -1,6 +1,9 @@
 import random
 from agentes.agente import Agente, escrever
-from objetos.acao import Acao
+from ambientes.farol import Farol
+from ambientes.recolecao import Recolecao
+from objetos.acao import Acao, atuar
+from objetos.posicao import getDistancia
 from objetos.redeNeuronal import criarRedeNeuronal
 
 
@@ -26,10 +29,10 @@ class AgenteGenetico(Agente):
     def avaliacaoEstadoAtual(self,recompensa):
         self.fitness += recompensa
 
-
     def calcular_fitness_objetivo(self):
-        total_pontos = self.num_colisoes * -25
-        total_pontos += len(self.comportamento) * -0.1 #para nao beneficiar tanto de andar parado
+        total_pontos = self.fitness
+        total_pontos += self.num_colisoes * -25
+        total_pontos += len(self.comportamento) * -0.1
         if self.tipoProblema == "F":
             if self.condicaoFim:
                 total_pontos+=500
