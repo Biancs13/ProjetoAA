@@ -11,6 +11,7 @@ class GUI:
         side = tamanho * tamanho_cell
         self.canvas = tk.Canvas(self.root, width=side, height=side, bg="white")
         self.canvas.pack()
+        self.root.protocol("WM_DELETE_WINDOW", self.fechar)
 
 
     def representa(self, ambiente, agentes):
@@ -22,14 +23,14 @@ class GUI:
             for x in range(self.tamanho):
                 pos = Posicao(x, y)
                 if pos in pos_agentes:
-                    self._desenha_celula(x, y, "navy")
+                    self.desenha_celula(x, y, "navy")
                     continue
                 elemento = ambiente.getElemento(pos)
                 if pos in pos_vistas:
                     if elemento is not None and elemento.isSolido():
                         pass
                     else:
-                        self._desenha_celula(x, y, "lightblue")
+                        self.desenha_celula(x, y, "lightblue")
                         continue
                 nome = elemento.getNome()
                 if nome == "Vazio":
@@ -42,7 +43,9 @@ class GUI:
                     cor = "lightgreen"
                 else:
                     cor = "gray"
-                self._desenha_celula(x, y, cor)
+                self.desenha_celula(x, y, cor)
+
+        self.root.update_idletasks()
         self.root.update()
 
     def desenha_grelha(self):
@@ -51,9 +54,12 @@ class GUI:
             self.canvas.create_line(x, 0, x, self.tamanho * self.tamanho_cell)
             self.canvas.create_line(0, x, self.tamanho * self.tamanho_cell, x)
 
-    def _desenha_celula(self, x, y, cor):
+    def desenha_celula(self, x, y, cor):
         x0 = x * self.tamanho_cell
         y0 = y * self.tamanho_cell
         x1 = x0 + self.tamanho_cell
         y1 = y0 + self.tamanho_cell
         self.canvas.create_rectangle(x0, y0, x1, y1, fill=cor, outline="black")
+
+    def fechar(self):
+        self.root.destroy()
