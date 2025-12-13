@@ -47,7 +47,7 @@ class AgenteReforco(Agente):
         return random.choice(melhores_acoes) # para lidar com empates
 
 
-    #na verdade aqui é avaliacao do EstadoAntigo  Podemos mudar
+    #TODO na verdade aqui é avaliacao do EstadoAntigo  Podemos mudar
     def avaliacaoEstadoAtual(self,recompensa):
         if self.ultima_acao is None or self.estadoAntigo is None:
             return

@@ -22,6 +22,7 @@ class ControladorGenetico(Controlador):
         self.arquivos_por_geracao = arquivos_por_geracao
         self.arquivo = set()
         self.fitness_medio_geracao = []
+        self.fitness_max_geracao = []
         self.numero_passos = []
         self.modo = modo
         self.tamanho_torneio = tamanho_torneio
@@ -73,6 +74,7 @@ class ControladorGenetico(Controlador):
                 i+=1
             melhor_fitness = max(fitness_dicionario.values())
             fitness_medio = total_fitness / self.tamanho_populacao
+            self.fitness_max_geracao.append(melhor_fitness)
             self.fitness_medio_geracao.append(fitness_medio)
             agente_melhor_geracao = max(populacao_agentes, key=lambda x: x.fitness)
             if melhor_fitness > melhor_fitness_global:
@@ -122,27 +124,6 @@ def calcular_novelty(comportamento, arquivo, k):
     return sum(distancias[:k_use]) / k_use if k_use > 0 else 0.0
 
 
-
-
-#Para os gráficos
-def reconstruir_caminho(posicao,angulo, comportamento):
-    caminho = [posicao]
-    for a in comportamento:
-        posicao, angulo = atuar(posicao,angulo,a)
-        caminho.append(posicao)
-    return caminho
-
-#Assumimos que os caminhos já estão calculados
-def calcular_mapa(caminhos,tamanho_grelha):
-    mapa_visitas = {Posicao(x,y):0 for x in range(tamanho_grelha) for y in range(tamanho_grelha)}
-    for c in caminhos:
-        for pos in c:
-            mapa_visitas[pos] = mapa_visitas[pos] + 1
-    return mapa_visitas
-
-
-
-# TODO Acrescentar verifica ao conteudo APENAS !!!
 def criaGenetico(modo,problema,conteudo):
     tamanho_geracao, tamanho_populacao, taxa_mutacao,elite_rate,novelty_weight,k_novel,arquivos_geracao,torneio,ficheiro_motor = conteudo
     tamanho_geracao = int(tamanho_geracao.strip())
