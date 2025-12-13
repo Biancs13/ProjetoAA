@@ -64,8 +64,7 @@ class AgenteReforco(Agente):
 
         max_q_novo = max(self.q[estado_atual].values(), default=0)
 
-        self.q[estado_antigo][self.ultima_acao] =(
-                q_atual + self.alpha * (recompensa + self.desconto*max_q_novo - q_atual))
+        self.q[estado_antigo][self.ultima_acao] =(q_atual + self.alpha * (recompensa + self.desconto*max_q_novo - q_atual))
 
     def atualizar_epsilon(self, episodio):
         ratio = episodio / self.num_episodios

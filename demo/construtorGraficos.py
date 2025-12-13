@@ -89,11 +89,15 @@ def graficoCaminhos(caminhos,motor):
 def grafico_fitness_recompensas(valores,tipo):
     plt.figure(figsize=(10, 5))
     plt.plot(range(len(valores)),valores, marker='o')
-    if tipo == "reforco": mensagem = "Episodes"
-    else: mensagem = "Generation"
-    plt.title("Max Combined Fitness per " + mensagem)
-    plt.xlabel(mensagem)
-    plt.ylabel("Max Combined Fitness Score")
+    if tipo == "reforco":
+        intervalo = "100 Episódios"
+        valor = "Recompensa"
+    else:
+        intervalo = "1 Geração"
+        valor = "Fitness"
+    plt.title(f"Valor máximo de {valor} em {intervalo}")
+    plt.xlabel(intervalo)
+    plt.ylabel(f"Valor de {valor}")
     plt.grid(True)
     plt.show()
 

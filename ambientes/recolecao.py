@@ -44,6 +44,7 @@ class Recolecao(Ambiente):
                 return -25
             else:
                 return pts * 150 + 300
+        return 0
 
 
     def calcular_fitness(self,agente):

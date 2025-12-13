@@ -17,7 +17,6 @@ class ControladorReforco(Controlador):
         lista_passos_100 = []
 
         for ep in range(self.episodios + 1):
-
             motor = self.criar_motor("reforco", self.episodios)
             agente = motor.agentes[0]
 
