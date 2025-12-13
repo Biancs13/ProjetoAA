@@ -10,7 +10,12 @@ class ControladorGenetico(Controlador):
         self.geracoes = geracoes
         self.tamanho_populacao = tamanho_populacao
         self.taxa_mutacao = taxa_mutacao
-        self.num_pesos = 44 if problema == "F" else 50
+        if self.problema == "F":
+            input = 10
+        else:
+            input = 12
+        rede_neuronal = criarRedeNeuronal(input) #Só para calcular o número de pesos
+        self.num_pesos = rede_neuronal.getPesos()
         self.elite_rate = elite_rate
         self.novelty_weight = novelty_weight
         self.k_novel = k_novel

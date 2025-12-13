@@ -1,6 +1,6 @@
 import random
 
-from objetos.acao import Acao, melhor_acao_para_direcao
+from objetos.acao import *
 from agentes.agente import Agente, escrever, estaFora, existeSolido
 from objetos.vetor import Vetor
 
@@ -18,7 +18,7 @@ class AgenteFixo(Agente):
             acao = self.acoes.pop(0)
             return acao
         elementos = self.estadoAtual[0:9]
-        if len(self.estadoAtual) == 10:
+        if len(self.estadoAtual) == 10: #Farol
             if elementos[2] == 1:
                 self.acoes.append(Acao.ESQUERDA)
                 return Acao.ESQUERDA
@@ -29,7 +29,8 @@ class AgenteFixo(Agente):
                 self.acoes.append(Acao.DIREITA)
                 return Acao.DIREITA
 
-            melhorAcao = melhor_acao_para_direcao(angulo, vetorFarol)
+            angulo_farol = self.estadoAtual[9]*180
+            melhorAcao = melhor_acao_angulo(angulo_farol)
 
             if not existeSolido(elementos, melhorAcao) and not estaFora(elementos, melhorAcao):
                 self.ultima_acao = melhorAcao
@@ -65,15 +66,14 @@ class AgenteFixo(Agente):
                 self.acoes.append(melhor_acao)
                 return melhor_acao
             else:
-                numColetaveis = self.estadoAtual[10]
-                direcaoNinho = Vetor(self.estadoAtual[11],self.estadoAtual[12])
-                direcaoColetavel = Vetor(self.estadoAtual[13],self.estadoAtual[14])
-                if self.estadoAtual[13] == -1 and self.estadoAtual[14] == -1:
-                    melhorAcao = melhor_acao_para_direcao(angulo, direcaoNinho)
-                elif (numColetaveis >= 1):
-                    melhorAcao = melhor_acao_para_direcao(angulo, direcaoNinho)
+                numColetaveis = self.estadoAtual[9]
+                ang_ninho = self.estadoAtual[10] * 180
+                ang_ovo = self.estadoAtual[11] * 180
+                if ang_ovo == 0 or numColetaveis > 0:
+                    melhorAcao = melhor_acao_angulo(ang_ninho)
                 else:
-                    melhorAcao = melhor_acao_para_direcao(angulo, direcaoColetavel)
+                    melhorAcao = melhor_acao_angulo(ang_ovo)
+
             if melhorAcao == Acao.MEIA_VOLTA:
                 self.acoes.append(Acao.MEIA_VOLTA)
                 return Acao.MEIA_VOLTA

@@ -1,5 +1,5 @@
 from objetos.acao import Acao,getAcaoAleatoria
-from agentes.agente import Agente, escrever
+from agentes.agente import Agente, escrever, estaFora, existeSolido
 
 
 class AgenteAleatorio(Agente):
@@ -13,7 +13,7 @@ class AgenteAleatorio(Agente):
         if self.treino:
             acao = self.acoes.pop(0)
             return acao
-        elementos = self.estadoAtual[1:10]
+        elementos = self.estadoAtual[0:9]
         while True:
             acao = getAcaoAleatoria()
 
@@ -35,29 +35,5 @@ class AgenteAleatorio(Agente):
     def escreverMelhor(self):
         escrever(self.ficheiro,self.acoes)
 
-
-def existeSolido(elementos,acao):
-    if acao == Acao.ESQUERDA:
-        if elementos[1] == 1:
-            return True
-    elif acao == Acao.FRENTE:
-        if elementos[4] == 1:
-            return True
-    elif acao == Acao.DIREITA:
-        if elementos[7] == 1:
-            return True
-    return False
-
-def estaFora(elementos,acao):
-    if acao == Acao.ESQUERDA:
-        if elementos[1] == -2:
-            return True
-    elif acao == Acao.FRENTE:
-        if elementos[4] == -2:
-            return True
-    elif acao == Acao.DIREITA:
-        if elementos[7] == -2:
-            return True
-    return False
 
 

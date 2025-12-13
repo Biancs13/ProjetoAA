@@ -73,7 +73,7 @@ class RedeNeuronal:
 def criarRedeNeuronal(tamanho_input):
     fn_camada = lambda x: np.tanh(x)
     fn_output = softmax
-    return RedeNeuronal(tamanho_input,(2,2),fn_camada,fn_output,4)
+    return RedeNeuronal(tamanho_input,(5,5),fn_camada,fn_output,4)
 
 
 # função auxiliar

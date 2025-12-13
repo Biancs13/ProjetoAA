@@ -49,15 +49,15 @@ class Agente(ABC):
             else:
                 novoEstado.extend(elemento)
         if self.tipoProblema == "F":
-            cos_angulo = angulo_normalizado(vetor_frente,direcaoObj1)
-            novoEstado.append(cos_angulo)
+            angulo = angulo_normalizado(vetor_frente,direcaoObj1)
+            novoEstado.append(angulo)
         elif self.tipoProblema == "R":
             novoEstado.append(len(self.coletaveis)/100)
-            cos_angulo = angulo_normalizado(vetor_frente, direcaoObj1)
-            novoEstado.append(cos_angulo)
+            angulo = angulo_normalizado(vetor_frente, direcaoObj1)
+            novoEstado.append(angulo)
             if direcaoObj2 is not None:
-                cos_angulo2 = angulo_normalizado(vetor_frente, direcaoObj2)
-                novoEstado.append(cos_angulo2)
+                angulo2 = angulo_normalizado(vetor_frente, direcaoObj2)
+                novoEstado.append(angulo2)
             else:
                 novoEstado.append(0)
         if self.estadoAtual is None:

@@ -52,23 +52,14 @@ def getVetorFrente(angulo):
     else:
         raise ValueError(f"Angulo inválido: {angulo}")
 
-def melhor_acao_para_direcao(anguloAgente, direcao):
-    return melhor_acao(anguloAgente,vetor_para_angulo(direcao))
-
-def mesma_direcao(angA,direcao):
-    angulo = vetor_para_angulo(direcao)
-    if angA -45 < angulo < angA + 45:
-        return True
-    else:
-        return False
 
 # o angulo dado é dependente do agente
-def melhor_acao(ang):
-    if 0 <= ang < 45:
-        return Acao.DIREITA
-    elif 45 <= ang < 135:
+def melhor_acao_angulo(ang):
+    if -45 <= ang < 45:
         return Acao.FRENTE
-    elif 135 <= ang < 180:
+    elif -135 <= ang < -45:
         return Acao.ESQUERDA
+    elif 45 < ang < 130:
+        return Acao.DIREITA
     else:
         return Acao.MEIA_VOLTA

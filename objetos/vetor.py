@@ -41,18 +41,16 @@ def vetor_para_angulo(vetor):
     return ang_std
 
 def angulo_normalizado(v1, v2):
-    n1 = math.sqrt(v1.x*v1.x + v1.y*v1.y)
-    n2 = math.sqrt(v2.x*v2.x + v2.y*v2.y)
+    #cálculo da norma do vetor
+    n1 = math.hypot(v1.x, v1.y)
+    n2 = math.hypot(v2.x, v2.y)
 
-    #só para não haver problemas
     if n1 == 0 or n2 == 0:
-        return 0
+        return 0.0
 
-    # produto escalar
-    dot = v1.x*v2.x + v1.y*v2.y
-    cos_theta = dot / (n1 * n2)
+    dot = v1.x * v2.x + v1.y * v2.y
+    cross = v1.x * v2.y - v1.y * v2.x  # z do produto vetorial 2D
 
-    # em vez de devolvermos o angulo em si (usamos o cos)
-    return max(-1.0, min(1.0, cos_theta))
-
+    angulo = math.atan2(cross, dot)
+    return angulo / math.pi
 

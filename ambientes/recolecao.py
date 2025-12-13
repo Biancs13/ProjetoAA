@@ -1,8 +1,6 @@
 import time
 
-from agentes.agente import estaFora
 from ambientes.ambiente import Ambiente
-from objetos.acao import mesma_direcao
 from objetos.posicao import dentroLimites, getDistancia
 
 
