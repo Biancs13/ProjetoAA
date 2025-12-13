@@ -2,6 +2,7 @@
 150
 AG agente_fixo_recolecao_c.txt
 E ovo (2,3) True False 6
+E ovo (3,17) True False 6
 E ovo (5,7) True False 7
 E ovo (7,8) True False 5
 E ovo (10,4) True False 6
