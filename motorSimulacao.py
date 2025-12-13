@@ -134,7 +134,7 @@ def cria(ficheiro, tipo, politica, modo,episodios=None, tempo=0):
         numeroPassos = int(numeroPassos.strip())
 
         for ag in agentes_str:
-            path = "agentes/" + ag
+            path = "../agentes/" + ag
             agentes.append(criaAgente(path, tamanhoGrelha, tipo, politica, episodios, modo.strip(), carregaMelhor))
 
         for ele in elementos_str:
@@ -194,10 +194,6 @@ def verificaFicheiro(resultado):
     if numeroPassos < 10 or type(numeroPassos) is not int:
         return False
 
-    for agenteFich in agentesFich:
-        path = "agentes/" + agenteFich
-        if not os.path.exists(path) or not os.path.isfile(path):
-            return False
 
     def valida_coordenada(c_str):
         c = int(c_str)

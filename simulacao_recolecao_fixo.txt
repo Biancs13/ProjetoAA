@@ -1,5 +1,0 @@
-5
-20
-AG agente_fixo_recolecao.txt
-E ovo (0,4) True False 6
-E ninho (4,4) False False 0

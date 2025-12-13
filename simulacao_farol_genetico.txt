@@ -1,4 +1,0 @@
-50
-200
-AG agente_genetico_farol.txt
-E farol (40,45) False False 100

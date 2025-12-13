@@ -17,6 +17,7 @@ class AgenteFixo(Agente):
         if self.treino:
             acao = self.acoes.pop(0)
             return acao
+        self.num_passos += 1
         elementos = self.estadoAtual[0:9]
         if len(self.estadoAtual) == 10: #Farol
             if elementos[2] == 1:
@@ -51,25 +52,25 @@ class AgenteFixo(Agente):
 
             self.ultima_acao = Acao.MEIA_VOLTA
             self.acoes.append(Acao.MEIA_VOLTA)
-            self.num_passos += 1
+
             return Acao.MEIA_VOLTA
 
         elif len(self.estadoAtual) == 12:
             opcoes = {
-                Acao.ESQUERDA: elementos[2],
-                Acao.FRENTE:   elementos[5],
-                Acao.DIREITA:  elementos[8],
+                Acao.ESQUERDA: elementos[0:3],
+                Acao.FRENTE:   elementos[3:6],
+                Acao.DIREITA:  elementos[6:9],
             }
-            opcoes_validas = {a: p for a, p in opcoes.items() if p >= 0 and not existeSolido(elementos,a) and not estaFora(elementos, a)} # se existe lá qualquer coletavel
+            opcoes_validas = {a: [e1,e2,e3] for a, [e1,e2,e3] in opcoes.items() if e3 >= 0 and e1==1 and e2!=1 and not estaFora(elementos, a)} # se existe lá qualquer coletavel
             if opcoes_validas:
                 melhor_acao = max(opcoes_validas, key=opcoes_validas.get)
                 self.acoes.append(melhor_acao)
                 return melhor_acao
             else:
-                numColetaveis = self.estadoAtual[9]
+                numColetaveis = self.estadoAtual[9]*100
                 ang_ninho = self.estadoAtual[10] * 180
                 ang_ovo = self.estadoAtual[11] * 180
-                if ang_ovo == 0 or numColetaveis > 0:
+                if numColetaveis > 0:
                     melhorAcao = melhor_acao_angulo(ang_ninho)
                 else:
                     melhorAcao = melhor_acao_angulo(ang_ovo)

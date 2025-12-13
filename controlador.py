@@ -35,7 +35,7 @@ def ler(nome):
         return [linha.strip() for linha in fich.readlines()]
 
 
-def criarControlador(ficheiro):
+def criarControlador(ficheiro,repeticoes=1):
     from controladorGenetico import criaGenetico, ControladorGenetico
     from controladorReforco import criarReforco
     from controladorFixoAleatorio import criaFixoAleatorio
@@ -49,9 +49,9 @@ def criarControlador(ficheiro):
     elif politica == "reforco":
         return criarReforco(modo, problema, conteudo[3:])
     elif politica == "fixo":
-        return criaFixoAleatorio(modo,problema,conteudo[3:])
+        return criaFixoAleatorio(modo,problema,conteudo[3:],False,repeticoes)
     else:
-        return criaFixoAleatorio(modo,problema,conteudo[3:],True)
+        return criaFixoAleatorio(modo,problema,conteudo[3:],True,repeticoes)
 
 
 

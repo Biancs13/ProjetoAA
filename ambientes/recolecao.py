@@ -49,8 +49,8 @@ class Recolecao(Ambiente):
     def calcular_fitness(self,agente):
         recompensa = agente.num_colisoes * -20
         recompensa -= len(agente.comportamento) * 0.1
-        recompensa += agente.num_coletaveis() * 80
-        recompensa += agente.pontos() * 120
+        recompensa += len(agente.coletaveis) * 80
+        recompensa += agente.num_pontos_recolhidos * 120
         ninho_pos = self.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ninho")
         ovo_pos = self.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ovo")
         if getDistancia(ninho_pos, agente.posicaoAtual) == 0:

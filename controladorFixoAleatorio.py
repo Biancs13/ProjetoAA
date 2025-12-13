@@ -8,6 +8,7 @@ class ControladorFixoAleatorio(Controlador):
         self.aleatorio = aleatorio
         self.acoes = []
         self.repeticoes = repeticoes
+        self.numero_passos = []
 
     def executar_aprendizagem(self):
         for _ in range(self.repeticoes):
@@ -16,7 +17,9 @@ class ControladorFixoAleatorio(Controlador):
             else:
                 motor = self.criar_motor("fixo")
             motor.executa()
-            motor.agentes[0].escreverMelhor()
+            self.numero_passos.append(motor.agentes[0].num_passos)
+        motor.agentes[0].escreverMelhor()
+
 
 
     def executar_teste(self):

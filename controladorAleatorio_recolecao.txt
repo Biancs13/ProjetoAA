@@ -1,4 +1,0 @@
-A
-R 30
-aleatorio
-MS simulacao_recolecao_aleatorio.txt

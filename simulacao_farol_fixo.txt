@@ -1,4 +1,0 @@
-5
-20
-AG agente_fixo_farol.txt
-E farol (3,3) False False 100

@@ -1,7 +1,7 @@
-50
-200
-AG agente_aleatorio_farol.txt
-E farol (40,45) False False 100
+20
+100
+AG agente_aleatorio_farol_c.txt
+E farol (18,18) False False 100
 E parede (4,3) False True 0
 E parede (4,4) False True 0
 E parede (4,4) False True 0

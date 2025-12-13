@@ -1,4 +1,0 @@
-T
-F
-aleatorio
-MS simulacao_farol_aleatorio.txt

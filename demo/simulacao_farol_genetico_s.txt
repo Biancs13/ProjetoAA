@@ -1,0 +1,4 @@
+20
+150
+AG agente_genetico_farol_s.txt
+E farol (18,18) False False 100

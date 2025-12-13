@@ -6,8 +6,23 @@ from objetos.acao import atuar
 from objetos.posicao import Posicao
 
 
-#CAMINHO
-def reconstruir_caminho(posicao,angulo, comportamento):
+def construir_genetico(caminhos, motor, valores_f_r, passos):
+    graficoCaminhos(caminhos, motor)
+    grafico_fitness_recompensas(valores_f_r, "genetico")
+    grafico_passos(passos)
+    mapa = calcular_mapa(caminhos,motor.ambiente.tamanhoGrelha)
+    criar_heatmap(mapa, motor, cmap="coolwarm", titulo="Heatmap de Visitas")
+
+
+def construir_reforco(valores_f_r,passos,q):
+    grafico_fitness_recompensas(valores_f_r, "genetico")
+    grafico_passos(passos)
+    criar_heatmap_ref(q, cmap="coolwarm", titulo="Heatmap de Q-table")
+
+
+
+# CAMINHO
+def reconstruir_caminho(posicao, angulo, comportamento):
     caminho = [posicao]
     for a in comportamento:
         posicao, angulo = atuar(posicao,angulo,a)
@@ -25,7 +40,7 @@ def calcular_mapa(caminhos,tamanho_grelha):
 #GRAFICOS
 def graficoCaminhos(caminhos,motor):
     grelha_size = motor.ambiente.tamanhoGrelha
-    fig, ax = plt.subplots(figsize=(grelha_size * 0.7, grelha_size * 0.7))
+    fig, ax = plt.subplots(figsize=(grelha_size * 0.5, grelha_size * 0.5))
     fig.patch.set_facecolor('white')
     ax.set_facecolor('white')
     ax.set_xlim(0, grelha_size)
@@ -94,7 +109,7 @@ def grafico_passos(passos):
 
 
 #HEATMAP
-def criar_heatmap(mapa, motor, tamanho_base=1.0, cmap="coolwarm", titulo="Heatmap de Visitas"):
+def criar_heatmap(mapa, motor, cmap="coolwarm", titulo="Heatmap de Visitas"):
     coords = np.array([(p.x, p.y) for p in mapa.keys()])
     valores = np.array(list(mapa.values()))
     xs = coords[:, 0]
@@ -105,9 +120,7 @@ def criar_heatmap(mapa, motor, tamanho_base=1.0, cmap="coolwarm", titulo="Heatma
     altura = y_max - y_min + 1
     heatmap = np.zeros((altura, largura), dtype=float)
     heatmap[ys - y_min, xs - x_min] = valores
-    fig, ax = plt.subplots(
-        figsize=(largura * tamanho_base, altura * tamanho_base)
-    )
+    fig, ax = plt.subplots(figsize=(10, 10))
     im = ax.imshow(
         heatmap,
         cmap=cmap,
@@ -115,7 +128,7 @@ def criar_heatmap(mapa, motor, tamanho_base=1.0, cmap="coolwarm", titulo="Heatma
         aspect="equal",
         origin="upper"
     )
-    plt.colorbar(im, label="Número de Visitas")
+    plt.colorbar(im, label="Número de Visitas", fraction=0.046, pad=0.04)
     ax.set_xticks(np.arange(largura))
     ax.set_yticks(np.arange(altura))
     ax.set_xticklabels(np.arange(x_min, x_max + 1))
@@ -144,7 +157,7 @@ def criar_heatmap(mapa, motor, tamanho_base=1.0, cmap="coolwarm", titulo="Heatma
     plt.show()
 
 
-def criar_heatmap_ref(q, tamanho_base=1.0, cmap="coolwarm", titulo="Heatmap de Q-table"):
+def criar_heatmap_ref(q, cmap="coolwarm", titulo="Heatmap de Q-table"):
     data_flat = []
     for estado_tuple, dic_acoes in q.items():
         for acao, valor in dic_acoes.items():
@@ -167,7 +180,7 @@ def criar_heatmap_ref(q, tamanho_base=1.0, cmap="coolwarm", titulo="Heatmap de Q
     num_estados_bottom = matrix_bottom.shape[0]
     fig, (ax_top, ax_bottom) = plt.subplots(
         1, 2,
-        figsize=(num_acoes * tamanho_base * 1.5, num_estados_discretos * tamanho_base / 10),
+        figsize=(10, 10),
         sharey=False
     )
     fig.suptitle(titulo, fontsize=16)
@@ -223,8 +236,7 @@ def criar_heatmap_ref(q, tamanho_base=1.0, cmap="coolwarm", titulo="Heatmap de Q
     ax_bottom.set_yticks(np.arange(-.5, num_estados_bottom, 1), minor=True)
     ax_bottom.grid(which="minor", color="k", linestyle="-", linewidth=0.5)
     ax_bottom.tick_params(which="minor", size=0)
-    divider = make_axes_locatable(ax_bottom)
-    cax = divider.append_axes("right", size="5%", pad=0.05)
+    cax = fig.add_axes([0.92, 0.05, 0.03, 0.9])
     fig.colorbar(im_bottom, cax=cax, label="Recompensa")
     plt.tight_layout(rect=[0, 0, 1, 0.96])
     plt.show()

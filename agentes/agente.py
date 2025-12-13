@@ -10,7 +10,7 @@ from objetos.sensor import Sensor
 class Agente(ABC):
     def __init__(self, id, posicaoAtual, tipoProblema, angulo,ficheiro):
         self.id = id
-        self.num_passos = 0
+        self.num_passos = 1
         self.posicaoInicial = posicaoAtual
         self.angulo_Inicial = angulo
         self.posicaoAtual = posicaoAtual
@@ -42,7 +42,6 @@ class Agente(ABC):
     def atualizarEstadoAtual(self,direcaoObj1,direcaoObj2 = None):
         novoEstado = []
         vetor_frente = getVetorFrente(self.angulo)
-        #novoEstado.append(self.angulo/360) # o angulo fica em 0, 0.25, 0.5 ou 0.75 para indicar a orientação
         for elemento in self.observacaoAtual.getElementos():
             if elemento is None:
                 novoEstado.extend([-1, 0, -1])
@@ -267,7 +266,6 @@ def verificaFicheiro(agente,tamanhoGrelha):
 def estaFora(elementos,acao):
     if acao == Acao.ESQUERDA:
         if elementos[0] == -1 and elementos[1] == 0 and elementos[2] == -1:
-            print("entrei")
             return True
     elif acao == Acao.FRENTE:
         if elementos[3] == -1 and elementos[4] == 0 and elementos[5] == -1:

@@ -1,0 +1,4 @@
+T
+R 30
+fixo
+MS simulacao_recolecao_fixo_s.txt

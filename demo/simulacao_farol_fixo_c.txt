@@ -1,0 +1,43 @@
+20
+100
+AG agente_fixo_farol_c.txt
+E farol (18,18) False False 100
+E parede (4,3) False True 0
+E parede (4,4) False True 0
+E parede (4,5) False True 0
+E parede (4,6) False True 0
+E parede (4,7) False True 0
+E parede (2,18) False True 0
+E parede (3,18) False True 0
+E parede (4,18) False True 0
+E parede (5,8) False True 0
+E parede (5,9) False True 0
+E parede (5,10) False True 0
+E parede (5,13) False True 0
+E parede (5,14) False True 0
+E parede (5,15) False True 0
+E parede (5,16) False True 0
+E parede (5,18) False True 0
+E parede (6,18) False True 0
+E parede (7,18) False True 0
+E parede (8,18) False True 0
+E parede (8,10) False True 0
+E parede (9,10) False True 0
+E parede (9,18) False True 0
+E parede (10,10) False True 0
+E parede (10,18) False True 0
+E parede (11,10) False True 0
+E parede (11,18) False True 0
+E parede (12,10) False True 0
+E parede (12,18) False True 0
+E parede (13,10) False True 0
+E parede (14,0) False True 0
+E parede (14,1) False True 0
+E parede (14,2) False True 0
+E parede (14,3) False True 0
+E parede (14,4) False True 0
+E parede (14,5) False True 0
+E parede (14,6) False True 0
+E parede (14,10) False True 0
+E parede (15,10) False True 0
+E parede (16,10) False True 0

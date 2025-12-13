@@ -1,0 +1,4 @@
+20
+100
+AG agente_fixo_farol_s.txt
+E farol (18,18) False False 100

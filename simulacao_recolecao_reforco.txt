@@ -1,6 +1,0 @@
-5
-50
-AG agente_reforco_recolecao.txt
-E ninho (3,3) False False 0
-E parede (1,2) False True 0
-E ovo (2,1) True False 10
