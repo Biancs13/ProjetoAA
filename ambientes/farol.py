@@ -28,7 +28,7 @@ class Farol(Ambiente):
         farol = self.getPosicaoElementoMaisProximo(pos, "farol")
         if pos == farol:
             return 500
-        return -1
+        return 0
 
     def calcular_fitness(self,agente):
         recompensa = agente.num_colisoes * -20

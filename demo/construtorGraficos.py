@@ -15,7 +15,7 @@ def construir_genetico(caminhos, motor, valores_f_r, passos):
 
 
 def construir_reforco(valores_f_r,passos,q):
-    grafico_fitness_recompensas(valores_f_r, "genetico")
+    grafico_fitness_recompensas(valores_f_r, "reforco")
     grafico_passos(passos)
     criar_heatmap_ref(q, cmap="coolwarm", titulo="Heatmap de Q-table")
 
