@@ -30,14 +30,14 @@ class MotorSimulacao:
             self.janela = GUI(self.ambiente.tamanhoGrelha)
             #self.representa_TUI()
         self.inicializarObservacao()
-        self.atualizarEstadoAgentes()
         while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos * len(self.agentes):
             for agente in self.agentes:
+                self.atualizarEstadoAgente(agente)
                 posAntiga = agente.getPosicao()
                 acao = agente.age()
                 agente.estadoAntigo = agente.estadoAtual
                 novaPos, novoAng = atuar(agente.posicaoAtual,agente.angulo, acao)
-                self.atualizarEstadoAgente(agente)
+
                 pts = 0
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
@@ -55,6 +55,7 @@ class MotorSimulacao:
                 else:
                     agente.num_colisoes += 1
                 i += 1
+                self.atualizarEstadoAgente(agente)
                 recompensa = self.ambiente.getRecompensa(posAntiga,novaPos,novoAng, len(agente.coletaveis), pts)
 
                 if isinstance(agente, AgenteReforco) and self.modo == "A":  # Só se tivermos no modo aprendizagem
