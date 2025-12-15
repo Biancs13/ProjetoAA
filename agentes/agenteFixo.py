@@ -18,6 +18,7 @@ class AgenteFixo(Agente):
             acao = self.acoes.pop(0)
             return acao
         self.num_passos += 1
+        print(self.estadoAtual)
         elementos = self.estadoAtual[0:9]
         if len(self.estadoAtual) == 10: #Farol
             if elementos[2] == 1:

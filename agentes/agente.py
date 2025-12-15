@@ -59,10 +59,6 @@ class Agente(ABC):
                 novoEstado.append(angulo2)
             else:
                 novoEstado.append(0)
-        if self.estadoAtual is None:
-            self.estadoAntigo = novoEstado
-        else:
-            self.estadoAntigo = self.estadoAtual
         self.estadoAtual = novoEstado
 
     @abstractmethod

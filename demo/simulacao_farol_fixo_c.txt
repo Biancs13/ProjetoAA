@@ -1,5 +1,5 @@
 20
-100
+150
 AG agente_fixo_farol_c.txt
 E farol (18,18) False False 100
 E parede (4,3) False True 0

@@ -42,7 +42,8 @@ E parede (15,10) False True 0
 E parede (16,10) False True 0"""
 
 
-coletaveis_e_ninhos = """E ovo (2,3) True False 6
+coletaveis_e_ninhos = \
+"""E ovo (2,3) True False 6
 E ovo (3,17) True False 6
 E ovo (5,7) True False 7
 E ovo (7,8) True False 5
@@ -59,8 +60,7 @@ E ninho (18,18) False False 0"""
 ambiente_farol_sem_paredes = f"""E farol (18,18) False False 100"""
 
 ambiente_farol_com_paredes = f"""E farol (18,18) False False 100
-{paredes}
-"""
+{paredes}"""
 
 ambiente_recolecao_sem_paredes = coletaveis_e_ninhos
 
