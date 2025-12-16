@@ -31,12 +31,14 @@ class MotorSimulacao:
             #self.representa_TUI()
         self.inicializarObservacao()
         while not self.ambiente.condicaoFim(self.agentes) and i < self.num_passos * len(self.agentes):
-            self.atualizarEstadoAgentes()
             for agente in self.agentes:
+                self.atualizarEstadoAgente(agente)
                 posAntiga = agente.getPosicao()
                 acao = agente.age()
+                agente.estadoAntigo = agente.estadoAtual
                 novaPos, novoAng = atuar(agente.posicaoAtual,agente.angulo, acao)
-                pts =0
+
+                pts = 0
                 if dentroLimites(novaPos,self.ambiente.tamanhoGrelha):
                     ele = self.ambiente.getElemento(novaPos)
                     if ele.getId() == (-1, -1, -1) or (ele != (-1, -1, -1) and not ele.isSolido()):
@@ -53,6 +55,7 @@ class MotorSimulacao:
                 else:
                     agente.num_colisoes += 1
                 i += 1
+                self.atualizarEstadoAgente(agente)
                 recompensa = self.ambiente.getRecompensa(posAntiga,novaPos,novoAng, len(agente.coletaveis), pts)
 
                 if isinstance(agente, AgenteReforco) and self.modo == "A":  # Só se tivermos no modo aprendizagem
@@ -74,26 +77,30 @@ class MotorSimulacao:
 
     def atualizarEstadoAgentes(self):
         for agente in self.agentes:
-            obs, pos = self.ambiente.observacaoParaAgente(agente)
-            agente.observacao(obs)
-            if self.tipo == "F":
-                direcao1 = getDirecao(agente.posicaoAtual,
-                                      self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "farol"))
+            self.atualizarEstadoAgente(agente)
+
+    def atualizarEstadoAgente(self, agente):
+        obs, pos = self.ambiente.observacaoParaAgente(agente)
+        agente.observacao(obs)
+        if self.tipo == "F":
+            direcao1 = getDirecao(agente.posicaoAtual,
+                                  self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "farol"))
+            agente.atualizarEstadoAtual(direcao1)
+        elif self.tipo == "R":
+            direcao1 = getDirecao(agente.posicaoAtual,
+                                  self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ninho"))
+            posOvo = self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ovo")
+            if posOvo is not None:
+                direcao2 = getDirecao(agente.posicaoAtual, posOvo)
+                agente.atualizarEstadoAtual(direcao1, direcao2)
+            else:
                 agente.atualizarEstadoAtual(direcao1)
-            elif self.tipo == "R":
-                direcao1 = getDirecao(agente.posicaoAtual,
-                                      self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ninho"))
-                posOvo = self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ovo")
-                if posOvo is not None:
-                    direcao2 = getDirecao(agente.posicaoAtual, posOvo)
-                    agente.atualizarEstadoAtual(direcao1, direcao2)
-                else:
-                    agente.atualizarEstadoAtual(direcao1)
 
     def inicializarObservacao(self):
         for agente in self.agentes:
             obs, _ = self.ambiente.observacaoParaAgente(agente)
             agente.observacao(obs)
+
 
     def representa_TUI(self):
         pos_agentes = [a.getPosicao() for a in self.agentes]

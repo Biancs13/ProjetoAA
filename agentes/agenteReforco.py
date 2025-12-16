@@ -27,7 +27,14 @@ class AgenteReforco(Agente):
 
     #Para que o Q learning nao crie imensas linhas
     def _obter_chave_estado(self, estado_original):
-        return tuple(round(e, 2) for e in estado_original)
+        if self.tipoProblema == "R":
+            inicio = estado_original[:10]
+            angulos = [normalizar_angulo(a) for a in estado_original[10:]]
+        else:
+            inicio = estado_original[:9]
+            angulos = [normalizar_angulo(a) for a in estado_original[9:]]
+        estado = tuple(inicio + angulos)
+        return estado
 
     def escolher_acao(self):
         if random.random() < self.epsilon:
@@ -36,7 +43,7 @@ class AgenteReforco(Agente):
             return self.getAcaoComMaiorQ()
 
     def getAcaoComMaiorQ(self):
-        estado = self._obter_chave_estado(self.estadoAntigo)
+        estado = self._obter_chave_estado(self.estadoAtual)
         if estado not in self.q:
             self.q[estado] = {acao: 0 for acao in list(Acao)}
             return getAcaoAleatoria()
@@ -63,8 +70,8 @@ class AgenteReforco(Agente):
             self.q[estado_atual] = {acao: 0 for acao in list(Acao)}
 
         max_q_novo = max(self.q[estado_atual].values(), default=0)
-
-        self.q[estado_antigo][self.ultima_acao] =(q_atual + self.alpha * (recompensa + self.desconto*max_q_novo - q_atual))
+        update_recompensa = (q_atual + self.alpha * (recompensa + self.desconto*max_q_novo - q_atual))
+        self.q[estado_antigo][self.ultima_acao] = update_recompensa
 
     def atualizar_epsilon(self, episodio):
         ratio = episodio / self.num_episodios
@@ -107,3 +114,7 @@ def lerDicionario(nome):
                 dic[chave] = {}
             dic[chave][acao] = recompensa
     return dic
+
+def normalizar_angulo(angulo):
+    angulo = angulo % 360  # garante intervalo [0, 360)
+    return int(angulo // 45) + 1

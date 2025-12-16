@@ -21,14 +21,16 @@ class Farol(Ambiente):
         return False
 
     def getRecompensa(self,posAntiga,pos,angulo,num_coletaveis=0,pts=0):
+
         if not dentroLimites(pos, self.tamanhoGrelha):
-            return -50
+            return -0.5
         if self.getElemento(pos).isSolido():
-            return -50
+            return -0.5
+
         farol = self.getPosicaoElementoMaisProximo(pos, "farol")
         if pos == farol:
-            return 500
-        return 0
+            return 100
+        return -0.1
 
     def calcular_fitness(self,agente):
         recompensa = agente.num_colisoes * -20

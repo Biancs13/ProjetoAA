@@ -42,7 +42,8 @@ E parede (15,10) False True 0
 E parede (16,10) False True 0"""
 
 
-coletaveis_e_ninhos = """E ovo (2,3) True False 6
+coletaveis_e_ninhos = \
+"""E ovo (2,3) True False 6
 E ovo (3,17) True False 6
 E ovo (5,7) True False 7
 E ovo (7,8) True False 5
@@ -59,8 +60,7 @@ E ninho (18,18) False False 0"""
 ambiente_farol_sem_paredes = f"""E farol (18,18) False False 100"""
 
 ambiente_farol_com_paredes = f"""E farol (18,18) False False 100
-{paredes}
-"""
+{paredes}"""
 
 ambiente_recolecao_sem_paredes = coletaveis_e_ninhos
 
@@ -122,7 +122,7 @@ def resetRecolecaoGenetico(ficheiro_controlador, ficheiro_simulacao, ficheiro_ag
 #Reforco
 def resetFarolReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica,ambiente,episodios,alpha,gama,eps_inicial,eps_final):
     texto_controlador = f"A\nF\n{politica}\n{episodios}\nMS {ficheiro_simulacao}"
-    texto_simulacao = f"20\n150\nAG {ficheiro_agente}\n{ambiente}"
+    texto_simulacao = f"20\n1000\nAG {ficheiro_agente}\n{ambiente}"
     texto_agente = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}"
 
     with open(ficheiro_controlador, "w", encoding="utf-8") as f:
@@ -134,7 +134,7 @@ def resetFarolReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente,
 
 def resetRecolecaoReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica,ambiente,tempo,episodios,alpha,gama,eps_inicial,eps_final):
     texto_controlador = f"A\nR {tempo}\n{politica}\n{episodios}\nMS {ficheiro_simulacao}"
-    texto_simulacao = f"20\n150\nAG {ficheiro_agente}\n{ambiente}"
+    texto_simulacao = f"20\n2000\nAG {ficheiro_agente}\n{ambiente}"
     texto_agente = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}"
 
     with open(ficheiro_controlador, "w", encoding="utf-8") as f:
