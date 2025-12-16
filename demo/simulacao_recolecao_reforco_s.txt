@@ -1,5 +1,5 @@
 20
-150
+2000
 AG agente_reforco_recolecao_s.txt
 E ovo (2,3) True False 6
 E ovo (3,17) True False 6

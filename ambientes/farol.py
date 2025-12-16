@@ -30,10 +30,6 @@ class Farol(Ambiente):
         farol = self.getPosicaoElementoMaisProximo(pos, "farol")
         if pos == farol:
             return 100
-        '''
-        if posAntiga == pos:
-            return -2
-        '''
         return -0.1
 
     def calcular_fitness(self,agente):
