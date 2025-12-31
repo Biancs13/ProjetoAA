@@ -66,10 +66,10 @@ E parede (1,4) False True 0
 E parede (11,5) False True 0
 E parede (10,5) False True 0
 E parede (9,5) False True 0
-E parede (6,5) False True 0
-E parede (5,5) False True 0
-E parede (4,5) False True 0
-E parede (3,5) False True 0
+E parede (4,16) False True 0
+E parede (4,17) False True 0
+E parede (4,18) False True 0
+E parede (4,19) False True 0
 E parede (1,5) False True 0
 E parede (1,6) False True 0
 E parede (1,7) False True 0
