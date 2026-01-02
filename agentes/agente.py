@@ -162,15 +162,16 @@ def criaAgente(ficheiro_agentes, tamanhoGrelha, tipoProblema, politica, episodio
         if politica == "genetico":
             agente = AgenteGenetico(id,posicao,tipoProblema, angulo,ficheiro_agentes)
         if politica == "reforco":
-            conteudo = ag[4:8]
-            melhor = ag[8:]
-            alpha,gama,epsilon_inicial,epsilon_final = conteudo
+            conteudo = ag[4:9]
+            melhor = ag[9:]
+            alpha,gama,epsilon_inicial,epsilon_final,beta = conteudo
             alpha = float(alpha.strip())
             gama = float(gama.strip())
             epsilon_inicial = float(epsilon_inicial.strip())
             epsilon_final = float(epsilon_final.strip())
+            beta = float(beta.strip())
             agente = AgenteReforco(id, posicao, tipoProblema, angulo, ficheiro_agentes, alpha, gama, epsilon_inicial,
-                                   epsilon_final,episodios)
+                                   epsilon_final,episodios,beta)
         if politica == "aleatorio":
             agente = AgenteAleatorio(id,posicao,tipoProblema, angulo,ficheiro_agentes,treino)
 

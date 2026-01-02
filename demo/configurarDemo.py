@@ -174,10 +174,10 @@ def resetRecolecaoGenetico(ficheiro_controlador, ficheiro_simulacao, ficheiro_ag
 
 
 #Reforco
-def resetFarolReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica,ambiente,episodios,alpha,gama,eps_inicial,eps_final):
+def resetFarolReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica,ambiente,episodios,alpha,gama,eps_inicial,eps_final,beta):
     texto_controlador = f"A\nF\n{politica}\n{episodios}\nMS {ficheiro_simulacao}"
     texto_simulacao = f"20\n1000\nAG {ficheiro_agente}\n{ambiente}"
-    texto_agente = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}"
+    texto_agente = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}\n{beta}"
 
     with open(ficheiro_controlador, "w", encoding="utf-8") as f:
         f.write(texto_controlador)
@@ -186,10 +186,10 @@ def resetFarolReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente,
     with open("../agentes/" + ficheiro_agente, "w", encoding="utf-8") as f:
         f.write(texto_agente)
 
-def resetRecolecaoReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica,ambiente,tempo,episodios,alpha,gama,eps_inicial,eps_final):
+def resetRecolecaoReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica,ambiente,tempo,episodios,alpha,gama,eps_inicial,eps_final,beta):
     texto_controlador = f"A\nR {tempo}\n{politica}\n{episodios}\nMS {ficheiro_simulacao}"
     texto_simulacao = f"20\n2000\nAG {ficheiro_agente}\n{ambiente}"
-    texto_agente = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}"
+    texto_agente = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}\n{beta}"
 
     with open(ficheiro_controlador, "w", encoding="utf-8") as f:
         f.write(texto_controlador)

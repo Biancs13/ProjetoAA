@@ -13,6 +13,7 @@ class ControladorReforco(Controlador):
 
     def executar_aprendizagem(self):
         q = {}
+        estado_visitas = {}
         epsilon = 0
         lista_passos_100 = []
 
@@ -20,6 +21,7 @@ class ControladorReforco(Controlador):
             motor = self.criar_motor("reforco", self.episodios)
             agente = motor.agentes[0]
 
+            agente.estado_visitas = estado_visitas
             agente.q = q
             if epsilon != 0:
                 agente.epsilon = epsilon
@@ -28,6 +30,7 @@ class ControladorReforco(Controlador):
 
             agente.atualizar_epsilon(ep)
             q = agente.q
+            estado_visitas = agente.estado_visitas
             epsilon = agente.epsilon
             lista_passos_100.append(agente.num_passos)
 
