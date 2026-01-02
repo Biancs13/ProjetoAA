@@ -22,13 +22,13 @@ class ControladorFixoAleatorio(Controlador):
 
 
 
-    def executar_teste(self):
+    def executar_teste(self,showGUI = True):
         for _ in range(self.repeticoes):
             if self.aleatorio:
                 motor = self.criar_motor("aleatorio")
             else:
                 motor = self.criar_motor("fixo")
-            motor.executa()
+            motor.executa(showGUI)
 
 
 

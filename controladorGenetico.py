@@ -103,9 +103,10 @@ class ControladorGenetico(Controlador):
         if melhor_agente is not None:
             melhor_agente.escreverMelhor()
 
-    def executar_teste(self):
+    def executar_teste(self,showGUI = True):
         motor = self.criar_motor("genetico")
-        motor.executa()
+        motor.executa(showGUI)
+        self.melhores_caminhos_gen.append(motor.agentes[0].comportamento)
 
 
 def distancia_jaccard(seq1, seq2):

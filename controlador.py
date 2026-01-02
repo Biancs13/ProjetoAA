@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+from idlelib.autocomplete import TRY_A
 
 from motorSimulacao import cria
 
@@ -14,18 +14,18 @@ class Controlador(ABC):
         return cria(self.ficheiro_motor, self.problema, politica, self.modo,episodios,self.tempo)
 
 
-    def executa(self):
+    def executa(self,showGUI = True):
         if self.modo == 'A':
             self.executar_aprendizagem()
         if self.modo == 'T':
-            self.executar_teste()
+            self.executar_teste(showGUI)
 
     @abstractmethod
     def executar_aprendizagem(self):
         pass
 
     @abstractmethod
-    def executar_teste(self):
+    def executar_teste(self,showGUI = True):
         pass
 
 

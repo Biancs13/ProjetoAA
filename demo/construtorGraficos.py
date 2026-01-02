@@ -14,10 +14,9 @@ def construir_genetico(caminhos, motor, valores_f_r, passos):
     criar_heatmap(mapa, motor, cmap="coolwarm", titulo="Heatmap de Visitas")
 
 
-def construir_reforco(valores_f_r,passos,q,epsillon):
+def construir_reforco(valores_f_r,passos,q):
     grafico_fitness_recompensas(valores_f_r, "reforco")
     grafico_passos(passos)
-    grafico_passos(epsillon)
     criar_heatmap_ref(q, cmap="coolwarm", titulo="Heatmap de Q-table")
 
 
@@ -52,15 +51,19 @@ def graficoCaminhos(caminhos,motor):
     colors = cmap(np.linspace(0, 1, len(caminhos)))
     if len(caminhos) == 1:
         plot_gens = [0]
+        test = True
     else:
+        test = False
         indices = {0, len(caminhos)//2, len(caminhos)-1}
         plot_gens = sorted(list(indices))
     for i in plot_gens:
         path = caminhos[i]
         x_vals = [p.getX() for p in path]
         y_vals = [p.getY() for p in path]
-        ax.plot(x_vals, y_vals, color=colors[i], alpha=0.7,
-                label=f"Geração {i+1}", linewidth=2)
+        if test:
+            ax.plot(x_vals, y_vals, color=colors[i], alpha=0.7,label=f"Teste", linewidth=2)
+        else:
+            ax.plot(x_vals, y_vals, color=colors[i], alpha=0.7,label=f"Geração {i+1}", linewidth=2)
         if x_vals:
             ax.plot(x_vals[-1], y_vals[-1], 'x', color=colors[i],
                     markersize=10, markeredgewidth=2)
@@ -76,7 +79,10 @@ def graficoCaminhos(caminhos,motor):
                 color="black",
                 fontweight="bold"
             )
-    ax.set_title("Melhores Caminhos por Geração", pad=20)
+    if test:
+        ax.set_title("Caminho no ambiente de Teste", pad=20)
+    else:
+        ax.set_title("Melhores Caminhos por Geração", pad=20)
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
     ax.spines['bottom'].set_color('black')

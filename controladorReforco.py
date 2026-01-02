@@ -50,9 +50,10 @@ class ControladorReforco(Controlador):
 
 
 
-    def executar_teste(self):
+    def executar_teste(self,showGUI = True):
         motor = self.criar_motor("reforco", self.episodios)
-        motor.executa()
+        motor.executa(showGUI)
+
 
 
 
