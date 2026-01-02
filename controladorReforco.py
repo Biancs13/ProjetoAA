@@ -8,6 +8,7 @@ class ControladorReforco(Controlador):
         self.episodios = episodios
         self.melhores_recompensas_ep =[]
         self.numero_passos = []
+        self.epsillon = []
         super().__init__(ficheiro_motor, problema,tempo,modo)
 
 
@@ -39,6 +40,7 @@ class ControladorReforco(Controlador):
                 melhor = min(lista_passos_100)
                 self.numero_passos.append(melhor)
                 lista_passos_100 = []
+                self.epsillon.append(epsilon)
 
             if ep % 1000 == 0:
                 print(f"Episódio: {ep}/{self.episodios} | Max R:", get_max_recompensa_q(q))

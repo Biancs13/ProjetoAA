@@ -20,7 +20,7 @@ class AgenteFixo(Agente):
         self.num_passos += 1
         print(self.estadoAtual)
         elementos = self.estadoAtual[0:9]
-        if len(self.estadoAtual) == 10: #Farol
+        if len(self.estadoAtual) == 10: #Farol ou Labirinto
             if elementos[2] == 1:
                 self.acoes.append(Acao.ESQUERDA)
                 return Acao.ESQUERDA
@@ -31,8 +31,8 @@ class AgenteFixo(Agente):
                 self.acoes.append(Acao.DIREITA)
                 return Acao.DIREITA
 
-            angulo_farol = self.estadoAtual[9]*180
-            melhorAcao = melhor_acao_angulo(angulo_farol)
+            angulo = self.estadoAtual[9]*180
+            melhorAcao = melhor_acao_angulo(angulo)
 
             if not existeSolido(elementos, melhorAcao) and not estaFora(elementos, melhorAcao):
                 self.ultima_acao = melhorAcao

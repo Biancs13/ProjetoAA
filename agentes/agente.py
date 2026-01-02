@@ -19,7 +19,7 @@ class Agente(ABC):
         self.coletaveis = []
         self.observacaoAtual = None
         self.estadoAtual = None
-        self.tipoProblema = tipoProblema #Pode ser F ou R
+        self.tipoProblema = tipoProblema #Pode ser F ou R ou L
         self.num_colisoes = 0
         self.num_pontos_recolhidos = 0
         self.condicaoFim = False
@@ -47,7 +47,7 @@ class Agente(ABC):
                 novoEstado.extend([-1, 0, -1])
             else:
                 novoEstado.extend(elemento)
-        if self.tipoProblema == "F":
+        if self.tipoProblema == "F" or self.tipoProblema == "L":
             angulo = angulo_normalizado(vetor_frente,direcaoObj1)
             novoEstado.append(angulo)
         elif self.tipoProblema == "R":

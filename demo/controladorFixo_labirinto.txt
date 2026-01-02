@@ -1,0 +1,4 @@
+A
+L
+fixo
+MS simulacao_labirinto_fixo.txt

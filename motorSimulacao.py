@@ -2,6 +2,7 @@ import os
 from time import sleep
 
 from agentes.agenteReforco import AgenteReforco
+from ambientes.labirinto import Labirinto
 from objetos.acao import atuar
 from agentes.agente import criaAgente
 from ambientes.farol import Farol
@@ -16,7 +17,7 @@ class MotorSimulacao:
     def __init__(self, modo, agentes, ambiente, tipo, num_passos):
         self.agentes = agentes
         self.ambiente = ambiente
-        self.tipo = tipo  # pode ser F ou R
+        self.tipo = tipo  # pode ser F ou R ou L
         self.modo = modo  # pode ser T ou A
         self.num_passos = num_passos
         self.janela = None
@@ -86,6 +87,10 @@ class MotorSimulacao:
             direcao1 = getDirecao(agente.posicaoAtual,
                                   self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "farol"))
             agente.atualizarEstadoAtual(direcao1)
+        elif self.tipo == "L":
+            direcao1 = getDirecao(agente.posicaoAtual,
+                                  self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "saida"))
+            agente.atualizarEstadoAtual(direcao1)
         elif self.tipo == "R":
             direcao1 = getDirecao(agente.posicaoAtual,
                                   self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ninho"))
@@ -138,6 +143,8 @@ def cria(ficheiro, tipo, politica, modo,episodios=None, tempo=0):
             ambiente = Recolecao(tamanhoGrelha, tempo)
         elif tipo == "F":
             ambiente = Farol(tamanhoGrelha)
+        elif tipo == "L":
+            ambiente = Labirinto(tamanhoGrelha)
 
         numeroPassos = int(numeroPassos.strip())
 
