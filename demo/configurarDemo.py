@@ -41,7 +41,6 @@ E parede (14,10) False True 0
 E parede (15,10) False True 0
 E parede (16,10) False True 0"""
 
-
 coletaveis_e_ninhos = \
 """E ovo (2,3) True False 6
 E ovo (3,17) True False 6
@@ -55,16 +54,71 @@ E ninho (4,9) False False 0
 E ninho (15,3) False False 0
 E ninho (18,18) False False 0"""
 
+paredes_v2 = \
+"""E parede (16,4) False True 0
+E parede (15,4) False True 0
+E parede (14,4) False True 0
+E parede (13,4) False True 0
+E parede (12,4) False True 0
+E parede (1,2) False True 0
+E parede (1,3) False True 0
+E parede (1,4) False True 0
+E parede (11,5) False True 0
+E parede (10,5) False True 0
+E parede (9,5) False True 0
+E parede (4,16) False True 0
+E parede (4,17) False True 0
+E parede (4,18) False True 0
+E parede (4,19) False True 0
+E parede (1,5) False True 0
+E parede (1,6) False True 0
+E parede (1,7) False True 0
+E parede (1,8) False True 0
+E parede (9,8) False True 0
+E parede (9,9) False True 0
+E parede (1,9) False True 0
+E parede (9,10) False True 0
+E parede (1,10) False True 0
+E parede (9,11) False True 0
+E parede (1,11) False True 0
+E parede (9,12) False True 0
+E parede (1,12) False True 0
+E parede (9,13) False True 0
+E parede (19,14) False True 0
+E parede (18,14) False True 0
+E parede (17,14) False True 0
+E parede (16,14) False True 0
+E parede (15,14) False True 0
+E parede (14,14) False True 0
+E parede (13,14) False True 0
+E parede (9,14) False True 0
+E parede (9,15) False True 0
+E parede (9,16) False True 0"""
 
+coletaveis_e_ninhos_v2 = \
+"""E ovo (2,4) True False 6
+E ovo (3,14) True False 5
+E ovo (6,2) True False 7
+E ovo (10,15) True False 5
+E ovo (14,5) True False 6
+E ovo (15,6) True False 6
+E ovo (17,11) True False 5
+E ovo (17,13) True False 7
+E ninho (2,18) False False 0
+E ninho (10,3) False False 0
+E ninho (18,5) False False 0"""
 
 ambiente_farol_sem_paredes = f"""E farol (18,18) False False 100"""
 
 ambiente_farol_com_paredes = f"""E farol (18,18) False False 100
 {paredes}"""
+ambiente_farol_com_paredes_v2 = f"""E farol (18,18) False False 100
+{paredes_v2}"""
 
 ambiente_recolecao_sem_paredes = coletaveis_e_ninhos
 
 ambiente_recolecao_com_paredes = coletaveis_e_ninhos + "\n" + paredes
+ambiente_recolecao_com_paredes_v2 = coletaveis_e_ninhos_v2 + "\n" + paredes_v2
 
 
 #Fixo e Aleatório
@@ -150,4 +204,11 @@ def changeTest(ficheiro_controlador):
         linhas = f.readlines()
     linhas[0] = "T\n"
     with open(ficheiro_controlador, "w", encoding="utf-8") as f:
+        f.writelines(linhas)
+
+def changeAmbiente(ficheiro_simulacao, ambiente):
+    with open(ficheiro_simulacao, "r", encoding="utf-8") as f:
+        linhas = f.readlines()
+    linhas[3:] = [ambiente + "\n"]
+    with open(ficheiro_simulacao, "w", encoding="utf-8") as f:
         f.writelines(linhas)
