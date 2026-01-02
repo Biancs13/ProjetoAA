@@ -1,61 +1,6 @@
 from controlador import *
 
 paredes = \
-"""E parede (16,4) False True 0
-E parede (15,4) False True 0
-E parede (14,4) False True 0
-E parede (13,4) False True 0
-E parede (12,4) False True 0
-E parede (1,2) False True 0
-E parede (1,3) False True 0
-E parede (1,4) False True 0
-E parede (11,5) False True 0
-E parede (10,5) False True 0
-E parede (9,5) False True 0
-E parede (4,16) False True 0
-E parede (4,17) False True 0
-E parede (4,18) False True 0
-E parede (4,19) False True 0
-E parede (1,5) False True 0
-E parede (1,6) False True 0
-E parede (1,7) False True 0
-E parede (1,8) False True 0
-E parede (9,8) False True 0
-E parede (9,9) False True 0
-E parede (1,9) False True 0
-E parede (9,10) False True 0
-E parede (1,10) False True 0
-E parede (9,11) False True 0
-E parede (1,11) False True 0
-E parede (9,12) False True 0
-E parede (1,12) False True 0
-E parede (9,13) False True 0
-E parede (19,14) False True 0
-E parede (18,14) False True 0
-E parede (17,14) False True 0
-E parede (16,14) False True 0
-E parede (15,14) False True 0
-E parede (14,14) False True 0
-E parede (13,14) False True 0
-E parede (9,14) False True 0
-E parede (9,15) False True 0
-E parede (9,16) False True 0"""
-
-coletaveis_e_ninhos = \
-"""E ovo (2,4) True False 6
-E ovo (3,14) True False 5
-E ovo (6,2) True False 7
-E ovo (10,15) True False 5
-E ovo (14,5) True False 6
-E ovo (15,6) True False 6
-E ovo (17,11) True False 5
-E ovo (17,13) True False 7
-E ninho (2,18) False False 0
-E ninho (10,3) False False 0
-E ninho (18,5) False False 0"""
-
-
-paredes_v2 = \
 """E parede (4,3) False True 0
 E parede (4,4) False True 0
 E parede (4,5) False True 0
@@ -96,6 +41,197 @@ E parede (14,10) False True 0
 E parede (15,10) False True 0
 E parede (16,10) False True 0"""
 
+paredesLabirinto = """E parede (1,0) False True 0
+E parede (1,1) False True 0
+E parede (1,2) False True 0
+E parede (1,3) False True 0
+E parede (1,4) False True 0
+E parede (1,5) False True 0
+E parede (1,6) False True 0
+E parede (1,7) False True 0
+E parede (1,8) False True 0
+E parede (1,9) False True 0
+E parede (1,10) False True 0
+E parede (1,11) False True 0
+E parede (1,12) False True 0
+E parede (1,13) False True 0
+E parede (1,14) False True 0
+E parede (1,15) False True 0
+E parede (1,16) False True 0
+E parede (1,17) False True 0
+E parede (1,18) False True 0
+E parede (3,1) False True 0
+E parede (3,2) False True 0
+E parede (3,3) False True 0
+E parede (3,4) False True 0
+E parede (3,5) False True 0
+E parede (3,6) False True 0
+E parede (3,7) False True 0
+E parede (3,8) False True 0
+E parede (3,9) False True 0
+E parede (3,10) False True 0
+E parede (3,11) False True 0
+E parede (3,12) False True 0
+E parede (3,13) False True 0
+E parede (3,14) False True 0
+E parede (3,15) False True 0
+E parede (3,16) False True 0
+E parede (3,17) False True 0
+E parede (3,18) False True 0
+E parede (3,19) False True 0
+E parede (5,0) False True 0
+E parede (5,1) False True 0
+E parede (5,2) False True 0
+E parede (5,3) False True 0
+E parede (5,4) False True 0
+E parede (5,5) False True 0
+E parede (5,6) False True 0
+E parede (5,7) False True 0
+E parede (5,8) False True 0
+E parede (5,9) False True 0
+E parede (5,10) False True 0
+E parede (5,11) False True 0
+E parede (5,12) False True 0
+E parede (5,13) False True 0
+E parede (5,14) False True 0
+E parede (5,15) False True 0
+E parede (5,16) False True 0
+E parede (5,17) False True 0
+E parede (5,18) False True 0
+E parede (7,1) False True 0
+E parede (7,2) False True 0
+E parede (7,3) False True 0
+E parede (7,4) False True 0
+E parede (7,5) False True 0
+E parede (7,6) False True 0
+E parede (7,7) False True 0
+E parede (7,8) False True 0
+E parede (7,9) False True 0
+E parede (7,10) False True 0
+E parede (7,11) False True 0
+E parede (7,12) False True 0
+E parede (7,13) False True 0
+E parede (7,14) False True 0
+E parede (7,15) False True 0
+E parede (7,16) False True 0
+E parede (7,17) False True 0
+E parede (7,18) False True 0
+E parede (7,19) False True 0
+E parede (9,0) False True 0
+E parede (9,1) False True 0
+E parede (9,2) False True 0
+E parede (9,3) False True 0
+E parede (9,4) False True 0
+E parede (9,5) False True 0
+E parede (9,6) False True 0
+E parede (9,7) False True 0
+E parede (9,8) False True 0
+E parede (9,9) False True 0
+E parede (9,10) False True 0
+E parede (9,11) False True 0
+E parede (9,12) False True 0
+E parede (9,13) False True 0
+E parede (9,14) False True 0
+E parede (9,15) False True 0
+E parede (9,16) False True 0
+E parede (9,17) False True 0
+E parede (9,18) False True 0
+E parede (11,1) False True 0
+E parede (11,2) False True 0
+E parede (11,3) False True 0
+E parede (11,4) False True 0
+E parede (11,5) False True 0
+E parede (11,6) False True 0
+E parede (11,7) False True 0
+E parede (11,8) False True 0
+E parede (11,9) False True 0
+E parede (11,10) False True 0
+E parede (11,11) False True 0
+E parede (11,12) False True 0
+E parede (11,13) False True 0
+E parede (11,14) False True 0
+E parede (11,15) False True 0
+E parede (11,16) False True 0
+E parede (11,17) False True 0
+E parede (11,18) False True 0
+E parede (11,19) False True 0
+E parede (13,0) False True 0
+E parede (13,1) False True 0
+E parede (13,2) False True 0
+E parede (13,3) False True 0
+E parede (13,4) False True 0
+E parede (13,5) False True 0
+E parede (13,6) False True 0
+E parede (13,7) False True 0
+E parede (13,8) False True 0
+E parede (13,9) False True 0
+E parede (13,10) False True 0
+E parede (13,11) False True 0
+E parede (13,12) False True 0
+E parede (13,13) False True 0
+E parede (13,14) False True 0
+E parede (13,15) False True 0
+E parede (13,16) False True 0
+E parede (13,17) False True 0
+E parede (13,18) False True 0
+E parede (15,1) False True 0
+E parede (15,2) False True 0
+E parede (15,3) False True 0
+E parede (15,4) False True 0
+E parede (15,5) False True 0
+E parede (15,6) False True 0
+E parede (15,7) False True 0
+E parede (15,8) False True 0
+E parede (15,9) False True 0
+E parede (15,10) False True 0
+E parede (15,11) False True 0
+E parede (15,12) False True 0
+E parede (15,13) False True 0
+E parede (15,14) False True 0
+E parede (15,15) False True 0
+E parede (15,16) False True 0
+E parede (15,17) False True 0
+E parede (15,18) False True 0
+E parede (15,19) False True 0
+E parede (17,0) False True 0
+E parede (17,1) False True 0
+E parede (17,2) False True 0
+E parede (17,3) False True 0
+E parede (17,4) False True 0
+E parede (17,5) False True 0
+E parede (17,6) False True 0
+E parede (17,7) False True 0
+E parede (17,8) False True 0
+E parede (17,9) False True 0
+E parede (17,10) False True 0
+E parede (17,11) False True 0
+E parede (17,12) False True 0
+E parede (17,13) False True 0
+E parede (17,14) False True 0
+E parede (17,15) False True 0
+E parede (17,16) False True 0
+E parede (17,17) False True 0
+E parede (17,18) False True 0
+E parede (19,0) False True 0
+E parede (19,1) False True 0
+E parede (19,2) False True 0
+E parede (19,3) False True 0
+E parede (19,4) False True 0
+E parede (19,5) False True 0
+E parede (19,6) False True 0
+E parede (19,7) False True 0
+E parede (19,8) False True 0
+E parede (19,9) False True 0
+E parede (19,10) False True 0
+E parede (19,11) False True 0
+E parede (19,12) False True 0
+E parede (19,13) False True 0
+E parede (19,14) False True 0
+E parede (19,15) False True 0
+E parede (19,16) False True 0
+E parede (19,17) False True 0
+E parede (19,18) False True 0"""
+
 coletaveis_e_ninhos_v2 = \
 """E ovo (2,3) True False 6
 E ovo (3,17) True False 6
@@ -113,8 +249,12 @@ ambiente_farol_sem_paredes = f"""E farol (18,18) False False 100"""
 
 ambiente_farol_com_paredes = f"""E farol (18,18) False False 100
 {paredes}"""
+
 ambiente_farol_com_paredes_v2 = f"""E farol (18,18) False False 100
 {paredes_v2}"""
+
+ambiente_labirinto = f"""E saida (19,19) False False 100
+{paredesLabirinto}"""
 
 ambiente_recolecao_sem_paredes = coletaveis_e_ninhos
 
@@ -135,6 +275,17 @@ def resetFarol(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente,politic
     with open("../agentes/" + ficheiro_agente, "w", encoding="utf-8") as f:
         f.write(texto_agente)
 
+def resetLabirinto(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica, ambiente):
+    texto_controlador = f"A\nL\n{politica}\nMS {ficheiro_simulacao}"
+    texto_simulacao = f"20\n2000\nAG {ficheiro_agente}\n{ambiente}"
+    texto_agente = "1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)"
+
+    with open(ficheiro_controlador, "w", encoding="utf-8") as f:
+        f.write(texto_controlador)
+    with open(ficheiro_simulacao, "w", encoding="utf-8") as f:
+        f.write(texto_simulacao)
+    with open("../agentes/" + ficheiro_agente, "w", encoding="utf-8") as f:
+        f.write(texto_agente)
 
 def resetRecolecao(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente,politica,ambiente,tempo):
     texto_controlador = f"A\nR {tempo}\n{politica}\nMS {ficheiro_simulacao}"
@@ -161,6 +312,18 @@ def resetFarolGenetico(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente
     with open("../agentes/" + ficheiro_agente, "w", encoding="utf-8") as f:
         f.write(texto_agente)
 
+def resetLabirintoGenetico(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, ambiente, politica, geracoes, num_individuos, taxa_mutacao, taxa_elite, novelty_weight, num_novelty, num_archives, torneio):
+    texto_controlador = f"A\nL\n{politica}\n{geracoes}\n{num_individuos}\n{taxa_mutacao}\n{taxa_elite}\n{novelty_weight}\n{num_novelty}\n{num_archives}\n{torneio}\nMS {ficheiro_simulacao}"
+    texto_simulacao = f"20\n300\nAG {ficheiro_agente}\n{ambiente}"
+    texto_agente = "1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)"
+
+    with open(ficheiro_controlador, "w", encoding="utf-8") as f:
+        f.write(texto_controlador)
+    with open(ficheiro_simulacao, "w", encoding="utf-8") as f:
+        f.write(texto_simulacao)
+    with open("../agentes/" + ficheiro_agente, "w", encoding="utf-8") as f:
+        f.write(texto_agente)
+
 def resetRecolecaoGenetico(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica, ambiente, tempo,geracoes,num_individuos,taxa_mutacao,taxa_elite,novelty_weight,num_novelty,num_archives,torneio):
     texto_controlador = f"A\nR {tempo}\n{politica}\n{geracoes}\n{num_individuos}\n{taxa_mutacao}\n{taxa_elite}\n{novelty_weight}\n{num_novelty}\n{num_archives}\n{torneio}\nMS {ficheiro_simulacao}"
     texto_simulacao = f"20\n150\nAG {ficheiro_agente}\n{ambiente}"
@@ -178,7 +341,19 @@ def resetRecolecaoGenetico(ficheiro_controlador, ficheiro_simulacao, ficheiro_ag
 def resetFarolReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica,ambiente,episodios,alpha,gama,eps_inicial,eps_final,beta):
     texto_controlador = f"A\nF\n{politica}\n{episodios}\nMS {ficheiro_simulacao}"
     texto_simulacao = f"20\n1000\nAG {ficheiro_agente}\n{ambiente}"
-    texto_agente = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}\n{beta}"
+    texto_agente = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}"
+
+    with open(ficheiro_controlador, "w", encoding="utf-8") as f:
+        f.write(texto_controlador)
+    with open(ficheiro_simulacao, "w", encoding="utf-8") as f:
+        f.write(texto_simulacao)
+    with open("../agentes/" + ficheiro_agente, "w", encoding="utf-8") as f:
+        f.write(texto_agente)
+
+def resetLabirintoReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica, ambiente, episodios, alpha, gama, eps_inicial, eps_final):
+    texto_controlador = f"A\nL\n{politica}\n{episodios}\nMS {ficheiro_simulacao}"
+    texto_simulacao = f"20\n2000\nAG {ficheiro_agente}\n{ambiente}"
+    texto_agente = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}"
 
     with open(ficheiro_controlador, "w", encoding="utf-8") as f:
         f.write(texto_controlador)

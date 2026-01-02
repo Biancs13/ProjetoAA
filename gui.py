@@ -37,7 +37,7 @@ class GUI:
                     continue
                 if nome == "ninho":
                     cor = "lightcoral"
-                elif nome == "farol":
+                elif nome == "farol" or nome == "saida":
                     cor = "yellow"
                 elif elemento.isColetavel():
                     cor = "lightgreen"

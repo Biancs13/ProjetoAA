@@ -1,0 +1,4 @@
+T
+L
+aleatorio
+MS simulacao_labirinto_aleatorio.txt

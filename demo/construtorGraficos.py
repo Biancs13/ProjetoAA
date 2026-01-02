@@ -14,9 +14,10 @@ def construir_genetico(caminhos, motor, valores_f_r, passos):
     criar_heatmap(mapa, motor, cmap="coolwarm", titulo="Heatmap de Visitas")
 
 
-def construir_reforco(valores_f_r,passos,q):
+def construir_reforco(valores_f_r,passos,q,epsillon):
     grafico_fitness_recompensas(valores_f_r, "reforco")
     grafico_passos(passos)
+    grafico_passos(epsillon)
     criar_heatmap_ref(q, cmap="coolwarm", titulo="Heatmap de Q-table")
 
 
@@ -110,6 +111,14 @@ def grafico_passos(passos):
     plt.grid(True)
     plt.show()
 
+def grafico_epsillon(epsillon):
+    plt.figure(figsize=(10, 5))
+    plt.plot(range(len(epsillon)),epsillon, marker='o')
+    plt.title("Valor do epsillon ao longo das gerações")
+    plt.xlabel("Nº de episódios (x100)")
+    plt.ylabel("Epsillon")
+    plt.grid(True)
+    plt.show()
 
 
 #HEATMAP

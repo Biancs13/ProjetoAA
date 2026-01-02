@@ -10,7 +10,7 @@ class ControladorGenetico(Controlador):
         self.geracoes = geracoes
         self.tamanho_populacao = tamanho_populacao
         self.taxa_mutacao = taxa_mutacao
-        if self.problema == "F":
+        if self.problema == "F" or self.problema == "L":
             input = 10
         else:
             input = 12
