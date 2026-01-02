@@ -1,3 +1,4 @@
+import math
 import random
 from abc import ABC
 
@@ -9,15 +10,17 @@ from objetos.acao import Acao
 
 class AgenteReforco(Agente):
 
-    def __init__(self, id, posicaoInicial, tipo, angulo, ficheiro, alpha, desconto, epsilon_inicial, epsilon_final,num_episodios):
+    def __init__(self, id, posicaoInicial, tipo, angulo, ficheiro, alpha, desconto, epsilon_inicial, epsilon_final,num_episodios,beta):
         super().__init__(id,posicaoInicial,tipo, angulo,ficheiro)
         self.q = {} # Dicionario de dicionarios, para cada estado damos um dicionario com acao,Q
+        self.estado_visitas = {}
         self.alpha = alpha
         self.desconto = desconto
         self.num_episodios = num_episodios
         self.epsilon_inicial = epsilon_inicial
         self.epsilon = epsilon_inicial
         self.epsilon_final = epsilon_final
+        self.beta = beta
         self.ultima_acao = None
 
     def age(self):
@@ -56,6 +59,9 @@ class AgenteReforco(Agente):
 
     #TODO na verdade aqui é avaliacao do EstadoAntigo  Podemos mudar
     def avaliacaoEstadoAtual(self,recompensa):
+        self.atualizar_visitas()
+        n = self.get_visitas()
+        recompensa = recompensa + self.beta/math.sqrt(n)
         if self.ultima_acao is None or self.estadoAntigo is None:
             return
         estado_atual = self._obter_chave_estado(self.estadoAtual)
@@ -88,12 +94,23 @@ class AgenteReforco(Agente):
                 dados.append(linha)
         fich = open(self.ficheiro,'r+')
         linhas = fich.readlines()
-        primeiras = linhas[:8]
+        primeiras = linhas[:9]
         fich.seek(0)
         for linha in primeiras:
             fich.write(linha)
         for linha in dados:
             fich.write('\n' + linha)
+
+    def atualizar_visitas(self):
+        estado = self._obter_chave_estado(self.estadoAtual)
+        if estado not in self.estado_visitas:
+            self.estado_visitas[estado] = 1
+        else:
+            self.estado_visitas[estado] += 1
+
+    def get_visitas(self):
+        return self.estado_visitas[self._obter_chave_estado(self.estadoAtual)]
+
 
 def lerDicionario(nome):
     dic = {}
