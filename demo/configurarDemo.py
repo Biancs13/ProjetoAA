@@ -1,60 +1,6 @@
 from controlador import *
 
 paredes = \
-"""E parede (4,3) False True 0
-E parede (4,4) False True 0
-E parede (4,5) False True 0
-E parede (4,6) False True 0
-E parede (4,7) False True 0
-E parede (2,18) False True 0
-E parede (3,18) False True 0
-E parede (4,18) False True 0
-E parede (5,8) False True 0
-E parede (5,9) False True 0
-E parede (5,10) False True 0
-E parede (5,13) False True 0
-E parede (5,14) False True 0
-E parede (5,15) False True 0
-E parede (5,16) False True 0
-E parede (5,18) False True 0
-E parede (6,18) False True 0
-E parede (7,18) False True 0
-E parede (8,18) False True 0
-E parede (8,10) False True 0
-E parede (9,10) False True 0
-E parede (9,18) False True 0
-E parede (10,10) False True 0
-E parede (10,18) False True 0
-E parede (11,10) False True 0
-E parede (11,18) False True 0
-E parede (12,10) False True 0
-E parede (12,18) False True 0
-E parede (13,10) False True 0
-E parede (14,0) False True 0
-E parede (14,1) False True 0
-E parede (14,2) False True 0
-E parede (14,3) False True 0
-E parede (14,4) False True 0
-E parede (14,5) False True 0
-E parede (14,6) False True 0
-E parede (14,10) False True 0
-E parede (15,10) False True 0
-E parede (16,10) False True 0"""
-
-coletaveis_e_ninhos = \
-"""E ovo (2,3) True False 6
-E ovo (3,17) True False 6
-E ovo (5,7) True False 7
-E ovo (7,8) True False 5
-E ovo (10,4) True False 6
-E ovo (12,16) True False 7
-E ovo (15,6) True False 5
-E ovo (17,11) True False 6
-E ninho (4,9) False False 0
-E ninho (15,3) False False 0
-E ninho (18,18) False False 0"""
-
-paredes_v2 = \
 """E parede (16,4) False True 0
 E parede (15,4) False True 0
 E parede (14,4) False True 0
@@ -95,7 +41,7 @@ E parede (9,14) False True 0
 E parede (9,15) False True 0
 E parede (9,16) False True 0"""
 
-coletaveis_e_ninhos_v2 = \
+coletaveis_e_ninhos = \
 """E ovo (2,4) True False 6
 E ovo (3,14) True False 5
 E ovo (6,2) True False 7
@@ -107,6 +53,61 @@ E ovo (17,13) True False 7
 E ninho (2,18) False False 0
 E ninho (10,3) False False 0
 E ninho (18,5) False False 0"""
+
+
+paredes_v2 = \
+"""E parede (4,3) False True 0
+E parede (4,4) False True 0
+E parede (4,5) False True 0
+E parede (4,6) False True 0
+E parede (4,7) False True 0
+E parede (2,18) False True 0
+E parede (3,18) False True 0
+E parede (4,18) False True 0
+E parede (5,8) False True 0
+E parede (5,9) False True 0
+E parede (5,10) False True 0
+E parede (5,13) False True 0
+E parede (5,14) False True 0
+E parede (5,15) False True 0
+E parede (5,16) False True 0
+E parede (5,18) False True 0
+E parede (6,18) False True 0
+E parede (7,18) False True 0
+E parede (8,18) False True 0
+E parede (8,10) False True 0
+E parede (9,10) False True 0
+E parede (9,18) False True 0
+E parede (10,10) False True 0
+E parede (10,18) False True 0
+E parede (11,10) False True 0
+E parede (11,18) False True 0
+E parede (12,10) False True 0
+E parede (12,18) False True 0
+E parede (13,10) False True 0
+E parede (14,0) False True 0
+E parede (14,1) False True 0
+E parede (14,2) False True 0
+E parede (14,3) False True 0
+E parede (14,4) False True 0
+E parede (14,5) False True 0
+E parede (14,6) False True 0
+E parede (14,10) False True 0
+E parede (15,10) False True 0
+E parede (16,10) False True 0"""
+
+coletaveis_e_ninhos_v2 = \
+"""E ovo (2,3) True False 6
+E ovo (3,17) True False 6
+E ovo (5,7) True False 7
+E ovo (7,8) True False 5
+E ovo (10,4) True False 6
+E ovo (12,16) True False 7
+E ovo (15,6) True False 5
+E ovo (17,11) True False 6
+E ninho (4,9) False False 0
+E ninho (15,3) False False 0
+E ninho (18,18) False False 0"""
 
 ambiente_farol_sem_paredes = f"""E farol (18,18) False False 100"""
 
