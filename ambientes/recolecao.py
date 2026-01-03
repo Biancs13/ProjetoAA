@@ -31,20 +31,19 @@ class Recolecao(Ambiente):
 
 
     def getRecompensa(self,posAntiga,pos,angulo,numColetaveis=0,pts=0):
-        #Falta novelty
         if not dentroLimites(pos,self.tamanhoGrelha):
-            return -50
+            return -0.5
         ele = self.getElemento(pos)
         if ele.isSolido():
-            return -50
+            return -0.5
         if ele.isColetavel():
-            return ele.getPontos() * 150
+            return ele.getPontos() * 30
         if ele.getNome() == "ninho":
             if pts == 0:
-                return -25
+                return -10
             else:
-                return pts * 150 + 300
-        return 0
+                return pts * 30 + 50
+        return -0.1
 
 
     def calcular_fitness(self,agente):

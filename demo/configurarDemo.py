@@ -637,7 +637,7 @@ def resetFarolReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente,
 
 def resetLabirintoReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente, politica, ambiente, episodios, alpha, gama, eps_inicial, eps_final,beta):
     texto_controlador = f"A\nL\n{politica}\n{episodios}\nMS {ficheiro_simulacao}"
-    texto_simulacao = f"20\n2000\nAG {ficheiro_agente}\n{ambiente}"
+    texto_simulacao = f"20\n3000\nAG {ficheiro_agente}\n{ambiente}"
     texto_agente = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}\n{beta}"
 
     with open(ficheiro_controlador, "w", encoding="utf-8") as f:
