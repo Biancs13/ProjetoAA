@@ -532,7 +532,7 @@ E ninho (15,3) False False 0
 E ninho (18,18) False False 0"""
 
 ambiente_farol_sem_paredes = f"""E farol (18,18) False False 100"""
-ambiente_farol_sem_paredes_v2 = f"""E farol (18,9) False False 100"""
+ambiente_farol_sem_paredes_v2 = f"""E farol (9,18) False False 100"""
 
 ambiente_farol_com_paredes = f"""E farol (10,10) False False 100 \n {paredes}"""
 ambiente_farol_com_paredes_v2 = f"""E farol (18,9) False False 100 \n {paredes_v2}"""

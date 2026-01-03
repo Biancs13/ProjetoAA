@@ -1,5 +1,5 @@
 T
 F
 reforco
-2000
+20000
 MS simulacao_farol_reforco_c.txt
