@@ -9,6 +9,7 @@ class ControladorReforco(Controlador):
         self.melhores_recompensas_ep =[]
         self.numero_passos = []
         self.epsillon = []
+        self.melhores_caminhos = []
         super().__init__(ficheiro_motor, problema,tempo,modo)
 
 
@@ -53,6 +54,7 @@ class ControladorReforco(Controlador):
     def executar_teste(self,showGUI = True):
         motor = self.criar_motor("reforco", self.episodios)
         motor.executa(showGUI)
+        self.melhores_caminhos.append(motor.agentes[0].comportamento)
 
 
 

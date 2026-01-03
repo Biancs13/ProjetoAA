@@ -22,9 +22,11 @@ class AgenteReforco(Agente):
         self.epsilon_final = epsilon_final
         self.beta = beta
         self.ultima_acao = None
+        self.comportamento = []
 
     def age(self):
         self.ultima_acao = self.escolher_acao()
+        self.comportamento.append(self.ultima_acao)
         self.num_passos += 1
         return self.ultima_acao
 

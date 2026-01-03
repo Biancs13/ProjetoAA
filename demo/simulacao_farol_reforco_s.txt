@@ -1,4 +1,4 @@
 20
 1000
 AG agente_reforco_farol_s.txt
-E farol (18,9) False False 100
+E farol (18,18) False False 100
