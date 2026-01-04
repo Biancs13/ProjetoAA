@@ -1,0 +1,15 @@
+20
+2000
+AG agente1_reforco_recolecao_multi.txt
+AG agente2_reforco_recolecao_multi.txt
+E ovo (2,4) True False 6
+E ovo (3,14) True False 5
+E ovo (6,2) True False 7
+E ovo (10,15) True False 5
+E ovo (14,5) True False 6
+E ovo (15,6) True False 6
+E ovo (17,11) True False 5
+E ovo (17,13) True False 7
+E ninho (2,18) False False 0
+E ninho (10,3) False False 0
+E ninho (18,5) False False 0

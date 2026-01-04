@@ -1,0 +1,5 @@
+T
+R 30
+reforco
+10
+MS simulacao_recolecao_reforco_multi.txt

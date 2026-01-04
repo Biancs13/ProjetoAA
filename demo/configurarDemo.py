@@ -659,6 +659,23 @@ def resetRecolecaoReforco(ficheiro_controlador, ficheiro_simulacao, ficheiro_age
     with open("../agentes/" + ficheiro_agente, "w", encoding="utf-8") as f:
         f.write(texto_agente)
 
+def resetRecolecaoReforcoMulti(ficheiro_controlador, ficheiro_simulacao, ficheiro_agente1,ficheiro_agente2, politica,ambiente,tempo,episodios,alpha,gama,eps_inicial,eps_final,beta):
+    texto_controlador = f"A\nR {tempo}\n{politica}\n{episodios}\nMS {ficheiro_simulacao}"
+    texto_simulacao = f"20\n2000\nAG {ficheiro_agente1}\nAG {ficheiro_agente2}\n{ambiente}"
+    texto_agente1 = f"1\n(0,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}\n{beta}"
+    texto_agente2 = f"2\n(19,0)\n0\nS (0,-1) (0,1) (1,0)\n{alpha}\n{gama}\n{eps_inicial}\n{eps_final}\n{beta}"
+
+    with open(ficheiro_controlador, "w", encoding="utf-8") as f:
+        f.write(texto_controlador)
+    with open(ficheiro_simulacao, "w", encoding="utf-8") as f:
+        f.write(texto_simulacao)
+    with open("../agentes/" + ficheiro_agente1, "w", encoding="utf-8") as f:
+        f.write(texto_agente1)
+    with open("../agentes/" + ficheiro_agente2, "w", encoding="utf-8") as f:
+        f.write(texto_agente2)
+
+
+
 
 def changeTest(ficheiro_controlador):
     with open(ficheiro_controlador, "r", encoding="utf-8") as f:

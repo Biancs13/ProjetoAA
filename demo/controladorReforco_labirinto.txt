@@ -1,0 +1,5 @@
+T
+L
+reforco
+2
+MS simulacao_labirinto_reforco.txt

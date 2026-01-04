@@ -39,7 +39,7 @@ class Agente(ABC):
     def observacao(self,obs):
         self.observacaoAtual = obs
 
-    def atualizarEstadoAtual(self,direcaoObj1,direcaoObj2 = None):
+    def atualizarEstadoAtual(self,direcaoObj1,direcaoObj2 = None,direcaoAgente = None):
         novoEstado = []
         vetor_frente = getVetorFrente(self.angulo)
         for elemento in self.observacaoAtual.getElementos():
@@ -59,6 +59,8 @@ class Agente(ABC):
                 novoEstado.append(angulo2)
             else:
                 novoEstado.append(0)
+        if direcaoAgente is not None:
+            novoEstado.append(direcaoAgente)
         self.estadoAtual = novoEstado
 
     @abstractmethod
