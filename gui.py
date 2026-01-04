@@ -18,7 +18,7 @@ class GUI:
         self.canvas.delete("all")
         self.desenha_grelha()
         pos_agentes = [a.getPosicao() for a in agentes]
-        pos_vistas = [pos for a in agentes for pos in ambiente.observacaoParaAgente(a)[1]]
+        pos_vistas = [pos for a in agentes for pos in ambiente.observacaoParaAgente(a,agentes)[1]]
         for y in range(self.tamanho):
             for x in range(self.tamanho):
                 pos = Posicao(x, y)

@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from objetos.acao import atuar
-from objetos.posicao import Posicao
+from objetos.posicao import Posicao, dentroLimites
 
 
 def construir_genetico(caminhos, motor, valores_f_r, passos):
@@ -20,13 +20,25 @@ def construir_reforco(valores_f_r,passos,q):
     criar_heatmap_ref(q, cmap="coolwarm", titulo="Heatmap de Q-table")
 
 
+def construir_reforco_multi(valores_f_r_agentes,passos_agentes,q_agentes):
+    grafico_mult(valores_f_r_agentes,"reforco")
+    grafico_mult(passos_agentes,"passos")
+    for a,q in q_agentes.items():
+        criar_heatmap_ref(q, cmap="coolwarm", titulo=f"Heatmap de Q-table de Agente{a}")
+
 
 # CAMINHO
-def reconstruir_caminho(posicao, angulo, comportamento):
+def reconstruir_caminho(ambiente, posicao, angulo, comportamento):
     caminho = [posicao]
     for a in comportamento:
-        posicao, angulo = atuar(posicao,angulo,a)
-        caminho.append(posicao)
+        posicao_antiga = posicao
+        nova_posicao, novo_angulo = atuar(posicao, angulo, a)
+        angulo = novo_angulo
+        if not dentroLimites(nova_posicao, ambiente.tamanhoGrelha) or ambiente.getElemento(nova_posicao).isSolido():
+            caminho.append(posicao_antiga)
+        else:
+            posicao = nova_posicao
+            caminho.append(posicao)
     return caminho
 
 #MAPA
@@ -38,7 +50,7 @@ def calcular_mapa(caminhos,tamanho_grelha):
     return mapa_visitas
 
 #GRAFICOS
-def graficoCaminhos(caminhos,motor):
+def graficoCaminhos(caminhos,motor,multi_agente = False):
     grelha_size = motor.ambiente.tamanhoGrelha
     fig, ax = plt.subplots(figsize=(grelha_size * 0.5, grelha_size * 0.5))
     fig.patch.set_facecolor('white')
@@ -62,6 +74,8 @@ def graficoCaminhos(caminhos,motor):
         y_vals = [p.getY() for p in path]
         if test:
             ax.plot(x_vals, y_vals, color=colors[i], alpha=0.7,label=f"Teste", linewidth=2)
+        elif multi_agente:
+            ax.plot(x_vals, y_vals, color=colors[i], alpha=0.7,label=f"Agente{i}", linewidth=2)
         else:
             ax.plot(x_vals, y_vals, color=colors[i], alpha=0.7,label=f"Geração {i+1}", linewidth=2)
         if x_vals:
@@ -107,6 +121,41 @@ def grafico_fitness_recompensas(valores,tipo):
     plt.ylabel(f"Valor de {valor}")
     plt.grid(True)
     plt.show()
+
+
+def grafico_mult(valores, tipo="reforco"):
+    """
+    valores: dicionário {nome_agente: lista_valores}
+    tipo: 'reforco' para recompensas ou 'passos' para nº de passos
+    """
+
+    if tipo == "reforco":
+        titulo = "Valor máximo de Recompensa"
+        ylabel = "Recompensa"
+        xlabel = "100 Episódios"
+    elif tipo == "passos":
+        titulo = "Nº de Passos até à condição de fim"
+        ylabel = "Passos"
+        xlabel = "Repetições"
+    else:
+        titulo = "Valores"
+        ylabel = "Valor"
+        xlabel = "Índice"
+
+    plt.figure(figsize=(10, 6))
+
+    for agente, vals in valores.items():
+        plt.plot(range(len(vals)), vals, marker='o', label=agente)
+
+    plt.title(titulo)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.grid(True)
+
+    plt.legend()
+    plt.show()
+
+
 
 def grafico_passos(passos):
     plt.figure(figsize=(10, 5))

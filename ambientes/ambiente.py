@@ -12,16 +12,20 @@ class Ambiente(ABC):
         self.grelha = {Posicao(x,y): Elemento("Vazio",-1,-1,-1) for x in range(tamanhoGrelha) for y in range(tamanhoGrelha)}
         self.tamanhoGrelha = tamanhoGrelha
 
-    def observacaoParaAgente(self,agente):
+    def observacaoParaAgente(self,agente,agentes):
         sensor = agente.getSensor()
         observacao = Observacao()
         posicoes = []
+        agentes_pos = [a.posicaoAtual for a in agentes if agente != a]
         i = 0
         for v in sensor.getCampoVisao(): #Está ordenado esq, frente, dta
             posicao = v.soma(agente.getPosicao())
             if dentroLimites(posicao,self.tamanhoGrelha):
                 posicoes.append(posicao)
-                observacao.adicionar(self.grelha[posicao].getId(),i)
+                if agentes_pos and posicao in agentes_pos :
+                    observacao.adicionar((0,1,-1),i) # agente
+                else:
+                    observacao.adicionar(self.grelha[posicao].getId(),i)
             else:
                 observacao.adicionar(None, i)
             i += 1

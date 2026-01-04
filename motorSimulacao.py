@@ -6,7 +6,7 @@ from ambientes.labirinto import Labirinto
 from objetos.acao import atuar
 from agentes.agente import criaAgente
 from ambientes.farol import Farol
-from objetos.posicao import Posicao, dentroLimites
+from objetos.posicao import Posicao, dentroLimites, getDistancia
 from objetos.elemento import Elemento
 from ambientes.recolecao import Recolecao
 from objetos.vetor import getDirecao
@@ -81,35 +81,41 @@ class MotorSimulacao:
             self.atualizarEstadoAgente(agente)
 
     def atualizarEstadoAgente(self, agente):
-        obs, pos = self.ambiente.observacaoParaAgente(agente)
+        obs, pos = self.ambiente.observacaoParaAgente(agente,self.agentes)
         agente.observacao(obs)
+        direcaoAg = None
+        if len(self.agentes) > 1:
+            direcaoAg = getDirecao(agente.posicaoAtual,self.getAgenteMaisProximo(agente).posicaoAtual)
         if self.tipo == "F":
-            direcao1 = getDirecao(agente.posicaoAtual,
-                                  self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "farol"))
-            agente.atualizarEstadoAtual(direcao1)
+            direcao1 = getDirecao(agente.posicaoAtual, self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "farol"))
+            agente.atualizarEstadoAtual(direcao1,None,direcaoAg)
         elif self.tipo == "L":
-            direcao1 = getDirecao(agente.posicaoAtual,
-                                  self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "saida"))
-            agente.atualizarEstadoAtual(direcao1)
+            direcao1 = getDirecao(agente.posicaoAtual, self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "saida"))
+            agente.atualizarEstadoAtual(direcao1,None,direcaoAg)
         elif self.tipo == "R":
-            direcao1 = getDirecao(agente.posicaoAtual,
-                                  self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ninho"))
+            direcao1 = getDirecao(agente.posicaoAtual,self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ninho"))
             posOvo = self.ambiente.getPosicaoElementoMaisProximo(agente.posicaoAtual, "ovo")
             if posOvo is not None:
                 direcao2 = getDirecao(agente.posicaoAtual, posOvo)
-                agente.atualizarEstadoAtual(direcao1, direcao2)
+                agente.atualizarEstadoAtual(direcao1, direcao2,direcaoAg)
             else:
-                agente.atualizarEstadoAtual(direcao1)
+                agente.atualizarEstadoAtual(direcao1,None,direcaoAg)
 
     def inicializarObservacao(self):
         for agente in self.agentes:
-            obs, _ = self.ambiente.observacaoParaAgente(agente)
+            obs, _ = self.ambiente.observacaoParaAgente(agente,self.agentes)
             agente.observacao(obs)
+
+    def getAgenteMaisProximo(self,agente):
+        outros = [a for a in self.agentes if a != agente]
+        if not outros:
+            return None
+        return min(outros,key=lambda a: getDistancia(agente.posicaoAtual, a.posicaoAtual))
 
 
     def representa_TUI(self):
         pos_agentes = [a.getPosicao() for a in self.agentes]
-        pos_vistas = [pos for a in self.agentes for pos in self.ambiente.observacaoParaAgente(a)[1]]
+        pos_vistas = [pos for a in self.agentes for pos in self.ambiente.observacaoParaAgente(a,self.agentes)[1]]
         linhas = []
         for y in range(self.ambiente.tamanhoGrelha):
             linha = []
