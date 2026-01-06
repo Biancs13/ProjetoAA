@@ -1,6 +1,7 @@
 20
 2000
 AG agente1_reforco_recolecao_multi.txt
+AG agente2_reforco_recolecao_multi.txt
 E ovo (2,4) True False 6
 E ovo (3,14) True False 5
 E ovo (6,2) True False 7

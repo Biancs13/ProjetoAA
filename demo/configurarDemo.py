@@ -684,9 +684,12 @@ def changeTest(ficheiro_controlador):
     with open(ficheiro_controlador, "w", encoding="utf-8") as f:
         f.writelines(linhas)
 
-def changeAmbiente(ficheiro_simulacao, ambiente):
+def changeAmbiente(ficheiro_simulacao, ambiente,multiAgente = False):
     with open(ficheiro_simulacao, "r", encoding="utf-8") as f:
         linhas = f.readlines()
-    linhas[3:] = [ambiente + "\n"]
+    if not multiAgente:
+        linhas[3:] = [ambiente + "\n"]
+    else:
+        linhas[4:] = [ambiente + "\n"]
     with open(ficheiro_simulacao, "w", encoding="utf-8") as f:
         f.writelines(linhas)

@@ -34,10 +34,10 @@ class AgenteReforco(Agente):
     def _obter_chave_estado(self, estado_original):
         if self.tipoProblema == "R":
             inicio = estado_original[:10]
-            angulos = [normalizar_angulo(a) for a in estado_original[10:11]]
+            angulos = [normalizar_angulo(a) for a in estado_original[10:]]
         else:
             inicio = estado_original[:9]
-            angulos = [normalizar_angulo(a) for a in estado_original[9:10]]
+            angulos = [normalizar_angulo(a) for a in estado_original[9:]]
         estado = tuple(inicio + angulos)
         return estado
 
