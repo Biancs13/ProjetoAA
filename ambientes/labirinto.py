@@ -24,9 +24,10 @@ class Labirinto(Ambiente):
 
         if not dentroLimites(pos, self.tamanhoGrelha):
             return -0.5
+        '''
         if self.getElemento(pos).isSolido():
             return -0.5
-
+        '''
         saida = self.getPosicaoElementoMaisProximo(pos, "saida")
         if pos == saida:
             return 100
@@ -34,11 +35,11 @@ class Labirinto(Ambiente):
 
 
     def calcular_fitness(self,agente):
-        recompensa = agente.num_colisoes * -20
+        recompensa = agente.num_colisoes * -0.5
         recompensa -= len(agente.comportamento) * 0.1
         saida_pos = self.getPosicaoElementoMaisProximo(agente.posicaoAtual, "saida")
         if getDistancia(saida_pos, agente.posicaoAtual) == 0:
-            recompensa += 500
+            recompensa += 100
         else:
-            recompensa += 490 // getDistancia(saida_pos, agente.posicaoAtual)
+            recompensa += 90 // getDistancia(saida_pos, agente.posicaoAtual)
         return recompensa

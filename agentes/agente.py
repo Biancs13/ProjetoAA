@@ -60,7 +60,8 @@ class Agente(ABC):
             else:
                 novoEstado.append(0)
         if direcaoAgente is not None:
-            novoEstado.append(direcaoAgente)
+            angulo = angulo_normalizado(vetor_frente, direcaoAgente)
+            novoEstado.append(angulo)
         self.estadoAtual = novoEstado
 
     @abstractmethod

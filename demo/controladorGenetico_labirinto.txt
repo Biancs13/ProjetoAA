@@ -1,12 +1,12 @@
 T
 L
 genetico
+500
+400
+0.08
+0.05
+40
+10
 5
-200
-0.15
-0.1
-0
-15
-5
-5
+7
 MS simulacao_labirinto_genetico.txt

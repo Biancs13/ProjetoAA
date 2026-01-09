@@ -20,7 +20,6 @@ class ControladorReforco(Controlador):
         todos_q = {agente.id: None for agente in motor_temp.agentes}
         todos_epsilon = {agente.id: None for agente in motor_temp.agentes}
         todos_estados_visitas = {agente.id: None for agente in motor_temp.agentes}
-
         lista_passos_100 = {agente.id:[] for agente in motor_temp.agentes}
 
         for ep in range(self.episodios + 1):
