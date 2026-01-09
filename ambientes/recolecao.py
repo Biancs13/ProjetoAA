@@ -35,7 +35,7 @@ class Recolecao(Ambiente):
             return -0.5
         ele = self.getElemento(pos)
         if ele.isSolido():
-            return -0.5
+            return -0.01
         if ele.isColetavel():
             return ele.getPontos() * 30
         if ele.getNome() == "ninho":
